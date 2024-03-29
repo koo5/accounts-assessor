@@ -10,9 +10,15 @@ https://sf360.zendesk.com/hc/en-au/articles/360017821211-The-Create-Entries-Proc
 
  smsf_members_throw(Members) :-
 	doc_list_items($>value($>get_optional_singleton_sheet_data(smsf_ui:members_sheet)), Members),
-	(	Members = []
-	->	throw_string('no SMSF members defined')
-	;	true).
+	(
+		(
+			Members = [],
+			throw_string('no SMSF members defined')
+		)
+	;
+		true
+	).
+
 /*
  smsf_member_name_atoms_throw(Members) :-
  	smsf_members_throw(Members),
@@ -34,5 +40,3 @@ phase 1 - setting up opening balances
 	PL is always computed just for current period. Old transactions stay there but are not taken into account. At end of period, total of PL is copied over to retaine
 
 */
-
-
