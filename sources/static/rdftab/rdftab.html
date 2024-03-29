@@ -28,13 +28,23 @@
 		this.focused_graph = focused_graph;
 	}
 
-	Vue.component('node', {
+	Vue.component('page', {
 		props: ['node'],
 		template: `
         <span>
           <small>resource</small>
           <b><term :node="node"  :term="node.term"></term></b>
           <small>and its properties:</small>
+          <node :node="node"/>
+        </span>
+		`,
+		methods: {}
+	});
+
+	Vue.component('node', {
+		props: ['node'],
+		template: `
+        <span>
           <span v-for="source in node.sources">
               <div v-if="source.msg!='loaded'">
                 <small>({{ source.msg }})</small>
