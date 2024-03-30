@@ -91,6 +91,7 @@ def get(user, node: str):
 				g2['fake'] = '(default)'
 
 			if s is None:
+				p2['forward'] = True
 				result['props'].append(dict(category=c2, p=p2, o=o2, g=g2))
 			elif o is None:
 				p2['reverse'] = True
@@ -152,7 +153,7 @@ def get(user, node: str):
 			g = prop['g'].get('best')
 		else:
 			if i != 0:
-				prop['g']['fake'] = 'same as above'
+				prop['g']['fake'] = '(same as above)'
 		
 	for prop in result['props']:
 		for node in [prop['p'], prop['o'], prop['g']]:
