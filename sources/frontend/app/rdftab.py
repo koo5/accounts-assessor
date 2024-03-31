@@ -240,7 +240,7 @@ def add_uri_labels(result, xn):
 		xn['label']=False
 
 
-@cachetools.cached({})		
+@cachetools.cached({})
 def uri_labels(conn, node):
 
 	labels = []
@@ -260,9 +260,31 @@ def uri_labels(conn, node):
 		for bindingSet in results:
 			labels.append(dict(l=bindingSet.getValue("l").getLabel(), g=bindingSet.getValue("g")))
 	return labels
-	
-	
-	
+
+
+#
+# @cachetools.cached({})
+# def list_items(conn, node):
+#
+# 	items = []
+#
+# 	queryString = """
+# 	PREFIX franzOption_defaultDatasetBehavior: <franz:rdf>
+#
+# 	SELECT ?list ?first ?rest
+# 	{
+#   			{GRAPH ?g { ?list rdf:first ?first . ?list rdf:rest ?rest . }} UNION { ?list rdf:first ?first . ?list rdf:rest ?rest . }
+# 	} LIMIT 1
+# 	"""
+# 	tupleQuery: agraph.TupleQuery = conn.prepareTupleQuery(QueryLanguage.SPARQL, queryString)
+# 	tupleQuery.setBinding("list", node)
+# 	results: agraph.TupleQueryResult
+# 	with tupleQuery.evaluate() as results:
+# 		for bindingSet in results:
+# 			items.append(dict(=bindingSet.getValue("l").getLabel(), g=bindingSet.getValue("g")))
+# 	return labels
+
+
 
 def add_uri_comments(result, xn):
 	labels = []
