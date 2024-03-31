@@ -125,10 +125,6 @@
 %	->	E2 = with_processing_context(E, Ctx_str)
 %	;	E2 = E).
 
- reestablish_doc :-
-	(	user:exception_doc_dump(G,Ng)
-	->	reestablish_doc(G,Ng)
-	;	true).
 
  handle_processing_exception(E) :-
 	reestablish_doc,

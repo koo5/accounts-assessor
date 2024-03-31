@@ -130,14 +130,14 @@ def get(user, node: str):
 	add_href(result['term'])
 	
 	
-	if result['term'].get('short') or result['term'].get('label'):
-		result['props'].append(dict(
-			g=dict(fake='(rdftab)'),
-			category=dict(fake='identificational'),
-			p=dict(fake='full URI'), 
-			o=dict(fake=agraph_node.getURI())
-			))
-
+	# if result['term'].get('short') or result['term'].get('label'):
+	# 	result['props'].append(dict(
+	# 		g=dict(fake='(rdftab)'),
+	# 		category=dict(fake='identificational'),
+	# 		p=dict(fake='full URI'),
+	# 		o=dict(fake=agraph_node.getURI())
+	# 		))
+	#
 
 	for prop in result['props']:
 		assign_best_display2(prop['g'])
@@ -159,11 +159,21 @@ def get(user, node: str):
 		for node in [prop['p'], prop['o'], prop['g']]:
 			add_href(node)
 
+	for prop in result['props']:
+		for node in [prop['o']]:
+			add_list(node)
 
 	add_tools(result)
 	return result
 
-	
+
+
+
+def add_list(node):
+	pass
+
+
+
 def add_href(node):
 	if node.get('n3'):
 		node['href'] = '/static/rdftab/rdftab.html?node=' + urllib.parse.quote_plus(node['n3'])
@@ -189,9 +199,15 @@ def xnode_str(result,xn):
 		xn['datatype'] = n.getDatatype()
 		xn['language'] = n.getLanguage()
 		
-	if isinstance(n, agraph.franz.openrdf.model.value.URI):
+	elif isinstance(n, agraph.franz.openrdf.model.value.URI):
 		xn['uri'] = n.getURI()
 		add_uri_shortening(result, xn)
+	elif isinstance(n, agraph.franz.openrdf.model.value.BNode):
+		#logger.info(f"{n.__dir__()=}")
+		xn['uri'] = n.getId()
+	else:
+		logger.info(f"{n.__dir__()=}")
+		xn['fake'] = '? ' + str(n)
 
 
 
