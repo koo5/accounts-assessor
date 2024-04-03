@@ -29,6 +29,8 @@
  	%push_format('~q', [check_txset(St, Txs)]),
 	result_property(l:report_currency, Report_Currency),
 	result_property(l:exchange_rates, Exchange_Rates),
+	%(var(End_Date) -> gtrace ; true),
+	%gtrace,
 	result_property(l:end_date, End_Date),
 	(	Report_Currency = []
 	->	true
