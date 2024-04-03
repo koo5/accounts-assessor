@@ -196,7 +196,13 @@
 
 	C = crosscheck{check:Check, evaluation:Evaluation, status:Status, diff: Diff},
 
-	doc_add(Crosscheck_uri, kb:data, C).
+	round_term(Check, Check_round), % avoid variables in the term.
+
+	doc_add(Crosscheck_uri, kb:crosscheck_check, Check_round),
+	doc_add(Crosscheck_uri, kb:crosscheck_evaluation, Evaluation),
+	doc_add(Crosscheck_uri, kb:crosscheck_status, Status),
+	doc_add(Crosscheck_uri, kb:crosscheck_diff, Diff).
+	
 
 
 
@@ -205,7 +211,7 @@
 
 
  evaluate(Crosscheck_uri, Sd, Term, Value) :-
-	(	evaluate2(Sd, Term, Value)
+	(	evaluate2(Crosscheck_uri, Sd, Term, Value)
 	->	true
 	;	Value = evaluation_failed(Term, $>gensym(evaluation_failure))),
 
@@ -213,12 +219,12 @@
 	doc_add(Crosscheck_uri, kb:checked_value, Value).
 
 
- evaluate2(Sd, report_value(Key), Values_List) :-
+ evaluate2(Crosscheck_uri, Sd, report_value(Key), Values_List) :-
 	path_get_dict(Key, Sd, Values_List).
 		
 /* get vector of values in normal side, of an account, as provided by tree of entry(..) terms. Return [] if not found. */
 
- evaluate2(Sd, account_balance(Report_Id, Acct), Values_List) :-
+ evaluate2(Crosscheck_uri, Sd, account_balance(Report_Id, Acct), Values_List) :-
 	/* get report out of static data, such as "reports/pl/current" */
 	*path_get_dict(Report_Id, Sd, Report_wrapper),
 
@@ -227,30 +233,23 @@
 	Entries = Report_wrapper.entries,
 	assertion(is_list(Entries)),
 
-	findall(
-		Values_List,
-		report_report_entry_normal_side_values_by_acct(Entries, Acct, Values_List),
-		Values_List0
-	),
-	assertion(Values_List=[_]), %??
+	resolve_account(Acct, Account_uri),
+	accounts_report_entry_by_account_uri(Entries, Account_uri, Entry),
+	entry_normal_side_values(Entry, Account_uri, Values_List),
 
 	% maplist(link_crosscheck_to_vector..
 
 	vec_sum(Values_List0, Values_List).
 
-  evaluate2(_, fact_value(Aspects), Values_List) :-
+	
+
+
+  evaluate2(Crosscheck_uri, _, fact_value(Aspects), Values_List) :-
 	evaluate_fact2(Aspects, Values_List).
 
- evaluate2(_, Vec, Vec) :-
-	is_list(Vec).
 
- report_report_entry_normal_side_values_by_acct(Entries, Acct, Values_List) :-
-	assertion(is_list(Entries)),
-	resolve_account(Acct, Account_uri),
-	/* pick the entry out of Entries, and get the normal side values */
-	%report_entry_normal_side_values(Entries, Account_uri, Values_List).
-	accounts_report_entry_by_account_uri(Entries, Account_uri, Entry),
-	entry_normal_side_values(Entry, Account_uri, Values_List).
+ evaluate2(Crosscheck_uri, _, Vec, Vec) :-
+	is_list(Vec).
 
 
  check_account_is_zero(Sr, Specifier) :-
