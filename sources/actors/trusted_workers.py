@@ -1,12 +1,15 @@
 #sys.path.append(os.path.normpath(os.path.join(os.path.dirname(__file__), '../common/libs/misc')))
 import subprocess
 import sys, os
+import time
 import urllib
 from pathlib import Path, PosixPath
 from shutil import make_archive
 
 import rdflib
 import rdflib.plugins.serializers.nquads
+import requests
+
 import agraph
 from tasking import remoulade
 import logging
@@ -19,6 +22,11 @@ log.debug("debug from trusted_workers.py")
 log.info("info from trusted_workers.py")
 log.warning("warning from trusted_workers.py")
 
+
+
+
+class RobustException(Exception):
+	pass
 
 
 
@@ -35,7 +43,7 @@ def postprocess(job, request_directory, tmp_name, tmp_path, uris, user, public_u
 		#generate_yed_file(g, tmp_path)
 		#generate_gl_json(g)
 		
-		# todo export xlsx's
+		generate_result_xlsx()
 
 		result_tmp_directory_name = uris.get('result_tmp_directory_name', '')
 		
@@ -57,13 +65,20 @@ def postprocess(job, request_directory, tmp_name, tmp_path, uris, user, public_u
 def generate_result_xlsx(tmp_path):
 	f = tmp_path / '000000_doc_result_sheets.turtle'
 	if f.is_file():
-		g=rdflib.graph.ConjunctiveGraph()
-		log.debug(f"load {f} ...")
-		g.parse(f, format='turtle')
-		log.debug(f"load {f} done.")
+		# g=rdflib.graph.ConjunctiveGraph()
+		# log.debug(f"load {f} ...")
+		# g.parse(f, format='turtle')
+		# log.debug(f"load {f} done.")
 
 		# call CSharpServices to generate xlsx
-
+		start_time = time.time()
+		r = requests.post(os.environ['CSHARP_SERVICES_URL'] + '/rdf_to_xlsx', json={'output_directory': tmp_path, 'input_file': str(f)})
+		r.raise_for_status()
+		r = r.json()
+		if r.get('error'):
+			raise RobustException(r.get('error'))
+		
+		
 
 
 
