@@ -90,7 +90,11 @@
 		)
 	),
 	(	Exception \= none
-	->	!handle_processing_exception(Exception)
+	->	(
+			!handle_processing_exception(Exception),
+			format(user_error, '~n~q~n', Exception),
+			flush_output
+		)
 	;	true),
 	!process_request2.
 
