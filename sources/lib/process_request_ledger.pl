@@ -270,7 +270,7 @@ an ST - "Statement Transaction", originally "bank statement transaction", is now
 	[
 		(current,'',Static_Data),
 		(since_beginning,'_since_beginning',Static_Data.put(start_date, date(1,1,1)))
-	],
+	],%gtrace,
 	maplist(
 		(
 			[

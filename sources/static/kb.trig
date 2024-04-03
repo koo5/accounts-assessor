@@ -358,7 +358,11 @@ report_entries:misc rdftab:category rdftab:technical .
 l:has_used_unit rdftab:category rdftab:technical .
 l:rdf_explorer_base rdftab:category rdftab:technical .
 l:has_result_data_uri_base rdftab:category rdftab:technical .
-
+ l:result_data_uri_base rdftab:category rdftab:technical .
+ l:cashflow rdftab:category rdftab:technical .
+ l:job_handle rdftab:category rdftab:technical .
+ l:taxonomy_url_base rdftab:category rdftab:technical .
+ 
 
 
 <http://www.w3.org/2000/01/rdf-schema#label> rdftab:category rdftab:identificational . 

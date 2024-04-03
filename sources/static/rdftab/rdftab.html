@@ -14,40 +14,63 @@
 <body>
 
 <div id="top">
-	<node :node="node"></node>
+	<node_outer :node="node"></node_outer>
 </div>
 
 <script type="text/javascript">
 	'use strict';
 
-	function Node(node_n3, focused_graph)
+	function Node(node_n3)
 	{
 		this.node_n3 = node_n3;
 		this.term={short: node_n3};
 		this.sources=[{msg: "loading..."}];
-		this.focused_graph = focused_graph;
 	}
 
-	Vue.component('node', {
+	Vue.component('node_outer', {
 		props: ['node'],
 		template: `
         <span>
-          <small>resource</small>
-          <b><term :node="node"  :term="node.term"></term></b>
-          <small>and its properties:</small>
+          <b><term :node="node" :term="node.term"></term></b>
+          properties:
+          <node :node="node"/>
+        </span>
+		`,
+		methods: {}
+	});
+
+	Vue.component('node', {
+		props: ['node', 'is_list_tail'],
+		template: `
+        <span :class="{ 'focusedGraph' : false }">
           <span v-for="source in node.sources">
               <div v-if="source.msg!='loaded'">
                 <small>({{ source.msg }})</small>
               </div>
           </span>
-          
-          <table v-if="node.props" :class="{ 'focusedGraph' : false }">
-                    
+
+          <li v-if="node.is_list_tail">
+			  <node :node="node.list_item"/>
+          </li>
+
+			<span v-else-if="node.list_item">
+				<ol>
+					<li>
+						<node :node="node.list_item" :is_list_tail="true"/>
+					</li>
+				</ol>
+			</span>
+
+			<span v-else-if="node.uri=='http://www.w3.org/1999/02/22-rdf-syntax-ns#nil'">
+				<small>(list end)</small>
+			</span>
+
+          <table v-else-if="node.props">
                 <thead>
                       <tr>
                         <th>property</th>
                         <th>value</th>
-                        <th>id</th>
+                        <th>source</th>
                       </tr>
                     </thead>
   
@@ -55,12 +78,12 @@
                       <tr v-for="prop in node.props" :key="prop.id">
 
                           <td :class="{ 'general' : prop.category?.fake == 'general' }">
-                              <term_expandable :node="node"  :term="prop.p" :key="prop.p.id" />
+                              <term :node="node"  :term="prop.p" :key="prop.p.id" />
                           </td>
-                          <td :class="{ 'focusedGraphAndGeneral' : prop.g.uri == node.focused_graph && prop.category?.fake == 'general' }">                           
-                              <term_expandable :node="node"  :term="prop.o" :key="prop.o.id" />
+                          <td>                           
+                              <term_expandable :node="node"  :term="prop.o" :key="prop.o.id" :interesting="prop.g.uri == this.$focused_graph && prop.category?.fake == 'general'"/>
                           </td>
-                          <td :class="{ 'focusedGraph' : prop.g.uri == node.focused_graph }">
+                          <td :class="{ 'focusedGraph' : prop.g.uri == this.$focused_graph, graph : true }">
                               <term_expandable :node="node"  :term="prop.g" :key="prop.g.id"/>
                           </td>
 
@@ -68,10 +91,8 @@
               </tbody>
           </table>
           
-          <hr>
-
           <small v-if="node.tools">
-              browse <b><term :node="node" :term="node.term"></term></b> also in:
+              browse {{ node.term.n3 }} also in:
               <ul>
               
                   <li  v-for="tool in node.tools">
@@ -89,30 +110,27 @@
 
   
  Vue.component('term_expandable', {
-     props: ['term', 'node'],
+     props: ['term', 'node', 'interesting'],
      template: `
-<div>
-    <button v-if="term.literal_str || term.uri" @click="toggle_expanded" >{{ term.wtf ? '-' : ' + ' }}</button>
+<div :class="{ 'expanded' : term.wtf }">
+    <div :class="{ 'focusedGraphAndGeneral' : interesting }">
+        <button v-if="(term.literal_str !== undefined) || term.uri" @click="toggle_expanded" >{{ term.wtf ? '-' : ' + ' }}</button><term :term="term" :node="node"/>
+    </div>
     
-    <template v-if="term.wtf">
-            <node :node="term.embedded_node" :key="term.id" />
-    </template>
-    <template v-else>
-            <term :term="term" :node="node"/>
-    </template>
-
+    <Transition>
+            properties: <node v-if="term.wtf" :node="term.embedded_node" :key="term.id" />
+    </Transition>
 </div>          
     `,
      methods: {
          toggle_expanded: function () {
              var wtf = !this.term.wtf;
              console.log("toggle_expanded:" + wtf);
-             if (wtf && !this.term.embedded_node.node_n3 && !this.term.loading) 
+             if (wtf && !this.term.loading && !this.term.embedded_node.node_n3) 
              {
                  this.term.loading = true;
-                 let n = new Node(this.term.n3, this.node.focused_graph);
+                 let n = new Node(this.term.n3);
                  n.term.href = this.term.href;
-                 //Vue.set(this.term, 'embedded_node', this.term.embedded_node);
                  load_node_data_all(n, (e) => {this.term.loading = false;}).then(
                      () => {
                          console.log("loaded");
@@ -136,50 +154,16 @@
 
 Vue.component('term', {
 		props: ['term', 'node'],
-		template: `
-        <span>
-              <span v-if="term?.reverse">
-                  is
-              </span>
-              <template  v-if="term === undefined">
-
-              </template>
-              <template  v-else-if="term.fake">
-                  <span>
-                        {{ term.fake }}
-                  </span>
-              </template>
-              <template v-else-if="typeof term == 'string'">
-                <span class="identifier">
-                    {{ term }}
-                </span>
-              </template>
-              <template  v-else-if="term.literal_str">
-                  <span>
-                        <a :href="term.href + '&focused-graph=' + node.focused_graph">{{ term.literal_str }}</a>
-                  </span>
-              </template>
-              <template v-else-if="term.label">
-                  <span class="identifier" >
-                        <a :href="term.href + '&focused-graph=' + node.focused_graph">{{ term.label.l }}</a>
-                  </span>
-              </template>
-              <template v-else-if="term.short">
-                  <span class="identifier">
-                        <a :href="term.href + '&focused-graph=' + node.focused_graph">{{ term.short }}</a>
-                  </span>
-              </template>
-              <template v-else-if="term.uri">
-                  <span class="identifier">
-                        <a :href="term.href + '&focused-graph=' + node.focused_graph">{{ term.uri }}</a>
-                  </span>
-              </template>
-              <template v-else>
-                        ???
-              </template>
-              <span v-if="term?.reverse">
-                  of
-              </span>
+		// https://github.com/vuejs/vue/issues/9208
+		template: `<span>
+<span v-if="term?.reverse">is </span>
+<span v-else-if="term?.forward">has </span><span  v-if="term === undefined"></span><span  v-else-if="term.fake !== undefined"><span>{{ term.fake }}</span></span><template v-else-if="typeof term == 'string'"><span class="identifier">{{ term }}</span></template><template v-else-if="term.literal_str === ''"><small><a :href="term.href + '&focused-graph=' + this.$focused_graph">(empty string)</a></small></template><template v-else-if="term.literal_str !== undefined"><span><a :href="term.href + '&focused-graph=' + this.$focused_graph">{{ term.literal_str }}</a></span></template><template v-else-if="term.label"><span class="identifier" ><a :href="term.href + '&focused-graph=' + this.$focused_graph">{{ term.label.l }}</a></span></template><template v-else-if="term.short"><span class="identifier"><a :href="term.href + '&focused-graph=' + this.$focused_graph">{{ term.short }}</a></span></template><template v-else-if="term.uri"><span class="identifier"><a :href="term.href + '&focused-graph=' + this.$focused_graph">{{ term.uri }}</a></span></template>
+<template v-else>
+???
+</template>
+<span v-if="term?.reverse">
+of
+</span>
           </span>
 		`,
 		methods: {}
@@ -198,7 +182,7 @@ Vue.component('term', {
 						).catch(
 							(error) => {
 							  node.sources[0].msg = "error: " + error;
-							  fail_callback(error) 
+							  fail_callback && fail_callback(error)
               }
             )
 		]);
@@ -224,26 +208,50 @@ Vue.component('term', {
 		);
 	}
 
-	function assign_node_data1(node, result)
-	{
+	function assign_node_data1(node, result) {
 		console.log("assign_node_data1");
 		console.log(result);
 		//node.props.push(result.props);
 		for (var key in result) {
-		  if (result.hasOwnProperty(key)) {
-		    node[key] = result[key];
-		  }
+			if (result.hasOwnProperty(key)) {
+				node[key] = result[key];
+			}
+		}
+		load_list_item(node);
+
+	}
+
+	function load_list_item(node) {
+		console.log("load_list_item:"+(node.node_n3));
+		let first = undefined;
+		let rest = undefined;
+
+		if (node.props) {
+			node.props.forEach(function (prop) {
+				if (prop.p.uri == 'http://www.w3.org/1999/02/22-rdf-syntax-ns#first') {
+					first = prop.o;
+				} else if (prop.p.uri == 'http://www.w3.org/1999/02/22-rdf-syntax-ns#rest') {
+					rest = prop.o;
+				}
+			});
+		}
+
+		console.log("first:");console.log(first);
+		console.log("rest:");console.log(rest);
+		if (first && rest) {
+			node.list_item = new Node(first.node_n3);
+			load_node_data_all(rest);
 		}
 	}
-	
+
 	const searchParams = new URLSearchParams(window.location.search);
-	const node_n3 = searchParams.get('node') || '<https://rdf.lodgeit.net.au/v1/request#Result>';
-	const focused_graph = searchParams.get('focused-graph');
+
+	Object.defineProperty(Vue.prototype, 'focused_graph', { value: searchParams.get('focused-graph') });
 
 	var vm = new Vue({
 		el: '#top',
 		data: {
-			node: new Node(node_n3, focused_graph)
+			node: new Node(searchParams.get('node') || '<https://rdf.lodgeit.net.au/v1/request#Result>'),
 		},
 		mounted: function ()
 		{
@@ -252,7 +260,7 @@ Vue.component('term', {
 		}
 	});
   
-  
+
   document.addEventListener('DOMContentLoaded', (event) => {
     const link = document.getElementById('stylesheet');
     link.href = link.href + '?v=' + new Date().getTime();

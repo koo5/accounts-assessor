@@ -91,6 +91,7 @@ def get(user, node: str):
 				g2['fake'] = '(default)'
 
 			if s is None:
+				p2['forward'] = True
 				result['props'].append(dict(category=c2, p=p2, o=o2, g=g2))
 			elif o is None:
 				p2['reverse'] = True
@@ -129,14 +130,14 @@ def get(user, node: str):
 	add_href(result['term'])
 	
 	
-	if result['term'].get('short') or result['term'].get('label'):
-		result['props'].append(dict(
-			g=dict(fake='(rdftab)'),
-			category=dict(fake='identificational'),
-			p=dict(fake='full URI'), 
-			o=dict(fake=agraph_node.getURI())
-			))
-
+	# if result['term'].get('short') or result['term'].get('label'):
+	# 	result['props'].append(dict(
+	# 		g=dict(fake='(rdftab)'),
+	# 		category=dict(fake='identificational'),
+	# 		p=dict(fake='full URI'),
+	# 		o=dict(fake=agraph_node.getURI())
+	# 		))
+	#
 
 	for prop in result['props']:
 		assign_best_display2(prop['g'])
@@ -152,17 +153,27 @@ def get(user, node: str):
 			g = prop['g'].get('best')
 		else:
 			if i != 0:
-				prop['g']['fake'] = 'same as above'
+				prop['g']['fake'] = '(same as above)'
 		
 	for prop in result['props']:
 		for node in [prop['p'], prop['o'], prop['g']]:
 			add_href(node)
 
+	for prop in result['props']:
+		for node in [prop['o']]:
+			add_list(node)
 
 	add_tools(result)
 	return result
 
-	
+
+
+
+def add_list(node):
+	pass
+
+
+
 def add_href(node):
 	if node.get('n3'):
 		node['href'] = '/static/rdftab/rdftab.html?node=' + urllib.parse.quote_plus(node['n3'])
@@ -188,9 +199,15 @@ def xnode_str(result,xn):
 		xn['datatype'] = n.getDatatype()
 		xn['language'] = n.getLanguage()
 		
-	if isinstance(n, agraph.franz.openrdf.model.value.URI):
+	elif isinstance(n, agraph.franz.openrdf.model.value.URI):
 		xn['uri'] = n.getURI()
 		add_uri_shortening(result, xn)
+	elif isinstance(n, agraph.franz.openrdf.model.value.BNode):
+		#logger.info(f"{n.__dir__()=}")
+		xn['uri'] = n.getId()
+	else:
+		logger.info(f"{n.__dir__()=}")
+		xn['fake'] = '? ' + str(n)
 
 
 
@@ -223,7 +240,7 @@ def add_uri_labels(result, xn):
 		xn['label']=False
 
 
-@cachetools.cached({})		
+@cachetools.cached({})
 def uri_labels(conn, node):
 
 	labels = []
@@ -243,9 +260,31 @@ def uri_labels(conn, node):
 		for bindingSet in results:
 			labels.append(dict(l=bindingSet.getValue("l").getLabel(), g=bindingSet.getValue("g")))
 	return labels
-	
-	
-	
+
+
+#
+# @cachetools.cached({})
+# def list_items(conn, node):
+#
+# 	items = []
+#
+# 	queryString = """
+# 	PREFIX franzOption_defaultDatasetBehavior: <franz:rdf>
+#
+# 	SELECT ?list ?first ?rest
+# 	{
+#   			{GRAPH ?g { ?list rdf:first ?first . ?list rdf:rest ?rest . }} UNION { ?list rdf:first ?first . ?list rdf:rest ?rest . }
+# 	} LIMIT 1
+# 	"""
+# 	tupleQuery: agraph.TupleQuery = conn.prepareTupleQuery(QueryLanguage.SPARQL, queryString)
+# 	tupleQuery.setBinding("list", node)
+# 	results: agraph.TupleQueryResult
+# 	with tupleQuery.evaluate() as results:
+# 		for bindingSet in results:
+# 			items.append(dict(=bindingSet.getValue("l").getLabel(), g=bindingSet.getValue("g")))
+# 	return labels
+
+
 
 def add_uri_comments(result, xn):
 	labels = []

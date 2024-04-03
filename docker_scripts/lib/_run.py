@@ -748,8 +748,9 @@ class ExcThread(threading.Thread):
 			task = ''
 			#if self.task:
 			#	task = ' (' + str(self.task) + ')'
-			msg = f"{self.getName()}{task} threw an exception: {self.exc[1]}"
-			logger.crit(msg)
+			task = self.pretty_str()
+			msg = f"{self.getName()} - {task} threw an exception: {self.exc[1]}"
+			logger.critical(msg)
 			#exit(1)
 			new_exc = Exception(msg)
 			raise new_exc.with_traceback(self.exc[2])
