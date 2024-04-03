@@ -173,6 +173,8 @@
  	
 	evaluate(Crosscheck_uri, Sd, A, A2),
 	evaluate(Crosscheck_uri, Sd, B, B2),
+	doc_add(Crosscheck_uri, kb:left_side, A2),
+	doc_add(Crosscheck_uri, kb:right_side, B2),
 
 	(
 	 crosscheck_compare(A2, B2)
@@ -213,10 +215,7 @@
  evaluate(Crosscheck_uri, Sd, Term, Value) :-
 	(	evaluate2(Crosscheck_uri, Sd, Term, Value)
 	->	true
-	;	Value = evaluation_failed(Term, $>gensym(evaluation_failure))),
-
-	% this is useless until the evaluate2's actually deal with a kind of data that are stored in doc, and the links can be followed. vec_sum would have to be vec_sum_with_proof, etc.
-	doc_add(Crosscheck_uri, kb:checked_value, Value).
+	;	Value = evaluation_failed(Term, $>gensym(evaluation_failure))).
 
 
  evaluate2(Crosscheck_uri, Sd, report_value(Key), Values_List) :-
