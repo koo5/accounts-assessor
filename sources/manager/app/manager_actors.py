@@ -149,7 +149,7 @@ def call_prolog_calculator(
 		request_directory=request_directory,
 		tmp_name=result_tmp_directory_name,
 		tmp_path=result_tmp_directory_path,
-		uris=result.get('uris'),
+		result=result,
 		user=worker_options['user'],
 		public_url=public_url
 	), queue_name='postprocessing',
