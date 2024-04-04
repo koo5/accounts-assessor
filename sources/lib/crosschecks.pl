@@ -218,37 +218,39 @@
 	;	Value = evaluation_failed(Term, $>gensym(evaluation_failure))).
 
 
- evaluate2(Crosscheck_uri, Sd, report_value(Key), Values_List) :-
+ evaluate2(_Crosscheck_uri, Sd, report_value(Key), Values_List) :-
 	path_get_dict(Key, Sd, Values_List).
 		
-/* get vector of values in normal side, of an account, as provided by tree of entry(..) terms. Return [] if not found. */
 
  evaluate2(Crosscheck_uri, Sd, account_balance(Report_Id, Acct), Values_List) :-
+	
 	/* get report out of static data, such as "reports/pl/current" */
+	/* it's a dict, such as creted by balance_sheet_at, where entries is a list of make_report_entry uris */
 	*path_get_dict(Report_Id, Sd, Report_wrapper),
 
-	/* it's a dict, such as creted by balance_sheet_at, where entries is a list of make_report_entry uris */
 	assertion(is_dict(Report_wrapper)),
 	Entries = Report_wrapper.entries,
 	assertion(is_list(Entries)),
 
 	resolve_account(Acct, Account_uri),
 	accounts_report_entry_by_account_uri(Entries, Account_uri, Entry),
-	entry_normal_side_values(Entry, Account_uri, Values_List),
-
-	% maplist(link_crosscheck_to_vector..
-
-	vec_sum(Values_List0, Values_List).
-
+	entry_normal_side_values(Entry, Account_uri, Values_List0),
+	assertion(is_list(Values_List0)),
 	
+	doc_add(Entry, kb:crosscheck, Crosscheck_uri), % this would be extraneous if vectors were actualy rdf objects everywhere. 
+	
+	vec_sum([Values_List0], Values_List).  % isnt this extraneous?
 
 
-  evaluate2(Crosscheck_uri, _, fact_value(Aspects), Values_List) :-
+
+  evaluate2(_Crosscheck_uri, _, fact_value(Aspects), Values_List) :-
 	evaluate_fact2(Aspects, Values_List).
 
 
- evaluate2(Crosscheck_uri, _, Vec, Vec) :-
+
+ evaluate2(_Crosscheck_uri, _, Vec, Vec) :-
 	is_list(Vec).
+
 
 
  check_account_is_zero(Sr, Specifier) :-
@@ -258,7 +260,10 @@
 	),
 	quiet_crosscheck(Sr,Crosscheck).
 
+
+
  quiet_crosscheck(Sr,Crosscheck) :-
 	evaluate_equality(_{reports:Sr}, Crosscheck, Result),
 	crosscheck_output('./', Result, _).
+
 

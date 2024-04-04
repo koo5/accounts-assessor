@@ -85,12 +85,14 @@ replace aspect(..) terms with values
  evaluate_fact_table3(Row_in, Row_out) :-
 	maplist(evaluate_fact, Row_in, Row_out).
 
+
  evaluate_fact(X, X) :-
 	X \= aspects(_).
 
  evaluate_fact(In, with_metadata(Values,In)) :-
 	evaluate_fact2(In, Values).
 
+ 
  evaluate_fact2(In,Sum) :-
 	In = aspects(_),
 	!facts_by_aspects(In, Facts),
