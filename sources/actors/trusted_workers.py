@@ -11,6 +11,7 @@ import rdflib.plugins.serializers.nquads
 import requests
 
 import agraph
+from fs_utils import find_report_by_key
 from tasking import remoulade
 import logging
 
@@ -30,12 +31,29 @@ class RobustException(Exception):
 
 
 
-
 @remoulade.actor(priority=1, time_limit=1000*60*60*24*365, queue_name='postprocessing')
-def postprocess(job, request_directory, tmp_name, tmp_path, uris, user, public_url):
-	tmp_path = Path(tmp_path)
+def postprocess(job, request_directory, tmp_name, tmp_path, result, user, public_url):
 	log.info('postprocess...')
+
+	tmp_path = Path(tmp_path)
+	uris = result.get('uris', {})
+	reports = result.get('reports', [])
+	alerts = result.get('alerts', ['internal error'])
+	result_tmp_directory_name = uris.get('result_tmp_directory_name', '???')
+	result_tmp_directory_url = find_report_by_key(reports, 'task_directory')
 	
+	
+	sections = {}
+	
+	reports_dict = {}
+	for key in  ['alerts_html', 'crosschecks_html', 'balance_sheet.html', 'profit_and_loss.html', 'cashflow_html', 'investment_report_html', 'gl_html']: 
+		for r in reports:
+			if r['key'] == key:
+				reports_dict[r['title']] = r['val']['url']
+				break
+	sections['Reports'] = reports_dict
+	
+
 	g = load_doc_dump(tmp_path)
 	if g:
 		nq_fn = generate_doc_nq_from_trig(g, tmp_path)
@@ -43,23 +61,46 @@ def postprocess(job, request_directory, tmp_name, tmp_path, uris, user, public_u
 		#generate_yed_file(g, tmp_path)
 		#generate_gl_json(g)
 		
-		generate_result_xlsx()
 
-		result_tmp_directory_name = uris.get('result_tmp_directory_name', '')
-		
-		create_html_with_link(tmp_path/'job.html', dict(
-			Job=f'../{job}',
-			Inputs=f'../{request_directory}',
+	result_sheets_fn = tmp_path / '000000_doc_result_sheets.turtle'
+	if result_sheets_fn.is_file():
+		generate_result_xlsx(tmp_path)
+		reports_dict['Excel sheets'] = result_tmp_directory_url + '/result.xlsx'
+
+
+	sections['Job']=dict(
 			Archive=f'../../view/archive/{job}/{tmp_name}',
+			Result=find_report_by_key(reports, 'task_directory'),
+			Inputs=f'../{request_directory}',
 			Rdftab='/static/rdftab/rdftab.html?'+urllib.parse.urlencode(
 					{
 						'node':						'<'+	public_url + '/rdf/results/' + result_tmp_directory_name+'/>',
 						'focused-graph':				public_url + '/rdf/results/' + result_tmp_directory_name+'/default'
 					}
-				)
+				),
+			Job=f'../{job}',
 			)
-		)
 		
+			
+	html_content = f"""
+	<!DOCTYPE html>
+	<html>
+	<body>"""
+		
+	html_content += f"""<h3>Alerts</h3>""" + str(len(alerts)) + ' alerts.'
+	
+	for section_name, section_dict in sections.items():
+		html_content += f"""<h3>{section_name}</h3>"""
+		for k,v in section_dict.items():
+			if v is not None:
+				html_content += f"""<a href="{v}">{k}</a><br>"""
+				
+	html_content += """</body>
+	</html>
+	"""
+	with open(tmp_path/'job.html', 'w') as file:
+		file.write(html_content)
+
 
 
 def generate_result_xlsx(tmp_path):
@@ -72,7 +113,7 @@ def generate_result_xlsx(tmp_path):
 
 		# call CSharpServices to generate xlsx
 		start_time = time.time()
-		r = requests.post(os.environ['CSHARP_SERVICES_URL'] + '/rdf_to_xlsx', json={'output_directory': tmp_path, 'input_file': str(f)})
+		r = requests.post(os.environ['CSHARP_SERVICES_URL'] + '/rdf_to_xlsx', json={'output_directory': str(tmp_path), 'input_file': str(f)})
 		r.raise_for_status()
 		r = r.json()
 		if r.get('error'):
@@ -93,27 +134,6 @@ def print_actor_error(actor_name, exception_name, message_args, message_kwargs):
 
 
 remoulade.declare_actors([print_actor_error, postprocess])
-
-
-def create_html_with_link(filename, links):
-    html_content = f"""
-    <!DOCTYPE html>
-    <html>
-    <body>"""
-    for k,v in links.items():
-    	html_content += f"""<a href="{v}">{k}</a><br>"""
-    html_content += """</body>
-    </html>
-    """
-    with open(filename, 'w') as file:
-        file.write(html_content)
-        
-
-# @remoulade.actor(priority=1, time_limit=1000*60*60*24*365, queue_name='postprocessing')
-# def archive(tmp_name, tmp_path, uris, user):
-# 	pass
-# 
-# remoulade.declare_actors([archive])
 
 
 
