@@ -28,9 +28,6 @@
 	add_report_file(_Report_Uri, -10, Key, Title, Report_File_URL).
 
 
- make_same_named_symlinked_json_report(Json, Name) :-
-/* make a json report (with Name + an increasing id), and make a symlink to the last version */
-	make_symlinked_json_report(Json, Name, Name).
 
  make_symlinked_json_report(Json, Base, Symlink_name) :-
 	!make_json_report(Json,	Base, Final_fn),

@@ -81,6 +81,12 @@ def postprocess(job, request_directory, tmp_name, tmp_path, result, user, public
 			Job=f'../{job}',
 			)
 		
+	sections['Robust'] = {
+		'Docs':'/static/docs/Robust_documentation.html',
+		'Source code':'https://github.com/lodgeit-labs/accounts-assessor/', 
+		'Server version': '/static/git_info.txt',
+	}
+		
 			
 	html_content = f"""
 	<!DOCTYPE html>
