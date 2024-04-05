@@ -1,4 +1,6 @@
 import logging,json, subprocess, os, sys, shutil, shlex
+import select
+
 sys.path.append(os.path.normpath(os.path.join(os.path.dirname(__file__), '../common/libs/misc')))
 from tmp_dir_path import git, sources, get_tmp_directory_absolute_path, ln
 from fs_utils import command_nice, flatten_lists
@@ -94,7 +96,11 @@ def call_prolog(
 		info_fd.write('\nrequest:\n')
 		info_fd.write(json.dumps(msg, indent=4))
 		info_fd.write('\n')
-
+		info_fd.write('\nmachine:\n')
+		info_fd.flush()
+		if worker_options.get('machine_info', False):
+			subprocess.check_call(shlex.split('inxi -c 0 --host -Fxz'), stdout=info_fd)
+			info_fd.write('\n')
 
 	# construct the command line
 
@@ -151,8 +157,47 @@ def call_prolog(
 	if worker_options['dry_run']:
 		return {'result':'ok'}, []
 
-	p = subprocess.Popen(cmd, universal_newlines=True, stdout=subprocess.PIPE, env=env)
-	(stdout_data, stderr_data) = p.communicate()
+
+	stdout_data = ''
+
+	with open(worker_tmp_path + '/mem_prof.txt', 'w') as stderr_log:
+	
+		p = subprocess.Popen(cmd, universal_newlines=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE, env=env)
+	
+		# Make stdout and stderr non-blocking
+		fd_stdout = p.stdout.fileno()
+		fd_stderr = p.stderr.fileno()
+		os.set_blocking(fd_stdout, False)
+		os.set_blocking(fd_stderr, False)
+		
+		# Continuously read stdout and stderr while the process is running
+		end = False
+		while True:
+			reads = [p.stdout, p.stderr]
+			readable, _, _ = select.select(reads, [], [], 0.1)
+		
+			if p.stdout in readable:
+				stdout_line = p.stdout.readline()
+				if stdout_line:
+					print("STDOUT:", stdout_line, end='')
+					#log.info("STDOUT: %s", stdout_line)
+				stdout_data += stdout_line
+		
+			if p.stderr in readable:
+				stderr_line = p.stderr.readline()
+				if stderr_line:
+					print("STDERR:", stderr_line, end='')
+					if worker_options.get('worker_log'):
+						log.write(stderr_line)
+		
+			if end:
+				break
+			if p.poll() is not None:
+				end = True
+		
+	p.stdout.close()
+	p.stderr.close()	
+	
 
 	output_files = files_in_dir_recursive(worker_tmp_path)
 

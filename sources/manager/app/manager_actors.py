@@ -143,7 +143,7 @@ def call_prolog_calculator(
 	ln('../' + result_tmp_directory_name, params['final_result_tmp_directory_path'] + '/completed')
 
 	
-	log.info('postprocess(%s, %s, %s)' % (result_tmp_directory_path, result.get('uris'), worker_options['user']))
+	log.info('postprocess(%s, %s, %s)' % (result_tmp_directory_path, result, worker_options['user']))
 	trusted_workers.postprocess.send_with_options(kwargs=dict(
 		job=params['final_result_tmp_directory_name'],
 		request_directory=request_directory,

@@ -13,6 +13,7 @@ ARG APPPATH
 WORKDIR /app/
 
 RUN     apt-get install -y \
+        inxi \
         git \
         build-essential cmake ninja-build pkg-config \
         ncurses-dev libreadline-dev libedit-dev \

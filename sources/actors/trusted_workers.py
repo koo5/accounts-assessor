@@ -63,10 +63,10 @@ def postprocess(job, request_directory, tmp_name, tmp_path, result, user, public
 		
 
 	result_sheets_fn = tmp_path / '000000_doc_result_sheets.turtle'
-	if result_sheets_fn.is_file():
+	if result_tmp_directory_url and result_sheets_fn.is_file():
 		generate_result_xlsx(tmp_path)
 		reports_dict['Excel sheets'] = result_tmp_directory_url + '/result.xlsx'
-
+		
 
 	sections['Job']=dict(
 			Archive=f'../../view/archive/{job}/{tmp_name}',
