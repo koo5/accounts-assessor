@@ -85,10 +85,13 @@
 	->	true
 	;	Description3 = ""),
 
+	doc_new_(l:vec, Vec),
+	doc_add(Vec, rdf:value, Vector),
+
 	doc_add_s_transaction(
 		$>!read_date(Item, ic:date),
 		$>atom_string(<$, $>rpv(Item, ic:action_verb)),
-		Vector,
+		Vec,
 		account_name_ui_string(First_account),
 		Exchanged,
 		misc{desc2:Description2,desc3:Description3},

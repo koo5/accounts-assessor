@@ -40,7 +40,6 @@ german_bank_csv_row(Account, Currency, Row, S_Transaction) :-
 	(	Side == 'H'
 	->	Money_Amount is Money_Number
 	;	Money_Amount is -Money_Number),
-	Vector = [coord(Currency, Money_Amount)],
 	string_codes(Description, Description2),
 	(	phrase(gbtd2(desc(Verb,Exchanged)), Description2)
 	->	true
@@ -58,7 +57,11 @@ german_bank_csv_row(Account, Currency, Row, S_Transaction) :-
 			Exchanged2 = vector(E2)
 		)
 	),
-	doc_add_s_transaction(Date, Verb, Vector, bank_account_name(Account), Exchanged2, misc{desc2:Description,desc3:Description_Column2}, S_Transaction).
+		
+	doc_new_(l:vec, Vec),
+	doc_add(Vec, rdf:value, [coord(Currency, Money_Amount)]),
+	
+	doc_add_s_transaction(Date, Verb, Vec, bank_account_name(Account), Exchanged2, misc{desc2:Description,desc3:Description_Column2}, S_Transaction).
 
 german_bank_money(Money_Atom0, Money_Number) :-
 	filter_out_chars_from_atom(([X]>>(X == '\'')), Money_Atom0, Money_Atom1),

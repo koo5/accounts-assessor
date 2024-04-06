@@ -106,11 +106,14 @@
 		)
 	->	(
 			!doc(Bank_Account, l:name, Bank_Account_Name),
+			
+			doc_new_(l:vec, Vec),
+			doc_add(Vec, rdf:value, [Opening_Balance]),
+			
 			!c(doc_add_s_transaction(
-				date(1,1,1),
-				%Opening_Date,
+				date(1,1,1),%Opening_Date,
 				'Bank_Opening_Balance',
-				[Opening_Balance],
+				Vec,
 				bank_account_name(Bank_Account_Name),
 				vector([]),
 				misc{desc2:'Bank_Opening_Balance'},
@@ -220,10 +223,13 @@
 
 	!extract_exchanged_value2(Money_side, Units_type, Units_count, Exchanged),
 
+	doc_new_(l:vec, Vec),
+	doc_add(Vec, rdf:value, [Coord]),
+
 	!doc_add_s_transaction(
 		Date,
 		Action_verb_name,
-		[Coord],
+		Vec,
 		bank_account_name(Account_Name),
 		Exchanged,
 		misc{desc2:Description2},
