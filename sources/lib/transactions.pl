@@ -22,17 +22,19 @@ transaction_field(T, F, X) :-
 	doc(V, rdf:value, X).
 */
 
+ % todo ensure rdf vector?
  make_transaction2(Origin, Date, Description, Account, Vector, Type, Uri) :-
  	push_format('make_transaction2: ~q ~q ~q ~q', [Date, Description, $>account_name(Account), $>round_term(Vector)]),
  	Date = date(_,_,_),
 	flatten([Description], Description_Flat),
 	atomics_to_string(Description_Flat, Description_Str),
+	(atom(Vector) -> true ; doc_new_vec(Vector, Vec)),
 	doc_new_uri(gl_tx, Uri),
 	doc_add(Uri, rdf:type, l:transaction, transactions),
 	doc_add(Uri, transactions:day, Date, transactions),
 	doc_add(Uri, transactions:description, Description_Str, transactions),
 	doc_add(Uri, transactions:account, Account, transactions),
-	doc_add(Uri, transactions:vector, Vector, transactions),
+	doc_add(Uri, transactions:vector, Vec, transactions),
 	doc_add(Uri, transactions:type, Type, transactions),
 	doc_add(Uri, transactions:origin, Origin, transactions),
 	pop_context.
@@ -59,7 +61,8 @@ make_dr_cr_transactions(
 	transaction_day(T, Day),
 	transaction_description(T, Description),
 	transaction_account(T, Account),
-	transaction_vector(T, Vector),
+	transaction_vector(T, Vec),
+	val(Vec, Vector),
 	transaction_type(T, Type),
 	D = _{
 		date: Day,

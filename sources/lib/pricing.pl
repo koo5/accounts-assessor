@@ -137,7 +137,7 @@ Exchange_Rates are parsed from the request xml.
 
 infer_unit_cost_from_last_buy_or_sell(Unit, [ST|_], Exchange_Rate) :-
 	s_transaction_exchanged(ST, vector([coord(Unit, Goods_D)])),
-	s_transaction_vector(ST, [coord(Currency, Cost_D)]),
+	!s_transaction_vector(ST, [coord(Currency, Cost_D)]),
 	{Rate = -Cost_D / Goods_D},
 	Exchange_Rate = exchange_rate(_,Unit,Currency,Rate),
 	!.

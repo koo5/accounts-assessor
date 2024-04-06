@@ -223,10 +223,10 @@ increase_realized_gains(St, Description, Trading_Account_Id, Sale_Vector, Conver
 	number_coord(_, Goods_Integer, Goods_Coord),
 	{Goods_Positive = -Goods_Integer},
 
-	Sale_Vector = [coord(Sale_Currency, Sale_Currency_Amount)],
+	val(Sale_Vector, [coord(Sale_Currency, Sale_Currency_Amount)]),
 	{Sale_Currency_Unit_Price = Sale_Currency_Amount / Goods_Positive},
 	
-	[coord(Converted_Currency, Converted_Debit)] = Converted_Vector,
+	val(Converted_Vector, [coord(Converted_Currency, Converted_Debit)]),
 	{Sale_Unit_Price_Amount = Converted_Debit / Goods_Positive},
 	
 	maplist(

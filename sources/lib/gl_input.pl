@@ -259,7 +259,7 @@ todo, refactor: reallocation_tx_set_spec(Rows, [A_tx|Txs]) :-
 		Parameters).
 
  find_account_by_specification(Account_string_uri, Parameters, Account) :-
- 	value(Account_string_uri, Text),
+ 	val(Account_string_uri, Text),
  	push_context($>format(string(<$), 'interpret account specification string: ~q', [Text])),
 
  	once(c(!'use grammar to interpret text'(inp_account_specifier(Specifier), Text))),
@@ -304,7 +304,7 @@ fill_slots([], [], []) :- !.
 fill_slots([slot(_)|Slots], [Param|Params], [P2|RoleT]) :-
 	!fill_slots(Slots, Params, RoleT),
 	!,
-	atom_string(P2, $>!value(Param)).
+	atom_string(P2, $>!val(Param)).
 
 fill_slots([fixed(Part)|Slots], Params, [Part|RoleT]) :-
 	atom(Part),
@@ -314,7 +314,7 @@ fill_slots([fixed(Part)|Slots], Params, [Part|RoleT]) :-
 fill_slots([], [Param|_], []) :-
 %gtrace,
 	throw_string([
-		'no slot for parameter "', $>!value(Param), '", specified in ', $>sheet_and_cell_string(Param)
+		'no slot for parameter "', $>!val(Param), '", specified in ', $>sheet_and_cell_string(Param)
 	]).
 
 fill_slots([H|_], [], []) :-

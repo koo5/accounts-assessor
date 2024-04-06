@@ -4,7 +4,7 @@
 'extract action verbs' :-
 	(	get_optional_singleton_sheet_data(ic_ui:action_verbs_sheet, Data)
 	->	(
-			!value(Data, DataValue),
+			!val(Data, DataValue),
 			!doc_list_items(DataValue, Items),
 			maplist(!'extract action verb', Items)
 		)

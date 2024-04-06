@@ -79,7 +79,8 @@ doc_set_property_helper(Prefix,S1,S2,P,V,G,Field) :-
 	doc(T, rdf:type, l:s_transaction, transactions),
 	s_transaction_day(T, Date),
 	s_transaction_type_id(T, Action_verb),
-	s_transaction_vector(T, Money),
+	s_transaction_vector(T, V),
+	val(V, Money),
 	s_transaction_account(T, Account),
 	s_transaction_exchanged(T, Exchanged),
 	s_transaction_misc(T, Misc),
@@ -119,8 +120,10 @@ pretty_action_verb_term_string(Str, Str).
 	->	Order = Order0
 	;	(
 	/* If a buy and a sale of same thing happens on the same day, we want to process the buy first. */
-	s_transaction_vector(T1, [coord(_, Debit1)]),
-	s_transaction_vector(T2, [coord(_, Debit2)]),
+	s_transaction_vector(T1, V1),
+	val(V1, [coord(_, Debit1)]),
+	s_transaction_vector(T2, V2),
+	val(V2, [coord(_, Debit2)]),
 	compare(Order1, Debit1, Debit2),
 	(	Order1 \= '='
 	->	Order = Order1
@@ -149,7 +152,8 @@ s_transactions_up_to(End_Date, S_Transactions_All, S_Transactions_Capped) :-
 	doc(T, rdf:type, l:s_transaction, transactions),
 	s_transaction_day(T, Day),
 	s_transaction_type_id(T, uri(Action_Verb)),
-	s_transaction_vector(T, Vector),
+	s_transaction_vector(T, V),
+	val(V, Vector),
 	!s_transaction_account(T, uri(Account)),
 	account_name(Account, Account_name),
 	s_transaction_exchanged(T, Exchanged),
