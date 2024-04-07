@@ -36,7 +36,8 @@
 	maplist(exchange_amount(Exchange_Rates, Day, Bases), AsV, As_ExchangedV),
 	vec_reduce(As_ExchangedV, BsV),
 	doc_new_vec(BsV, Bs),
-	doc_add(Bs, l:origin, As).
+	doc_add(Bs, l:origin, As),
+	doc_add(Bs, l:conversion_day, Day).
 	##pop_context.
 
  exchange_amount_throw(Exchange_Rates, Day, [Base], coord(Unit, Debit), Amount_Exchanged) :-

@@ -196,11 +196,12 @@ cf_scheme_0_entry_for_account(
 
  cf_scheme_0_bank_account_currency_movement_entry(Sd, Account, Currency_Movement_Entry) :-
 	!bank_gl_account_currency_movement_account(Account, Currency_Movement_Account),
+
 	!net_activity_by_account(Sd, Currency_Movement_Account, Vec0, _),
 	!vec_inverse(Vec0, Vec),
-	!doc_new_vec_with_source(Vec, l:net_activity_by_account, Vec_Uri),
+	
 	!make_report_entry('Currency movement', [], Currency_Movement_Entry),
-	!doc_add(Currency_Movement_Entry, report_entries:own_vec, Vec_Uri).
+	!doc_add(Currency_Movement_Entry, report_entries:own_vec, Vec).
 
 /*
 cf_entry_by_category(
@@ -261,21 +262,19 @@ cf_entry_by_category(
 
 
  cf_instant_tx_vector_conversion(Sd, Tx, Uri) :-
-	/*very crude metadata for now*/
-	doc_new_(rdf:value, Uri),
-	Source =	vec_change_bases(Sd.exchange_rates, $>transaction_day(Tx), Sd.report_currency, $>transaction_vector(Tx), Vec),
-	call(Source),
-	doc_add(Uri, rdf:value, Vec),
-	doc_add(Uri, l:source, (vec_change_bases)).
+	vec_change_bases(Sd.exchange_rates, $>transaction_day(Tx), Sd.report_currency, $>transaction_vector(Tx), Vec).
 
 
  report_entry_fill_in_totals(Entry) :-
+
 	!report_entry_children(Entry, Children),
 	maplist(!report_entry_fill_in_totals, Children),
 	maplist(!report_entry_total_vec, Children, Child_Vecs),
+
 	(	doc(Entry, report_entries:own_vec, Own_Vec)
 	->	true
 	;	Own_Vec = []),
+
 	flatten([Own_Vec, Child_Vecs], Total_Vecs),
 
 	!vec_sum_with_proof(Total_Vecs, Total_Vec),

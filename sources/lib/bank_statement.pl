@@ -587,7 +587,8 @@ take statement/source transaction and generate a list of plain transactios.
 	pretty_term_string($>round_term(Date), Date_Str),
 	transaction_description(Transaction, Description),
 	account_name($>transaction_account(Transaction), Account),
-	transaction_vector(Transaction, Vector),
+	transaction_vector(Transaction, Vec),
+	value(Vec, Vector),
 	pretty_vector_string(Seen_Units0, Seen_Units1, Vector, Vector_Str),
 	pretty_transactions_string2(Seen_Units1, Transactions, String_Rest),
 	atomics_to_string([

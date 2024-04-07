@@ -96,12 +96,11 @@ make_dr_cr_transactions(
 
 % add up and reduce all the vectors of all the transactions, result is one vector
 
- transaction_vectors_total([], []).
+ transaction_vectors_total(Txs, Vec) :-
+ 	maplist(transaction_vector, Txs, Vecs),
+ 	vec_sum(Vecs, Vec).
+ 	doc_add(Vec, l:source, Txs).
 
- transaction_vectors_total([Hd_Transaction | Tl_Transaction], Net_Activity) :-
-	transaction_vector(Hd_Transaction, Curr),
-	transaction_vectors_total(Tl_Transaction, Acc),
-	vec_add(Curr, Acc, Net_Activity).
 
  transactions_in_account_set(Transactions_By_Account, Account_Id, Result) :-
 	findall(
@@ -193,8 +192,8 @@ make_dr_cr_transactions(
 
 
  transactions_report_currency_sum_at_(Exchange_Rates, Report_Currency, Date, Transactions, Vector_Converted) :-
-	maplist(transaction_vector, Transactions, Vectors_Nested),
-	flatten(Vectors_Nested, Vector0),
+	maplist(transaction_vector, Transactions, Vecs),
+	
 	vec_reduce(Vector0, Vector),
 	vec_change_bases(Exchange_Rates, Date, Report_Currency, Vector, Vector_Converted).
 

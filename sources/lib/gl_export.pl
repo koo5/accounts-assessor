@@ -98,7 +98,8 @@
 	!add_report_file(_Report_Uri, -10, File_name, File_name, Url).
 
  qb_csv_gl_export(Sd, Tx, Rows) :-
-	!transaction_vector(Tx, Vector),
+	!transaction_vector(Tx, Vec),
+	val(Vec, Vector),
 	maplist(!qb_csv_gl_export2(Sd, Tx), Vector, Rows).
 
  qb_csv_gl_export2(Sd, Tx, Coord0, Row) :-
