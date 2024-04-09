@@ -550,7 +550,7 @@ take statement/source transaction and generate a list of plain transactios.
 	!s_transaction_account(S_Transaction, uri(Account)),
 	!doc(Account, rdf:type, l:account, accounts).
 
-
+/*
  fill_in_missing_units(_,_, [], _, _, []).
 
  fill_in_missing_units(S_Transactions0, Report_End_Date, [Report_Currency], Used_Units, Exchange_Rates, Inferred_Rates) :-
@@ -571,7 +571,7 @@ take statement/source transaction and generate a list of plain transactios.
 		),
 		Inferred_Rates
 	).
-	
+*/	
 
 
  /*

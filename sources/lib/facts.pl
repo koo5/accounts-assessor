@@ -1,6 +1,7 @@
 /*
+test:
 mock_request :-
-	doc_init.
+	doc_init,..
 */
  make_fact(Vec, Aspects, Uri) :-
  	push_format('make_fact(~q, ~q)', [Aspects, $>round_term(Vec)]),
@@ -177,7 +178,7 @@ exp_compute(A = B) :-
 	!make_fact(B2, A).
 
 exp_eval(X, X) :-
-	is_list(X). % a vector
+	t(X, l:vec).	
 
 exp_eval(X, X2) :-
 	X = aspects(_),

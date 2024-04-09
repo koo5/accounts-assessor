@@ -10,12 +10,12 @@
 		p(["Tax Workings Reconciliation:"]),
 		table([border="1"], $>table_html([highlight_totals - true], Tbl2))
 	], Html),
-	'statement_of_taxable_income_v2' = Key,
+	
 	!add_report_page(_Report_Uri,
 		0,
 		Title_Text,
 		Html,
-		loc(file_name, $>atomic_list_concat([Key,'.html'])),
+		loc(file_name, 'statement_of_taxable_income_v2.html')),
 		statement_of_taxable_income
 	),
 	true.
@@ -27,8 +27,7 @@
 		[text('Benefits Accrued as a Result of Operations before Income Tax'),
 			aspects([
 				report - before_smsf_income_tax/pl/current,
-				account_role - 'Comprehensive_Income'])],
-		[text('Less:'), text('')]
+				account_role - 'Comprehensive_Income'])]
 	],
 
 	Rules0 = [
@@ -36,9 +35,9 @@
 		=
 		sum(
 			[
-				aspects([concept - ($>rdf_global_id(smsf_distribution_ui:non_primary_production_income))]),
-				aspects([concept - ($>rdf_global_id(smsf_distribution_ui:franked_divis_distri_including_credits))]),
-				aspects([concept - ($>rdf_global_id(smsf_distribution_ui:assessable_foreign_source_income))])
+				aspects([concept - ($>gu(smsf_distribution_ui:non_primary_production_income))]),
+				aspects([concept - ($>gu(smsf_distribution_ui:franked_divis_distri_including_credits))]),
+				aspects([concept - ($>gu(smsf_distribution_ui:assessable_foreign_source_income))])
 			]
 		)
 	],
@@ -49,6 +48,7 @@
 	],
 
 	Subtraction_rows = [
+		[text('Less:'), text('')],
 		[text('Change in Market Value'),
 			aspects([
 				report - before_smsf_income_tax/pl/current,
@@ -71,8 +71,8 @@
 		sum($>row_aspectses(Subtraction_rows)),
 
 		% assert two facts with unbound vars for values. Hoist this.
-		make_fact(aspects([concept - smsf/income_tax/'Total subtractions'])),
-		make_fact(aspects([concept - smsf/income_tax/'subtotal0'])),
+		%make_fact(aspects([concept - smsf/income_tax/'Total subtractions'])),
+		%make_fact(aspects([concept - smsf/income_tax/'subtotal0'])),
 
 		aspects([concept - smsf/income_tax/'subtotal0'])
 		=
@@ -110,7 +110,7 @@
 		=
 		sum($>row_aspectses(Addition_rows)),
 
-		make_fact(aspects([concept - smsf/income_tax/'Additions_vec'])),
+		%make_fact(aspects([concept - smsf/income_tax/'Additions_vec'])),
 
 		aspects([concept - smsf/income_tax/'After_subtractions'])
 		=
@@ -118,7 +118,7 @@
 		-
 		aspects([concept - smsf/income_tax/'Total subtractions']),
 
-		make_fact(aspects([concept - smsf/income_tax/'After_subtractions'])),
+		%make_fact(aspects([concept - smsf/income_tax/'After_subtractions'])),
 
 		aspects([concept - smsf/income_tax/'Taxable_income'])
 		=
@@ -127,8 +127,8 @@
 		aspects([concept - smsf/income_tax/'Additions_vec']),
 
 
-		make_fact(aspects([concept - smsf/income_tax/'Taxable_income'])),
-		make_fact(aspects([concept - smsf/income_tax/'Tax on Taxable Income @ 15%'])),
+		%make_fact(aspects([concept - smsf/income_tax/'Taxable_income'])),
+		%make_fact(aspects([concept - smsf/income_tax/'Tax on Taxable Income @ 15%'])),
 
 		aspects([concept - smsf/income_tax/'Tax on Taxable Income @ 15%'])
 		=
@@ -171,7 +171,7 @@
 		=
 		sum($>row_aspectses(Subtractions2_rows)),
 
-		make_fact(aspects([concept - smsf/income_tax/'Income_Tax_Payable/(Refund)'])),
+		%make_fact(aspects([concept - smsf/income_tax/'Income_Tax_Payable/(Refund)'])),
 
 		aspects([concept - smsf/income_tax/'Income_Tax_Payable/(Refund)'])
 		=
@@ -185,7 +185,7 @@
 		+
 		aspects([concept - smsf/income_tax/'ATO_Supervisory_Levy']),
 
-		make_fact(aspects([concept - smsf/income_tax/'to pay']))
+		%make_fact(aspects([concept - smsf/income_tax/'to pay']))
 	],
 
 	Rows4 = [
@@ -346,8 +346,8 @@ smsf_income_tax_reconcilliation_v2(Tbl_dict) :-
  solve_rules(Rules) :-
 	!maplist(solve_rule, Rules).
 
- solve_rule(make_fact(_Aspects)) :-
-	true.
+ %solve_rule(make_fact(_Aspects)) :-
+%	true.
 
  solve_rule('='(X, Y)) :-
 	X = aspects(X_aspects),
@@ -357,8 +357,9 @@ smsf_income_tax_reconcilliation_v2(Tbl_dict) :-
 	doc_add(Uri, l:evaluation, Evaluation).
 
  v2_exp_eval(X, X, Str) :-
-	is_list(X), % a vector
- 	term_string(X,Str).
+	t(X, l:vec),
+	val(X, V),
+ 	term_string(V, Str).
 
  v2_exp_eval(X, X2, Uri) :-
 	X = aspects(_),
