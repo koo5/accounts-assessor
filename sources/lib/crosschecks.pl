@@ -235,7 +235,7 @@
 	resolve_account(Acct, Account_uri),
 	accounts_report_entry_by_account_uri(Entries, Account_uri, Entry),
 	entry_normal_side_values(Entry, Account_uri, Values_List0),
-	assertion(is_list(Values_List0)),
+	assertion(t(Values_List0, l:vec)),
 	
 	doc_add(Entry, kb:crosscheck, Crosscheck_uri), % this would be extraneous if vectors were actualy rdf objects everywhere. 
 	
@@ -249,7 +249,7 @@
 
 
  evaluate2(_Crosscheck_uri, _, Vec, Vec) :-
-	is_list(Vec).
+	t(Vec, l:vec).
 
 
 
