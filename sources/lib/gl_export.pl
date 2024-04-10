@@ -126,6 +126,6 @@
 
  coord_converted_at_time(Sd, Date, Coord0, Coord1) :-
 	!vec_change_bases_throw(Sd.exchange_rates, Date, Sd.report_currency, [Coord0], Vec2),
-	Sd.report_currency = [Report_currency],
+	[Report_currency] = Sd.report_currency,
 	Coord1 = coord(Report_currency, _),
 	coord_vec(Coord1, Vec2).

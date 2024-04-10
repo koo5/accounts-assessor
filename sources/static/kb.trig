@@ -339,6 +339,11 @@ l:part rdfs:label "child" .
 
 l:vec rdfs:label "vector (list) of coords or values" .
 l:vec rdfs:comment "vector (list) of coords (debit or credit figures) or values (normal-side figures)" .
+l:vec rdfs:seeAlso l:coord, l:value .
+
+l:coord rdfs:comment "a debit or a credit in a ledger. Negative debit is a credit." .
+l:value rdfs:comment "value has the same structure as coord, but is used where the credit/debit distinction doesn't make sense or would be confusing. Just a number with a unit." .
+
 
 l:s_transaction rdfs:label "Source transaction (from bank statement or similar)" .
 
