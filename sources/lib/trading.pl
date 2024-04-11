@@ -61,7 +61,7 @@
 ) :-
 	result_property(l:report_currency, Report_Currency),
 	result_property(l:start_date, Start_Date),
-	Goods = [coord(Goods_Unit, Goods_Debit)],
+	val(Goods, [coord(Goods_Unit, Goods_Debit)]),
 	gains_accounts(
 		Trading_Account_Id, unrealized, $>unit_bare(Goods_Unit),
 		Currency_Movement_Account, Excluding_Forex_Account),

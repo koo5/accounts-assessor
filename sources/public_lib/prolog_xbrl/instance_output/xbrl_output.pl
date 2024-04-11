@@ -106,3 +106,34 @@
 			 	'xlink:href'=Formulas_Crosschecks,
 				'xlink:arcrole'="http://www.w3.org/1999/xlink/properties/linkbase"], [])
 		]).
+
+
+format_report_entries(_, _, _, _, _, [], []).
+
+format_report_entries(Format, Max_Detail_Level, Indent_Level, Report_Currency, Context, Entries, [Xml0, Xml1, Xml2]) :-
+	[Entry|Entries_Tail] = Entries,
+	(?report_entry_children(Entry, Children) -> true ; Children = []),
+
+	!report_entry_xmlsane_name(Entry, NameString),
+	% doh, somewhere downstream from here, we use the atom as a subject in doc.
+	atom_string(Name, NameString),
+	
+	!report_entry_total_vec(Entry, Balances),
+	!report_entry_transaction_count(Entry, Transactions_Count),
+	(	/* does the account have a detail level and is it greater than Max_Detail_Level? */
+		(account_detail_level(Name, Detail_Level), Detail_Level > Max_Detail_Level)
+	->
+		true /* nothing to do */
+	;
+		(
+			!report_entry_normal_side(Entry, Normal_Side),
+			!format_balance(Format, Report_Currency, Context, Name, Normal_Side, Balances, Xml0)
+
+			Level_New is Indent_Level + 1,
+			/*display child entries*/
+			!format_report_entries(Format, Max_Detail_Level, Level_New, Report_Currency, Context, Children, Xml1),
+			/*recurse on Entries_Tail*/
+			!format_report_entries(Format, Max_Detail_Level, Indent_Level, Report_Currency, Context, Entries_Tail, Xml2)
+		)
+	),
+	!.

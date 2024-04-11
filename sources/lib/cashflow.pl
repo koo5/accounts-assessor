@@ -261,7 +261,7 @@ cf_entry_by_category(
 	!add_report_entry_misc(Entry, 3, Misc2, single).
 
 
- cf_instant_tx_vector_conversion(Sd, Tx, Uri) :-
+ cf_instant_tx_vector_conversion(Sd, Tx, Vec) :-
 	vec_change_bases(Sd.exchange_rates, $>transaction_day(Tx), Sd.report_currency, $>transaction_vector(Tx), Vec).
 
 

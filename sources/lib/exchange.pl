@@ -34,10 +34,10 @@
 	assertion(flatten(Bases, Bases)),
 	val(As, AsV),
 	maplist(exchange_amount(Exchange_Rates, Day, Bases), AsV, As_ExchangedV),
-	vec_reduce(As_ExchangedV, BsV),
+	vec_reduce_(As_ExchangedV, BsV),
 	doc_new_vec(BsV, Bs),
 	doc_add(Bs, l:origin, As),
-	doc_add(Bs, l:conversion_day, Day).
+	doc_add(Bs, l:conversion_day, Day),
 	##pop_context.
 
  exchange_amount_throw(Exchange_Rates, Day, [Base], coord(Unit, Debit), Amount_Exchanged) :-
@@ -49,9 +49,9 @@
  	##push_format('convert ~q to ~q at ~q', [$>round_term(As), Bases, Day]),
 	assertion(flatten(Bases, Bases)),
 	val(As, AsV),
-	maplist(exchange_amount_throw(Exchange_Rates, Day, Bases), As, As_Exchanged),
-	vec_reduce(As_Exchanged, BsV),
+	maplist(exchange_amount_throw(Exchange_Rates, Day, Bases), AsV, As_Exchanged),
+	vec_reduce_(As_Exchanged, BsV),
 	doc_new_vec(BsV, Bs),
-	doc_add(Bs, l:origin, As).
+	doc_add(Bs, l:origin, As),
 	##pop_context.
 

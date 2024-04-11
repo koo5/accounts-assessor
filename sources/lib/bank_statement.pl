@@ -172,7 +172,9 @@ take statement/source transaction and generate a list of plain transactios.
 	Outstanding
 ) :-
 	s_transaction_type_id(S_Transaction, uri(Action_Verb)),
-	member(Action_Verb, $>livestock_verbs),
+	livestock_verbs(Livestock_Verbs),
+	member(Action_Verb, Livestock_Verbs),
+
 	cf(preprocess_livestock_buy_or_sell(S_Transaction, Transactions)).
 
  preprocess_s_transaction(
@@ -181,19 +183,25 @@ take statement/source transaction and generate a list of plain transactios.
 	Outstanding_Before,
 	Outstanding_After
 ) :-
+
 	s_transaction_type_id(S_Transaction, uri(Action_Verb)),
-	maplist(dif(Action_Verb), $>livestock_verbs),
+	livestock_verbs(Livestock_Verbs),
+	maplist(dif(Action_Verb), Livestock_Verbs),
+	
 	Transactions = [Ts1, Ts2, Ts3, Ts4],
 	s_transaction_exchanged(S_Transaction, vector(Counteraccount_Vector)),
+
 	/* is it time to introduce something like gtrace_on_user_error, and keep it off by default? */
 	(	is_zero(Counteraccount_Vector)
 	->	throw_string('exchanged 0 units?')
 	;	true),
+
 	s_transaction_vector(S_Transaction, Vector_Ours),
 	s_transaction_day(S_Transaction, Transaction_Date),
 	doc(Action_Verb, l:has_id, Action_Verb_Id),
 	Description = Action_Verb_Id,
 
+gtrace,
 	extract_pricing_method(Pricing_method),
 	affect_first_account(S_Transaction, Description, Ts1),
 

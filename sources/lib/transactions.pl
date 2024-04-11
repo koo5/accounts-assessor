@@ -28,7 +28,7 @@ transaction_field(T, F, X) :-
  	Date = date(_,_,_),
 	flatten([Description], Description_Flat),
 	atomics_to_string(Description_Flat, Description_Str),
-	(atom(Vector) -> true ; doc_new_vec(Vector, Vec)),
+	(atom(Vector) -> Vector = Vec ; doc_new_vec(Vector, Vec)),
 	doc_new_uri(gl_tx, Uri),
 	doc_add(Uri, rdf:type, l:transaction, transactions),
 	doc_add(Uri, transactions:day, Date, transactions),
@@ -98,7 +98,7 @@ make_dr_cr_transactions(
 
  transaction_vectors_total(Txs, Vec) :-
  	maplist(transaction_vector, Txs, Vecs),
- 	vec_sum(Vecs, Vec).
+ 	vec_sum(Vecs, Vec),
  	doc_add(Vec, l:source, Txs).
 
 
@@ -191,9 +191,9 @@ make_dr_cr_transactions(
 	transaction_vector(T, []).
 
 
- transactions_report_currency_sum_at_(Exchange_Rates, Report_Currency, Date, Transactions, Vector_Converted) :-
+ transactions_report_currency_sum_at_(Exchange_Rates, Report_Currency, Date, Transactions, Vector_Converted_Sum) :-
 	maplist(transaction_vector, Transactions, Vecs),
-	
-	vec_reduce(Vector0, Vector),
-	vec_change_bases(Exchange_Rates, Date, Report_Currency, Vector, Vector_Converted).
+	vec_sum(Vecs, Vector),
+	vec_change_bases(Exchange_Rates, Date, Report_Currency, Vector, Vector_Converted),
+	vec_sum(Vector_Converted, Vector_Converted_Sum).
 

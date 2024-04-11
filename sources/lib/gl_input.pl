@@ -61,7 +61,7 @@
 
 	!vec_add(Debit_Vector, Credit_Vector, Vector),
 
-	Vector = [coord(_,Dr)],
+	number_vec(_, Dr, Vector),
 
 	(	Dr >= 0
 	->	Money_side = kb:debit
@@ -271,7 +271,7 @@ todo, refactor: reallocation_tx_set_spec(Rows, [A_tx|Txs]) :-
 	;	(
 			Specifier = role(Role_spec),
 			ct(
-				$>format(string(<$), 'fill account role slots. role path: ~q specified in: ~w,  parameters: ~w', [Role_spec, $>sheet_and_cell_string(Account_string_uri), $>values(Parameters)]),
+				$>format(string(<$), 'fill account role slots. role path: ~q specified in: ~w,  parameters: ~w', [Role_spec, $>sheet_and_cell_string(Account_string_uri), $>vals(Parameters)]),
 				!fill_slots(Role_spec, Parameters, Role_list)
 			),
 			!path_list_to_term(Role_list, Role),

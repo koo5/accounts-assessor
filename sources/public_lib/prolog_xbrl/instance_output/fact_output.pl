@@ -1,42 +1,3 @@
-format_report_entries(_, _, _, _, _, [], []).
-
-format_report_entries(Format, Max_Detail_Level, Indent_Level, Report_Currency, Context, Entries, [Xml0, Xml1, Xml2]) :-
-	[Entry|Entries_Tail] = Entries,
-	(?report_entry_children(Entry, Children) -> true ; Children = []),
-
-	!report_entry_xmlsane_name(Entry, NameString),
-	% doh, somewhere downstream from here, we use the atom as a subject in doc.
-	atom_string(Name, NameString),
-	
-	!report_entry_total_vec(Entry, Balances),
-	!report_entry_transaction_count(Entry, Transactions_Count),
-	(	/* does the account have a detail level and is it greater than Max_Detail_Level? */
-		(account_detail_level(Name, Detail_Level), Detail_Level > Max_Detail_Level)
-	->
-		true /* nothing to do */
-	;
-		(
-			!report_entry_normal_side(Entry, Normal_Side),
-			
-			(
-				/* should we display an account with zero transactions? */
-				(Balances = [],(Indent_Level = 0; Transactions_Count \= 0))
-			->
-				/* force-display it */
-				!format_balance(Format, Report_Currency, Context, Name, Normal_Side, [], Xml0)
-			;
-				/* if not, let the logic omit it entirely */
-				!format_balances(Format, Report_Currency, Context, Name, Normal_Side, Balances, Xml0)
-			),
-
-			Level_New is Indent_Level + 1,
-			/*display child entries*/
-			!format_report_entries(Format, Max_Detail_Level, Level_New, Report_Currency, Context, Children, Xml1),
-			/*recurse on Entries_Tail*/
-			!format_report_entries(Format, Max_Detail_Level, Indent_Level, Report_Currency, Context, Entries_Tail, Xml2)
-		)
-	),
-	!.
 
 /*
 coord(
@@ -60,14 +21,13 @@ entry(
 
 /*
 pesseract_style_table_rows(Report_Uri,
-	Accounts,					% List record:account
 	Report_Currency,			% List atom:Report Currency
 	Entries,					% List entry
 	[Lines|Lines_Tail]			% List (List line)
 ) 
 */	
 
- pesseract_style_table_rows(_Report_Uri, _, [], []).
+ pesseract_style_table_rows(_Report_Uri, _Report_Currency, [], []).
  pesseract_style_table_rows(Report_Uri,
 	Report_Currency,
 	Entries,
@@ -78,13 +38,13 @@ pesseract_style_table_rows(Report_Uri,
 
 	!report_entry_name(Entry, Name),
 	!report_entry_normal_side(Entry, Normal_Side),
-	!report_entry_total_vec(Entry, Balances),
+	!report_entry_total_vec(Entry, Balance),
 	!report_entry_children(Entry, Children),
 
 	/*render child entries*/
 	!pesseract_style_table_rows(Report_Uri, Report_Currency, Children, Children_Rows),
 	/*render balance*/
-	!maybe_balance_lines(Name,Normal_Side,Report_Currency, Balances, Balance_Lines),
+	!format_vec(Name,Normal_Side,Report_Currency, Balance, Balance_Lines),
 	(	Children_Rows = []
 	->	!entry_row_childless(Name, Balance_Lines, Entry, Lines)
 	;	!entry_row_childful(Name, Entry, Children_Rows, Balance_Lines, Lines)),
@@ -150,7 +110,7 @@ cols_dict_to_row_helper3(Item, I) :-
 
 
 
-there_is_item_after(C, Pairs) :-
+ there_is_item_after(C, Pairs) :-
 	findall(X,
 		(
 			member(C2-X, Pairs),
@@ -159,53 +119,8 @@ there_is_item_after(C, Pairs) :-
 		Items),
 	Items \= [].
 
-/*
-	Name,				% atom:Entry Name
-	Report_Currency,	% List<atom>:Report Currency
-	Balances,			% List ...
-	Balance_Lines		% List ...
-*/
-/*not much of a maybe anymore?*/
-maybe_balance_lines(
-	Name,
-	Normal_Side,
-	Report_Currency,
-	Balances,
-	Balance_Lines
-) :-
-	/* force-display empty balance */
-	(	Balances = []
-	->	!format_balance(html, Report_Currency, '', Name, Normal_Side, [], Balance_Lines)
-	;	!format_balances(html, Report_Currency, '', Name, Normal_Side, Balances, Balance_Lines)).
 
 
-
-			
-/*
-format_balances(
-	Format,				% atom:{html,xbrl}
-	Report_Currency,	% List atom:Report Currency
-	Context,			% 
-	Name,				% atom:Entry Name
-	Normal_Side,		% atom:{credit,debit}
-	Balances,			% List ...
-	Balance_Lines		% List ...
-).
-*/
-format_balances(_, _, _, _, _, [], []).
-
-format_balances(Format, Report_Currency, Context, Name, Normal_Side, [Balance|Balances], [XmlH|XmlT]) :-
-	!format_balance(Format,  Report_Currency, Context, Name, Normal_Side, [Balance], XmlH),
-	!format_balances(Format, Report_Currency, Context, Name, Normal_Side, Balances, XmlT).
-
-format_balances(Format, Report_Currency, Context, Name, Normal_Side, Balances_Uri, Xml) :-
-	atom(Balances_Uri),
-	!doc(Balances_Uri, rdf:value, Balances),
-	!format_balances(Format, Report_Currency, Context, Name, Normal_Side, Balances, Text),
-	Xml = span(
-		$>append(
-			Text,
-			[$>link(Balances_Uri)])).
 
 
 
@@ -221,22 +136,43 @@ format_balance(
 ).
 */
 
-% should either be cutting here or changing Coord to [coord(Unit, Debit)]
-format_balance(Format, Report_Currency_List, Context, Name, Normal_Side, [], Xml) :-
-	% just for displaying zero balance when the balance vector is []), % fixme, change to ''
-	(	[Report_Currency] = Report_Currency_List
-	->	true
-	;	Report_Currency = ''),
-	!format_balance(Format, _, Context, Name, Normal_Side, [coord(Report_Currency, 0)], Xml).
+ format_vec(Format, Report_Currency, Context, Name, Normal_Side, Vec, Out) :-
+	!atom(Vec),
+	!val(Vec, V),
+	(	V = []
+	->	(	
+			% just for displaying zero balance when the balance vector is []),
+			(	[Report_Currency] = Report_Currency_List
+			->	true
+			;	Report_Currency = ''),
+			!format_coord(Format, _, Context, Name, Normal_Side, [coord(Report_Currency, 0)], Vec_str)
+		)
+	;
+		(
+			!maplist(format_coord(Format, Report_Currency, Context, Name, Normal_Side, V, Coord_strs),
+			atomics_to_strings(Coord_strs, Vec_str)
+		)
+	),
+	
+	(	format = html
+	->	(
+			Out = span(
+				$>append(
+					Coords_str,
+					[$>link(Vec)]))
+		)
+	;	Out = Coords_str
+	).
+					
 
+	
   
-format_balance(Format, Report_Currency_List, Context, Name, Normal_Side, Coord, Line) :-
-	[coord(Unit, Debit)] = Coord,
+format_coord(Format, Report_Currency_List, Context, Name, Normal_Side, coord(Unit, Debit), Line) :-
 
-	(	rdf_equal2(Normal_Side, kb:credit)
+	(	Normal_Side = 'https://rdf.lodgeit.net.au/v1/kb#credit'
 	->	Balance0 is -Debit
 	;	(
-			rdf_equal2(Normal_Side, kb:debit),
+			Normal_Side = 'https://rdf.lodgeit.net.au/v1/kb#debit',
 			Balance0 is Debit
 	)),
 
@@ -286,14 +222,3 @@ report_currency_atom(Report_Currency_List, Report_Currency_Atom) :-
 	;
 		Report_Currency_Atom = ''
 	).
-
-get_indentation(Level, Indentation) :-
-	get_indentation(Level, ' ', Indentation).
-
-get_indentation(Level, In, Out) :-
-	Level > 0,
-	Level2 is Level - 1,
-	get_indentation(Level2, In, Out2),
-	atomic_list_concat([Out2, In], Out).
-
-get_indentation(0, X, X).

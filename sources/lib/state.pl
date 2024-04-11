@@ -71,7 +71,7 @@ handle_op(S0,append,Field,Tail,S2) :-
 	!s_transactions_up_to(End_Date, S_Transactions, S_Transactions2),
 	!sort_s_transactions(S_Transactions2,S_Transactions4),
 	!cf('pre-preprocess source transactions'(S_Transactions4, Prepreprocessed_S_Transactions)),
-
+%gtrace,
 	cf(preprocess_s_transactions(
 		Prepreprocessed_S_Transactions,
 		Preprocessed_S_Transactions,

@@ -285,11 +285,9 @@ group{id:on_hand_at_cost, title:"On Hand At Cost Total", members:On_Hand_At_Cost
 	;	Unit = Unit_Name),
 
 	exchange_rate_throw(Exchange_Rates, End_Date, Unit, Investment_Currency, _),
-	vec_change_bases(Exchange_Rates, End_Date, [Investment_Currency],
-		[coord(Unit, 1)],
-		End_Unit_Price_Coord
-	),
-
+	
+	
+	exchange_amount(Exchange_Rates, End_Date, [Investment_Currency], coord(Unit, 1), End_Unit_Price_Coord),
 	exchange_rate_throw(Exchange_Rates, End_Date, Unit, Report_Currency_Unit, Closing_Unit_Price_Converted_Amount),
 
 	End_Unit_Price_Unit = Investment_Currency,

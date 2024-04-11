@@ -33,16 +33,27 @@
 
 /* - */
 
- make_without_currency_movement_against_since(Report_Currency, Since, [coord(Unit, D)], [coord(Unit2, D)]) :-
+ make_without_currency_movement_against_since(Report_Currency, Since, Vec, Vec2) :-
+ 	val(Vec, [coord(Unit, D)]),
+ 	
 	Unit2 = without_currency_movement_against_since(
 		Unit,
 		Unit,
 		Report_Currency,
 		Since
-	).
-
- vector_without_movement_after([coord(Unit1,D)], Start_Date, [coord(Unit2,D)]) :-
-	Unit2 = without_movement_after(Unit1, Start_Date).
+	),
+	
+ 	doc_new_vec([coord(Unit2, D)], Vec2),
+ 	doc_add(Vec2, l:origin, Vec).
+	
+	
+ vector_without_movement_after(Vec, Start_Date, Vec2) :-
+ 	val(Vec, [coord(Unit1, D)]),
+ 
+	Unit2 = without_movement_after(Unit1, Start_Date),
+	
+	doc_new_vec([coord(Unit2, D)], Vec2),
+	doc_add(Vec2, l:origin, Vec).
 
 
 

@@ -15,7 +15,7 @@
 		0,
 		Title_Text,
 		Html,
-		loc(file_name, 'statement_of_taxable_income_v2.html')),
+		loc(file_name, 'statement_of_taxable_income_v2.html'),
 		statement_of_taxable_income
 	),
 	true.
@@ -183,7 +183,7 @@
 		=
 		aspects([concept - smsf/income_tax/'Income_Tax_Payable/(Refund)'])
 		+
-		aspects([concept - smsf/income_tax/'ATO_Supervisory_Levy']),
+		aspects([concept - smsf/income_tax/'ATO_Supervisory_Levy'])
 
 		%make_fact(aspects([concept - smsf/income_tax/'to pay']))
 	],

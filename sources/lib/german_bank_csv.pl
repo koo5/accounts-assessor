@@ -58,8 +58,7 @@ german_bank_csv_row(Account, Currency, Row, S_Transaction) :-
 		)
 	),
 		
-	doc_new_(l:vec, Vec),
-	doc_add(Vec, rdf:value, [coord(Currency, Money_Amount)]),
+	doc_new_vec([coord(Currency, Money_Amount)], Vec),
 	
 	doc_add_s_transaction(Date, Verb, Vec, bank_account_name(Account), Exchanged2, misc{desc2:Description,desc3:Description_Column2}, S_Transaction).
 
