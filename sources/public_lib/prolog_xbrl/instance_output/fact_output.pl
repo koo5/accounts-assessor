@@ -44,7 +44,7 @@ pesseract_style_table_rows(Report_Uri,
 	/*render child entries*/
 	!pesseract_style_table_rows(Report_Uri, Report_Currency, Children, Children_Rows),
 	/*render balance*/
-	!format_vec(Name,Normal_Side,Report_Currency, Balance, Balance_Lines),
+	!format_vec(html, Report_Currency, _, Name, Normal_Side, Balance, Balance_Lines),
 	(	Children_Rows = []
 	->	!entry_row_childless(Name, Balance_Lines, Entry, Lines)
 	;	!entry_row_childful(Name, Entry, Children_Rows, Balance_Lines, Lines)),
@@ -136,21 +136,22 @@ format_balance(
 ).
 */
 
- format_vec(Format, Report_Currency, Context, Name, Normal_Side, Vec, Out) :-
+ format_vec(Format, Report_Currency_List, Context, Name, Normal_Side, Vec, Out) :-
 	!atom(Vec),
 	!val(Vec, V),
 	(	V = []
-	->	(	
+	->	
+		(
 			% just for displaying zero balance when the balance vector is []),
 			(	[Report_Currency] = Report_Currency_List
 			->	true
 			;	Report_Currency = ''),
-			!format_coord(Format, _, Context, Name, Normal_Side, [coord(Report_Currency, 0)], Vec_str)
+			!format_coord(Format, _, Context, Name, Normal_Side, coord(Report_Currency, 0), Vec_str)
 		)
 	;
 		(
-			!maplist(format_coord(Format, Report_Currency, Context, Name, Normal_Side, V, Coord_strs),
-			atomics_to_strings(Coord_strs, Vec_str)
+			!maplist(format_coord(Format, Report_Currency_List, Context, Name, Normal_Side), V, Coord_strs),
+			atomics_to_string(Coord_strs, Vec_str)
 		)
 	),
 	
@@ -158,21 +159,20 @@ format_balance(
 	->	(
 			Out = span(
 				$>append(
-					Coords_str,
+					[Vec_str],
 					[$>link(Vec)]))
 		)
-	;	Out = Coords_str
-	).
+	;	Out = Vec_str).
 					
 
 	
   
 format_coord(Format, Report_Currency_List, Context, Name, Normal_Side, coord(Unit, Debit), Line) :-
 
-	(	Normal_Side = 'https://rdf.lodgeit.net.au/v1/kb#credit'
+	(	e(Normal_Side, 'https://rdf.lodgeit.net.au/v1/kb#credit')
 	->	Balance0 is -Debit
 	;	(
-			Normal_Side = 'https://rdf.lodgeit.net.au/v1/kb#debit',
+			e(Normal_Side, 'https://rdf.lodgeit.net.au/v1/kb#debit'),
 			Balance0 is Debit
 	)),
 

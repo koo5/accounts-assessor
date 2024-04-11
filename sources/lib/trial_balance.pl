@@ -98,7 +98,8 @@
 
 
  vec_is_just_report_currency(Vec) :-
- 	!exclude(coord_is_almost_zero, Vec, Rest),
+ 	val(Vec, Vector),
+ 	!exclude(coord_is_almost_zero, Vector, Rest),
  	!result_property(l:report_currency, Report_Currency),
  	!'='(Report_Currency,[RC]),
  	maplist({RC}/[Coord]>>coord_unit(Coord,RC), Rest).

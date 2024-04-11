@@ -201,7 +201,6 @@ take statement/source transaction and generate a list of plain transactios.
 	doc(Action_Verb, l:has_id, Action_Verb_Id),
 	Description = Action_Verb_Id,
 
-gtrace,
 	extract_pricing_method(Pricing_method),
 	affect_first_account(S_Transaction, Description, Ts1),
 
@@ -271,16 +270,20 @@ gtrace,
 */
 
  make_buy(St, Trading_Account, Pricing_Method, Bank_Account_Currency, Goods_Vector,
-	Converted_Vector_Ours, Vector_Ours,
+	Converted_Vec_Ours, Vec_Ours,
 	Exchanged_Account, Transaction_Date, Description,
 	Outstanding_In, Outstanding_Out, [Ts1, Ts2]
 ) :-
 	push_format('record purchase of ~q onto ~q', [Goods_Vector, $>account_name(Exchanged_Account)]),
+	
+	val(Converted_Vec_Ours, Converted_Vector_Ours),
+	val(Vec_Ours, Vector_Ours),
+	
 	[Coord_Ours] = Vector_Ours,
 	[Goods_Coord] = Goods_Vector,
 
 
-	coord_vec(Coord_Ours_Converted, Converted_Vector_Ours),
+	coord_vec_(Coord_Ours_Converted, Converted_Vector_Ours),
 	/* in case of an empty vector, the unit name was lost, so fill it back in */
 	result_property(l:report_currency, Report_Currency0),
 	(	Report_Currency0 = [Report_Currency]
@@ -356,8 +359,8 @@ gtrace,
  	Trading_Account,
  	Pricing_Method,
  	Goods_Vector,
- 	Vector_Ours,
- 	Converted_Vector_Ours,
+ 	Vec_Ours,
+ 	Converted_Vec_Ours,
  	Exchanged_Account,
  	Transaction_Date,
  	Description,
@@ -365,6 +368,11 @@ gtrace,
  	Outstanding_Out,
  	[Ts1, Ts2, Ts3]
 ) :-
+
+	val(Converted_Vec_Ours, Converted_Vector_Ours),
+	val(Vec_Ours, Vector_Ours),
+	
+
 	credit_vec(Goods_Unit,Goods_Positive,Goods_Vector),
 	push_context(
 		$>format(string(<$),

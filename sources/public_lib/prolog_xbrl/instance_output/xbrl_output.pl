@@ -119,7 +119,7 @@ format_report_entries(Format, Max_Detail_Level, Indent_Level, Report_Currency, C
 	atom_string(Name, NameString),
 	
 	!report_entry_total_vec(Entry, Balances),
-	!report_entry_transaction_count(Entry, Transactions_Count),
+	%!report_entry_transaction_count(Entry, Transactions_Count),
 	(	/* does the account have a detail level and is it greater than Max_Detail_Level? */
 		(account_detail_level(Name, Detail_Level), Detail_Level > Max_Detail_Level)
 	->
@@ -127,7 +127,7 @@ format_report_entries(Format, Max_Detail_Level, Indent_Level, Report_Currency, C
 	;
 		(
 			!report_entry_normal_side(Entry, Normal_Side),
-			!format_balance(Format, Report_Currency, Context, Name, Normal_Side, Balances, Xml0)
+			!format_balance(Format, Report_Currency, Context, Name, Normal_Side, Balances, Xml0),
 
 			Level_New is Indent_Level + 1,
 			/*display child entries*/

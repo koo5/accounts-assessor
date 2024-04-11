@@ -147,8 +147,8 @@ cf_scheme_0_entry_for_account(
  cf_scheme_0_root_entry(Sd, Entry) :-
 	!cf_scheme_0_entry_for_account0(Sd, $>account_by_role_throw(rl('Cash_and_Cash_Equivalents')), Entry).
 
- add_entry_balance_desc(_Sd, Entry, B, Column, Text, Type) :-
-	!maybe_balance_lines(xxx, kb:debit, [], B, Balance_Text),
+ add_entry_balance_desc(_Sd, Entry, Balance, Column, Text, Type) :-
+	!format_vec(html, [], _, xxx, 'https://rdf.lodgeit.net.au/v1/kb#debit', Balance, Balance_Text),
 	flatten([Text, ':', Balance_Text], Desc0),
 	atomics_to_string(Desc0, Desc),
 	!add_report_entry_misc(Entry, Column, Desc, Type). /*todo add Tag, Value*/
@@ -272,12 +272,10 @@ cf_entry_by_category(
 	maplist(!report_entry_total_vec, Children, Child_Vecs),
 
 	(	doc(Entry, report_entries:own_vec, Own_Vec)
-	->	true
-	;	Own_Vec = []),
+	->	append([Own_Vec], Child_Vecs, Vecs)
+	;	Vecs = Child_Vecs),
 
-	flatten([Own_Vec, Child_Vecs], Total_Vecs),
-
-	!vec_sum_with_proof(Total_Vecs, Total_Vec),
+	!vec_sum(Vecs, Total_Vec),
 	!set_report_entry_total_vec(Entry, Total_Vec).
 
 

@@ -291,7 +291,7 @@ group{id:on_hand_at_cost, title:"On Hand At Cost Total", members:On_Hand_At_Cost
 	exchange_rate_throw(Exchange_Rates, End_Date, Unit, Report_Currency_Unit, Closing_Unit_Price_Converted_Amount),
 
 	End_Unit_Price_Unit = Investment_Currency,
-	number_vec(End_Unit_Price_Unit, End_Unit_Price_Amount, End_Unit_Price_Coord),
+	number_coord(End_Unit_Price_Unit, End_Unit_Price_Amount, End_Unit_Price_Coord),
 
 	ir2_forex_gain(Exchange_Rates, Opening_Date, value(End_Unit_Price_Unit, End_Unit_Price_Amount), End_Date, Investment_Currency, Report_Currency, Count, Forex_Gain),
 	ir2_market_gain(Exchange_Rates, Opening_Date, End_Date, Investment_Currency, Report_Currency, Count, Opening_Unit_Cost_Converted, End_Unit_Price_Unit, End_Unit_Price_Amount, Market_Gain),
@@ -417,7 +417,7 @@ group{id:on_hand_at_cost, title:"On Hand At Cost Total", members:On_Hand_At_Cost
 			*/
 			exchange_rate_throw(Exchange_Rates, End_Date, Market_Price_Unit, Report_Currency_Unit, _),
 			credit_coord(Market_Price_Unit, End_Unit_Price_Amount, Coord_X1),
-			vec_change_bases(Exchange_Rates, End_Date, Report_Currency, 
+			vec_change_bases_(Exchange_Rates, End_Date, Report_Currency, 
 				[
 					% unit price in investment currency
 					coord(End_Unit_Price_Unit, End_Unit_Price_Amount),

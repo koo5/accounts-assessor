@@ -23,12 +23,15 @@
 % combine them. If a coordinate cannot be exchanged into a unit from Bases, then it is
 % put into the result as is.
 
-/*vec_change_bases(_, _, _, [], []) :- !.*/
+ vec_change_bases_(_, _, _, [], []) :- !.
 
 
-/*vec_change_bases(Exchange_Rates, Day, Bases, As, Bs) :-
-	vec_change_bases(nothrow, Exchange_Rates, Day, Bases, As, Bs).
-*/
+ vec_change_bases_(Exchange_Rates, Day, Bases, As, Bs) :-
+ 	assertion(flatten(Bases, Bases)),
+	maplist(exchange_amount(Exchange_Rates, Day, Bases), As, As_Exchanged),
+	vec_reduce_(As_Exchanged, Bs).
+
+
  vec_change_bases(Exchange_Rates, Day, Bases, As, Bs) :-
  	##push_format('convert ~q to ~q at ~q', [$>round_term(As), Bases, Day]),
 	assertion(flatten(Bases, Bases)),

@@ -191,9 +191,9 @@ make_dr_cr_transactions(
 	transaction_vector(T, []).
 
 
- transactions_report_currency_sum_at_(Exchange_Rates, Report_Currency, Date, Transactions, Vector_Converted_Sum) :-
+ transactions_report_currency_sum_at(Exchange_Rates, Report_Currency, Date, Transactions, Vector_Converted_Sum) :-
 	maplist(transaction_vector, Transactions, Vecs),
 	vec_sum(Vecs, Vector),
 	vec_change_bases(Exchange_Rates, Date, Report_Currency, Vector, Vector_Converted),
-	vec_sum(Vector_Converted, Vector_Converted_Sum).
+	vec_sum([Vector_Converted], Vector_Converted_Sum).
 

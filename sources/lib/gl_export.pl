@@ -56,16 +56,16 @@
  s_transaction_with_transacted_amount(Sd, D1, D2) :-
 	D2 = D1.put([
 		report_currency_transacted_amount_converted_at_transaction_date=A,report_currency_transacted_amount_converted_at_balance_date=B]),
-	vec_change_bases(Sd.exchange_rates, D1.date, Sd.report_currency, D1.vector, A),
-	vec_change_bases(Sd.exchange_rates, Sd.end_date, Sd.report_currency, D1.vector, B).
+	vec_change_bases_(Sd.exchange_rates, D1.date, Sd.report_currency, D1.vector, A),
+	vec_change_bases_(Sd.exchange_rates, Sd.end_date, Sd.report_currency, D1.vector, B).
 
  transaction_with_converted_vector(Sd, Transaction, Transaction2) :-
 	Transaction2 = Transaction.put([
 		vector_converted_at_transaction_date=A,
 		vector_converted_at_balance_date=B
 	]),
-	vec_change_bases(Sd.exchange_rates, Transaction.date, Sd.report_currency, Transaction.vector, A),
-	vec_change_bases(Sd.exchange_rates, Sd.end_date, Sd.report_currency, Transaction.vector, B).
+	vec_change_bases_(Sd.exchange_rates, Transaction.date, Sd.report_currency, Transaction.vector, A),
+	vec_change_bases_(Sd.exchange_rates, Sd.end_date, Sd.report_currency, Transaction.vector, B).
 
  running_balance_initialization :-
 	b_setval(gl_export_running_balances, _{}).
@@ -82,7 +82,7 @@
 	running_balance_ensure_key_for_account_exists(Account),
 	b_getval(gl_export_running_balances, Balances),
 	get_dict(Account, Balances, Old),
-	vec_add(Old, Vector, New),
+	vec_add_(Old, Vector, New),
 	b_setval(gl_export_running_balances, Balances.put(Account, New)),
 	Tx_New = Tx.put(running_balance, New).
 	% todo running_balance_for_relevant_period?
@@ -126,6 +126,7 @@
 
  coord_converted_at_time(Sd, Date, Coord0, Coord1) :-
 	!vec_change_bases_throw(Sd.exchange_rates, Date, Sd.report_currency, [Coord0], Vec2),
-	[Report_currency] = Sd.report_currency,
+	/*[Report_currency] = Sd.report_currency,
 	Coord1 = coord(Report_currency, _),
-	coord_vec(Coord1, Vec2).
+	coord_vec(Coord1, Vec2).*/
+	val(Vec2, [Coord1]).

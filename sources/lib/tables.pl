@@ -90,4 +90,4 @@ produce an additional row with totals, calculated from Rows, directed by Keys.
 
  sum_cells(Values, Sum) :-
 	flatten(Values, Vec),
-	vec_reduce(Vec, Sum).
+	vec_reduce_(Vec, Sum).

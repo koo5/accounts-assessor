@@ -187,7 +187,7 @@ balance_by_account2(Sd, Report_Currency, Date, Account, balance(Balance, Tx_Coun
 	;	txs_vec_converted_sum_err(Exchange_Date, Transactions, Balance)
 	).
 
-txs_vec_converted_sum_err(Exchange_Date, Transactions, Balance) :-
+ txs_vec_converted_sum_err(Exchange_Date, Transactions, Balance) :-
 	add_alert(
 		check,
 		$>format(string(<$),

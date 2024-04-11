@@ -61,7 +61,7 @@
 ) :-
 	result_property(l:report_currency, Report_Currency),
 	result_property(l:start_date, Start_Date),
-	val(Goods, [coord(Goods_Unit, Goods_Debit)]),
+	[coord(Goods_Unit, Goods_Debit)] = Goods,
 	gains_accounts(
 		Trading_Account_Id, unrealized, $>unit_bare(Goods_Unit),
 		Currency_Movement_Account, Excluding_Forex_Account),
@@ -144,7 +144,7 @@ unrealized_gains_reduction_txs(Description, Transaction_Day, Trading_Account_Id,
 		without_movement_after(Goods_Unit, Before_Start),
 		Goods_Debit)
 	],
-	vec_inverse(Goods_Opening, Goods_Opening_Cr),
+	vec_inverse_(Goods_Opening, Goods_Opening_Cr),
 	%unrealized_gains_reduction_txs2(Transaction_Day, Start_Date, Before_Start, Purchase_Date, Cost, Goods_Opening_Cr, Goods_Unit, Purchase_Currency, Report_Currency, Goods_Count
 	(
 		Transaction_Day @>= Start_Date
@@ -223,10 +223,10 @@ increase_realized_gains(St, Description, Trading_Account_Id, Sale_Vector, Conver
 	number_coord(_, Goods_Integer, Goods_Coord),
 	{Goods_Positive = -Goods_Integer},
 
-	val(Sale_Vector, [coord(Sale_Currency, Sale_Currency_Amount)]),
+	Sale_Vector = [coord(Sale_Currency, Sale_Currency_Amount)],
 	{Sale_Currency_Unit_Price = Sale_Currency_Amount / Goods_Positive},
 	
-	val(Converted_Vector, [coord(Converted_Currency, Converted_Debit)]),
+	Converted_Vector = [coord(Converted_Currency, Converted_Debit)],
 	{Sale_Unit_Price_Amount = Converted_Debit / Goods_Positive},
 	
 	maplist(
