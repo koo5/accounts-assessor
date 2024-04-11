@@ -98,9 +98,9 @@
 		gains/unrealized_total, Unrealized_Total).put(
 		gains/total, Total).put(
 		unit, 'Total'),
-	vec_add(Totals0.gains.rea.market_converted, Totals0.gains.rea.forex, Realized_Total),
-	vec_add(Totals0.gains.unr.market_converted, Totals0.gains.unr.forex, Unrealized_Total),
-	vec_add(Realized_Total, Unrealized_Total, Total).
+	vec_add_(Totals0.gains.rea.market_converted, Totals0.gains.rea.forex, Realized_Total),
+	vec_add_(Totals0.gains.unr.market_converted, Totals0.gains.unr.forex, Unrealized_Total),
+	vec_add_(Realized_Total, Unrealized_Total, Total).
   	
 
 

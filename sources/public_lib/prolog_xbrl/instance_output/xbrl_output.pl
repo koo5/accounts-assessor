@@ -127,7 +127,7 @@ format_report_entries(Format, Max_Detail_Level, Indent_Level, Report_Currency, C
 	;
 		(
 			!report_entry_normal_side(Entry, Normal_Side),
-			!format_balance(Format, Report_Currency, Context, Name, Normal_Side, Balances, Xml0),
+			!format_vec(Format, Report_Currency, Context, Name, Normal_Side, Balances, Xml0),
 
 			Level_New is Indent_Level + 1,
 			/*display child entries*/

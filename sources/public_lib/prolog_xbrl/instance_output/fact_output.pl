@@ -125,7 +125,6 @@ cols_dict_to_row_helper3(Item, I) :-
 
 
 /*
-format_balance(
 	Format,					% atom:{html,xbrl}
 	Report_Currency_List,	% List atom:Report Currency
 	Context,				%
