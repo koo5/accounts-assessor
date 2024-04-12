@@ -17,3 +17,39 @@ process_request(basic_accounting_equation) :-
 	doc(report1, equity, E),
 
 	{A - L = E}.
+
+
+
+%=============
+
+
+
+process_request(basic_smsf_accounting_equation) :-
+	doc(report1, assets, A),
+	doc(report1, liabilities, L),
+	doc(report1, equity, E),
+	sum(Members) = E,
+
+	{A - L = E}.
+
+
+
+%=============
+
+
+
+process_request(basic_smsf_accounting_equation) :-
+	doc(report1, assets, A),
+	doc(report1, liabilities, L),
+	doc(report1, equity, E),
+	sum(Members, E),
+
+	{A - L = E}.
+
+sum([], 0).
+sum(H|T], S) :-
+	sum(T, ST),
+	{S = ST + H}.
+
+
+
