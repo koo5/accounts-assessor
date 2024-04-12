@@ -371,7 +371,6 @@ take statement/source transaction and generate a list of plain transactios.
 
 	val(Converted_Vec_Ours, Converted_Vector_Ours),
 	val(Vec_Ours, Vector_Ours),
-	
 
 	credit_vec(Goods_Unit,Goods_Positive,Goods_Vector),
 	push_context(
