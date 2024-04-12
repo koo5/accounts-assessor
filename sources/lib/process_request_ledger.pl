@@ -154,7 +154,7 @@ an ST - "Statement Transaction", originally "bank statement transaction", is now
 	->	!'table sheet'(Ir)
 	;	true),
 
-	'create XBRL instance'(Closed_books_static_data, Sr),
+	%'create XBRL instance'(Closed_books_static_data, Sr),
 
 	!cf(crosschecks_report0(
 		Closed_books_static_data.put(reports, Sr2),
