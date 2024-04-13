@@ -489,9 +489,9 @@ smsf_distribution_tx(Default_currency, Date, Item, Dist, Txs) :-
 
 /*
 =============
-
+>>>
  Goal is to automate the construct of the journal that allocates the components of net profit amongst the members based on the attributes of members i.e. age, tax rates, if they are using a pension account, etc.
-
+<<<
 Max 4 members.
 
 Fund Profit is allocated among Members Equity
