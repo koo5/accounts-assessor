@@ -14,14 +14,14 @@
  	!flatten(Txs0, Txs),
  	pop_context.
 
-extract_smsf_distribution3(Sts, Default_currency, Item, Txs) :-
+ extract_smsf_distribution3(Sts, Default_currency, Item, Txs) :-
 	push_context($>format(string(<$), 'extract SMSF distribution from: ~w', [$>sheet_and_cell_string(Item)])),
 	trim_string($>!doc_value(Item, smsf_distribution_ui:name), Unit_name_str),
 	!extract_smsf_distribution4(Sts, Default_currency, Item, Unit_name_str, Txs),
 	pop_context.
 
-extract_smsf_distribution4(_,_, _, "Dr/Cr", []) :- !.
-extract_smsf_distribution4(_,_, _, "Total", []) :- !.
+ extract_smsf_distribution4(_,_, _, "Dr/Cr", []) :- !.
+ extract_smsf_distribution4(_,_, _, "Total", []) :- !.
 
  extract_smsf_distribution4(Sts, Default_currency, Item, Unit_name_str, Txs) :-
 	!atom_string(Unit, Unit_name_str),

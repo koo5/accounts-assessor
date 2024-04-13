@@ -174,7 +174,7 @@ exp_compute(A = B) :-
 	!facts_by_aspects(A, Already_asserted),
 	(	Already_asserted = []
 	->	true
-	;	throw_string('exp_compute internal error')),
+	;	throw_string('exp_compute error')),
 	!make_fact(B2, A).
 
 exp_eval(X, X) :-
