@@ -26,5 +26,4 @@ USER root
 
 WORKDIR $APPPATH
 USER myuser
-ENTRYPOINT ["./start.sh"]
-CMD ["0.0.0.0:17788"]
+CMD "./start.sh 0.0.0.0:17788"
