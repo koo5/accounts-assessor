@@ -10,3 +10,4 @@ threadsafe-async
 python-jose[cryptography]
 diskcache
 better_exceptions
+paho-mqtt

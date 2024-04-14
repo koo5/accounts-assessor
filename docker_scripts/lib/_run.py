@@ -368,8 +368,11 @@ ProxyPass "/{path}" "http://{frontend}:7788/{path}"  connectiontimeout=999999999
 			lib.remove_all_anonymous_volumes.remove_anonymous_volumes()
 		
 		logger.info('flush old messages:')
+		logger.info('(a missing volume is not an error.)')
 		call_with_info('docker volume rm robust_rabbitmq')
 
+		logger.info('(in case of "error getting credentials - err: exit status 1, out: `Cannot autolaunch D-Bus without X11 $DISPLAY`", see https://stackoverflow.com/a/52251706/376258')
+		
 		logger.info('wait for old network to disappear..')
 		while True:
 			cmdxxx = "docker network ls | grep robust" + port_postfix

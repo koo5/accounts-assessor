@@ -1,4 +1,4 @@
-import logging,json, subprocess, os, sys, shutil, shlex
+import logging,json, subprocess, os, sys, shutil, shlex, time
 import select
 
 sys.path.append(os.path.normpath(os.path.join(os.path.dirname(__file__), '../common/libs/misc')))
@@ -11,7 +11,7 @@ from app.misc import uri_params, env_string
 
 
 log = logging.getLogger(__name__)
-log.setLevel(logging.WARNING)
+log.setLevel(logging.DEBUG)
 log.debug('debug from call_prolog.py')
 log.info('info from call_prolog.py')
 log.warning('warning from call_prolog.py')
@@ -193,6 +193,7 @@ def call_prolog(
 			if end:
 				break
 			if p.poll() is not None:
+				time.sleep(15)#hacke
 				end = True
 		
 	p.stdout.close()

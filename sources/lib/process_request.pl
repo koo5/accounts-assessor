@@ -356,7 +356,7 @@ alert_to_html also has key available - 'error'
 				!cf(doc_from_rdf('https://rdf.lodgeit.net.au/v1/excel_request#', Request_data_uri_base)),
 				!check_request_version,
 				%doc_input_to_chr_constraints
-				*process_rdf_request
+				once(process_rdf_request) % must be once() for nb doc 
 			)
 		;	throw_string('unrecognized request_format')
 		)

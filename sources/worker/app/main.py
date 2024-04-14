@@ -74,10 +74,8 @@ sys.path.append(os.path.normpath(os.path.join(os.path.dirname(__file__), '../../
 from div7a import div7a
 
 
-logging.basicConfig()
-log = logging.getLogger(__name__)
-log.setLevel(logging.WARNING)
-#log.addHandler(logging.StreamHandler(sys.stderr))
+
+import my_logging
 
 
 

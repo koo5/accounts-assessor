@@ -48,18 +48,18 @@ import exchange_rates
 
 
 
-logging.basicConfig()
+import my_logging
 
 log = logging.getLogger(__name__)
-log.setLevel(logging.WARNING)
+log.setLevel(logging.DEBUG)
 log.debug('debug main.py')
 log.warning('warn main.py')
-#log.addHandler(logging.StreamHandler(sys.stderr))
 
 loop_log = logging.getLogger('loop')
-loop_log.setLevel(logging.WARNING)
+loop_log.setLevel(logging.DEBUG)
 loop_log.debug('debug loop')
 loop_log.warning('warn loop')
+
 
 #logging.config.fileConfig('logging.yaml', defaults=None, disable_existing_loggers=False, encoding=None)
 

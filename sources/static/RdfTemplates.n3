@@ -342,7 +342,7 @@ depr_ui:depreciation_calculator_sheet_assets
 	excel:name_prefix "depreciation_assets";
 	excel:root depr_ui:depreciation_assets.
 
-depr_ui:depreciation_example_simple
+depr_ui: 
 	a excel:example_sheet_set;
 	excel:is_listed_by_hardcoding true;
 	excel:has_sheet_instances (

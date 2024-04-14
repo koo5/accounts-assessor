@@ -16,9 +16,11 @@ import tsasync
 
 
 log = logging.getLogger(__name__)
-log.setLevel(logging.WARNING)
-#log.addHandler(logging.StreamHandler(sys.stderr))
-log.debug("debug isolated_worker.py")
+log.setLevel(logging.DEBUG)
+log.debug("debug from isolated_worker.py")
+log.info("info from isolated_worker.py")
+log.warning("warning from isolated_worker.py")
+
 
 
 
