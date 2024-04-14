@@ -754,3 +754,6 @@ def robust_testcase_dirs(suite='.', dirglob=''):
 # 
 # if canonicalize(got_xml) != canonicalize(expected_xml):
 # 	delta.append({"msg": f"canonicalize(got_xml) != canonicalize(expected_xml)", "fix": {"op": "cp", "src": str(self.testcasedir / 'results' / expected_report['val']['url'].split('/')[-1]), "dst": results.path}})
+
+
+# https://news.ycombinator.com/item?id=39962303
