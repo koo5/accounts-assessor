@@ -179,21 +179,33 @@ def call_prolog(
 			if p.stdout in readable:
 				stdout_line = p.stdout.readline()
 				if stdout_line:
-					print("STDOUT:", stdout_line, end='')
-					#log.info("STDOUT: %s", stdout_line)
-				stdout_data += stdout_line
+					log.info(stdout_line)
+					stdout_data += stdout_line
 		
 			if p.stderr in readable:
 				stderr_line = p.stderr.readline()
 				if stderr_line:
-					print("STDERR:", stderr_line, end='')
 					if worker_options.get('worker_log'):
-						log.write(stderr_line)
+						log.info(stderr_line)
 		
 			if end:
+				if p.stdout in readable:
+					stdout_line = p.stdout.read()
+					if stdout_line:
+						log.info(stdout_line)
+						stdout_data += stdout_line
+			
+				if p.stderr in readable:
+					stderr_line = p.stderr.read()
+					if stderr_line:
+						if worker_options.get('worker_log'):
+							log.info(stderr_line)
+				
 				break
-			if p.poll() is not None:
-				time.sleep(15)#hacke
+			ret = p.poll()
+			if ret is not None:
+				log.info(f'invoke_rpc: process ended with return code {ret}')
+				time.sleep(1)#hacke
 				end = True
 		
 	p.stdout.close()
