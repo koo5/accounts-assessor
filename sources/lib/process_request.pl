@@ -356,7 +356,7 @@ alert_to_html also has key available - 'error'
 				!cf(doc_from_rdf('https://rdf.lodgeit.net.au/v1/excel_request#', Request_data_uri_base)),
 				!check_request_version,
 				%doc_input_to_chr_constraints
-				once(process_rdf_request) % must be once() for nb doc 
+				!process_rdf_request 
 			)
 		;	throw_string('unrecognized request_format')
 		)
@@ -407,7 +407,9 @@ alert_to_html also has key available - 'error'
 
  process_rdf_request :-
 	debug(requests, "process_rdf_request~n", []),
-	(	%process_request_hirepurchase_new;
+	% must be once() for nb doc
+	once(
+		%process_request_hirepurchase_new;
 		process_request_depreciation_new;
 		process_request_ledger
 	),

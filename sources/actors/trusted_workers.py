@@ -65,7 +65,7 @@ def postprocess(job, request_directory, tmp_name, tmp_path, result, user, public
 	result_sheets_fn = tmp_path / '000000_doc_result_sheets.turtle'
 	if result_tmp_directory_url and result_sheets_fn.is_file():
 		generate_result_xlsx(tmp_path)
-		reports_dict['Excel sheets'] = result_tmp_directory_url + '/result.xlsx'
+		reports_dict['excel sheets'] = result_tmp_directory_url + '/result.xlsx'
 		
 
 	sections['Job']=dict(
@@ -78,7 +78,7 @@ def postprocess(job, request_directory, tmp_name, tmp_path, result, user, public
 						'focused-graph':				public_url + '/rdf/results/' + result_tmp_directory_name+'/default'
 					}
 				),
-			Job=f'../{job}',
+			JobDir=f'../{job}',
 			)
 		
 	sections['Robust'] = {
