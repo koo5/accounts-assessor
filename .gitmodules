@@ -9,7 +9,7 @@
 	url = https://github.com/vishnubob/wait-for-it.git
 [submodule "sources/common/remoulade"]
 	path = sources/common/libs/remoulade
-	url = https://github.com/wiremind/remoulade
+	url = https://github.com/koo5/remoulade/
 [submodule "sources/super-bowl"]
 	path = sources/super-bowl
 	url = https://github.com/koo5/super-bowl
@@ -20,8 +20,6 @@
 [submodule "sdk"]
 	path = sources/common/libs/sdk
 	url = https://github.com/koo5/robust_sdk
-[submodule "remoulade"]
-	url = https://github.com/koo5/remoulade/
 [submodule "sources/download_bastion"]
 	path = sources/download
 	url = https://github.com/koo5/download_bastion

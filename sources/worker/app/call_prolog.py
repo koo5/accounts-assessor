@@ -179,27 +179,27 @@ def call_prolog(
 			if p.stdout in readable:
 				stdout_line = p.stdout.readline()
 				if stdout_line:
-					log.info(stdout_line)
+					log.info(stdout_line.rstrip())
 					stdout_data += stdout_line
 		
 			if p.stderr in readable:
 				stderr_line = p.stderr.readline()
 				if stderr_line:
 					if worker_options.get('worker_log'):
-						log.info(stderr_line)
+						log.info(stderr_line.rstrip())
 		
 			if end:
 				if p.stdout in readable:
 					stdout_line = p.stdout.read()
 					if stdout_line:
-						log.info(stdout_line)
+						log.info(stdout_line.rstrip())
 						stdout_data += stdout_line
 			
 				if p.stderr in readable:
 					stderr_line = p.stderr.read()
 					if stderr_line:
 						if worker_options.get('worker_log'):
-							log.info(stderr_line)
+							log.info(stderr_line.rstrip())
 				
 				break
 			ret = p.poll()

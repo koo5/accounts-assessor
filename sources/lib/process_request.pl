@@ -362,6 +362,7 @@ alert_to_html also has key available - 'error'
 		)
 	).
 
+
 /* only done when Request_format = "rdf" */
  check_request_version :-
 	Expected = "3",
@@ -372,13 +373,13 @@ alert_to_html also has key available - 'error'
 		;	throw_string(['incompatible client version, expected: ', Expected]))
 	;	throw_string(['l:client_version not specified, must be: ', Expected])).
 
+
  accept_request_file(File_Paths, Path, Type) :-
 	debug(tmp_files, "accept_request_file(~w, ~w, ~w)~n", [File_Paths, Path, Type]),
 	member(Path, File_Paths),
 	debug(tmp_files, "member(~w, ~w)~n", [Path, File_Paths]),
 	tmp_file_path_to_url__singleton(Path, Url),
 	debug(tmp_files, "tmp_file_path_to_url(~w, ~w)~n", [Path, Url]),
-	add_report_file(_, -20,'request_file', 'request_file', Url),
 	(	loc_icase_endswith(Path, ".xml")
 	->	(
 			add_report_file(_, -20,'request_xml', 'request_xml', Url),
@@ -390,10 +391,13 @@ alert_to_html also has key available - 'error'
 				Type = n3
 			)
 		)
-	).
+	),
+	add_report_file(_, -21,'request_file', 'request_file', Url).
+
 
  load_request_xml(loc(absolute_path,Xml_Tmp_File_Path), Dom) :-
 	load_structure(Xml_Tmp_File_Path, Dom, [dialect(xmlns), space(remove), keep_prefix(true)]).
+
 
  load_request_rdf(loc(absolute_path, Rdf_Tmp_File_Path)) :-
 
@@ -422,7 +426,6 @@ alert_to_html also has key available - 'error'
 /*+   request_xml_to_doc(Dom),*/
 	(process_request_car(File_Path, Dom);
 	(process_request_loan(File_Path, Dom);
-	%(process_request_ledger_xml(File_Path, Dom);
  	process_request_livestock(File_Path, Dom)
 	%(process_request_investment:process(File_Path, Dom);
 	)).
