@@ -106,7 +106,7 @@ def work_loop():
 					try:
 						task_result = do_task(task)
 					finally:
-						log.warning('worker %s exception, stopping heartbeat', worker_id)
+						log.warning('%s stopping heartbeat', worker_id)
 						stop_heartbeat.set()
 	
 			except requests.exceptions.ReadTimeout:
