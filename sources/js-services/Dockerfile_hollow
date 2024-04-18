@@ -24,7 +24,7 @@ COPY  --chown=myuser:myuser  $APPDIR/package-lock.json .
 
 RUN pwd
 RUN ls -thrlsa
-
+RUN echo $USER
 
 RUN npm install
 
