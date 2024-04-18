@@ -78,7 +78,6 @@ def postprocess(job, request_directory, converted_request_files, tmp_name, tmp_p
 	if result_tmp_directory_url and result_sheets_fn.is_file():
 		generate_result_xlsx(tmp_path)
 		reports_dict['excel sheets'] = result_tmp_directory_url + '/result.xlsx'
-		
 
 	sections['Job']=dict(
 			Archive=f'../../view/archive/{job}/{tmp_name}',
@@ -86,8 +85,8 @@ def postprocess(job, request_directory, converted_request_files, tmp_name, tmp_p
 			Inputs=f'../{request_directory}',
 			Rdftab='/static/rdftab/rdftab.html?'+urllib.parse.urlencode(
 					{
-						'node':						'<'+	public_url + '/rdf/results/' + result_tmp_directory_name+'/>',
-						'focused-graph':				public_url + '/rdf/results/' + result_tmp_directory_name+'/default'
+						'node':					'<'+result_uri+'/>',
+						'focused-graph':			result_graph
 					}
 				),
 			JobDir=f'../{job}',
