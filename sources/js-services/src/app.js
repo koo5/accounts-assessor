@@ -231,6 +231,12 @@ app.post('/frame', async (req, res) => {
 	const input_file_name = path.basename(input_file_path);
 	const destination_dir_path = body.destination_dir_path; // converted/
 	const dest = destination_dir_path + '/' + input_file_name + '.jsonld'
+	const frame_root_uri = body.frame_root_uri;
+	if (frame_root_uri) {
+		//deep copy frame
+		frame = JSON.parse(JSON.stringify(frame));
+		frame['@id'] = frame_root_uri;
+	}
 
     console.error('frame', input_file_path, dest);
 

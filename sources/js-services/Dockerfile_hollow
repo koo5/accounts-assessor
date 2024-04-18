@@ -20,7 +20,6 @@ RUN echo "ENVxx:" "$APPDIR" "$APPPATH"
 WORKDIR $APPPATH
 COPY  --chown=myuser:myuser  $APPDIR/package.json .
 COPY  --chown=myuser:myuser  $APPDIR/package-lock.json .
-
 RUN chown -vR myuser:myuser $APPPATH
 
 
@@ -33,7 +32,7 @@ RUN npm install
 
 
 
-CMD "./start.sh"
+CMD "./src/start.sh"
 ENV HC="curl http://127.0.0.1:17790/health" 
 
 

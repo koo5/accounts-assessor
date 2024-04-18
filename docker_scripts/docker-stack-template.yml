@@ -290,7 +290,6 @@ services:
       restart_policy:
         condition: any       
 
-
   redis:
     image: redis:6-alpine
     networks:

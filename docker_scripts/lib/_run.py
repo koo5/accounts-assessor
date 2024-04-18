@@ -671,7 +671,11 @@ def tweaked_services(src, port_postfix, PUBLIC_URL, use_host_network, mount_host
 			if mount_host_sources_dir:
 				if 'volumes' not in service:
 					service['volumes'] = []
-				service['volumes'].append('../sources:/app/sources')
+				if x == 'js-services':
+					host_sources_bind = '../sources/js-services/src:/app/sources/js-services/src'
+				else:
+					host_sources_bind = '../sources:/app/sources'
+				service['volumes'].append(host_sources_bind)
 				assert service['image'] == f'koo5/{x}${{PP}}:latest', service['image']
 				service['image'] = f'koo5/{x}-hlw{port_postfix}:latest'
 
