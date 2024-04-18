@@ -3,7 +3,7 @@
 frontend (or other caller) imports this file.
 
 """
-
+import json
 import logging, sys
 import ntpath
 import os
@@ -205,6 +205,7 @@ def call_prolog_calculator(
 		on_failure=print_actor_error
 	)
 
+	json.dump(result, open(result_tmp_directory_path + '/result.json', 'w'), indent=2)
 	return result
 
 
