@@ -13,7 +13,8 @@ _term() {
 trap _term SIGTERM
 
 
-pwd
+# pwd
+
 
 if [ ! -z $WATCHMEDO ]; then
   #QUEUE=health watchmedo auto-restart --debounce-interval 1 --interval $WATCHMEDO_INTERVAL -d .  -d ../common  --patterns="*.py;*.egg" --recursive  -- ./start2.sh 9112 &

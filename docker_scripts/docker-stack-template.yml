@@ -100,6 +100,7 @@ services:
     environment:
       SERVICES_URL:
       CSHARP_SERVICES_URL:
+      JS_SERVICES_URL:
       RABBITMQ_URL:
       REMOULADE_PG_URI:
       REMOULADE_API:
@@ -188,6 +189,7 @@ services:
       AGRAPH_URL:
       WATCHMEDO:
       CSHARP_SERVICES_URL:
+      JS_SERVICES_URL:
       PYDEVD_PYCHARM_PORT: 29111
       FLY:
     volumes:
@@ -268,7 +270,25 @@ services:
         condition: any
     environment:
       CSHARPSERVICES_DATADIR: "/App/data/"
-        
+
+
+  js-services:
+    image: koo5/js-services${PP}:latest
+    volumes:
+      - tmp:/app/server_root/tmp
+      - "/etc/localtime:/etc/localtime:ro"
+      - "../sources/static/:/App/data/"
+      - "/home/myuser/.dotnet"
+    networks:
+      - backend
+    hostnet_ports:
+      - 17790
+    deploy:
+      replicas: 1
+      placement:
+        constraints: [node.role == storage]
+      restart_policy:
+        condition: any       
 
 
   redis:

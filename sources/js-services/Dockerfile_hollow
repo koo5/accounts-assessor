@@ -1,32 +1,37 @@
 FROM koo5/ubuntu
 ARG APPDIR
 ARG APPPATH
+ENV APPDIR=${APPDIR}
+ENV APPPATH=${APPPATH}
 
 
 
 
+RUN apt-get install -y nodejs npm
+RUN pip install "watchdog==3.0.0"
 
-# python requirements (common block)
+
+
+RUN echo "ENVxx:" "$APPDIR" "$APPPATH"
+
+
+
+
 USER myuser:myuser
 WORKDIR $APPPATH
-COPY $APPDIR/requirements.txt .
-COPY $APPDIR/requirements-dev.txt .
-RUN PYTHONUSERBASE=/home/myuser/.local python3 -m pip install --upgrade --ignore-installed --user --no-cache-dir -r requirements.txt
-RUN PYTHONUSERBASE=/home/myuser/.local python3 -m pip install --upgrade --ignore-installed --user --no-cache-dir -r requirements-dev.txt
-USER root
+COPY  --chown=myuser:myuser  $APPDIR/package.json .
+COPY  --chown=myuser:myuser  $APPDIR/package-lock.json .
+
+RUN pwd
+RUN ls -thrlsa
+
+
+RUN npm install
 
 
 
-
-
-
-
-WORKDIR $APPPATH
-USER myuser
-CMD ["./start.sh"]
-ENV HC="curl http://127.0.0.1:6457/health" 
-
-
+CMD "./start.sh"
+ENV HC="curl http://127.0.0.1:17790/health" 
 
 
 

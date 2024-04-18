@@ -308,6 +308,7 @@ ProxyPass "/{path}" "http://{frontend}:7788/{path}"  connectiontimeout=999999999
 		'REMOULADE_API': 'http://localhost:5005' if hn else 'http://remoulade-api:5005',
 		'SERVICES_URL': 'http://localhost:17788' if hn else 'http://services:17788',
 		'CSHARP_SERVICES_URL': 'http://localhost:17789' if hn else 'http://csharp-services:17789',
+		'JS_SERVICES_URL': 'http://localhost:17790' if hn else 'http://js-services:17790',
 		'DOWNLOAD_BASTION_URL': 'http://localhost:6457' if hn else 'http://download:6457',
 		'ALL_PROXY': 'http://localhost:3128' if hn else 'http://webproxy:3128',
 	}
@@ -664,7 +665,7 @@ def tweaked_services(src, port_postfix, PUBLIC_URL, use_host_network, mount_host
 		if not container_startup_sequencing:
 			v['depends_on'] = {}
 
-	for x in ['worker', 'workers', 'manager', 'actors', 'services', 'frontend', 'remoulade-api', 'download']:
+	for x in ['worker', 'workers', 'manager', 'actors', 'services', 'js-services', 'frontend', 'remoulade-api', 'download']:
 		if x in services:
 			service = services[x]
 			if mount_host_sources_dir:
@@ -854,7 +855,7 @@ def build(offline, port_postfix, mode, parallel_build, no_cache, omit_images, on
 
 	def svc(service_name, dir, cmd, dockerfile):
 		if service_name not in omit_images and (not only_images or service_name in only_images):
-			appdir = service_name.replace("-","_")
+			appdir = service_name #.replace("-","_")
 			args = dict(
 				APPDIR=appdir, 
 				APPPATH = f'/app/sources/{appdir}'
@@ -879,18 +880,19 @@ def build(offline, port_postfix, mode, parallel_build, no_cache, omit_images, on
 
 	svc('apache', 		  'apache', 						dbptks+'{port_postfix}"', 	"Dockerfile")
 	svc('agraph', 		  'agraph', 						dbptks+'{port_postfix}"', 	"Dockerfile")
-	svc('super-bowl', 	  '../sources/super-bowl/',			dbptks+'"',					"container/Dockerfile")
-	svc('csharp-services','../sources/CsharpServices/WebApplication2',	dbptks+'"',	"../../../docker_scripts/csharp_services/Dockerfile")
+	svc('super-bowl', 	  '../sources/super-bowl/',		dbptks+'"',					"container/Dockerfile")
+	svc('csharp-services', '../sources/CsharpServices/WebApplication2',	dbptks+'"',	"../Dockerfile")
 
 	join([ubuntu])
 
-	svc('download',				'../sources/', dbtks+'-hlw{port_postfix}"', "../docker_scripts/download/Dockerfile_hollow")
-	svc('remoulade-api', 		'../sources/', dbtks+'-hlw{port_postfix}"', "../docker_scripts/remoulade_api/Dockerfile_hollow")
+	svc('download',				'../sources/', dbtks+'-hlw{port_postfix}"', "download/Dockerfile_hollow")
+	svc('remoulade-api', 		'../sources/', dbtks+'-hlw{port_postfix}"', "remoulade-api/Dockerfile_hollow")
 	svc('actors',				'../sources/', dbtks+'-hlw{port_postfix}"', "actors/Dockerfile_hollow")
 	svc('worker',				'../sources/', dbtks+'-hlw{port_postfix}"', "worker/Dockerfile_hollow")
 	svc('manager',				'../sources/', dbtks+'-hlw{port_postfix}"', "manager/Dockerfile_hollow")
-	svc('internal-services',		'../sources/', dbtks+'-hlw{port_postfix}"', "internal_services/Dockerfile_hollow")
+	svc('internal-services',		'../sources/', dbtks+'-hlw{port_postfix}"', "internal-services/Dockerfile_hollow")
 	svc('services',				'../sources/', dbtks+'-hlw{port_postfix}"', "services/Dockerfile_hollow")
+	svc('js-services',			'../sources/', dbtks+'-hlw{port_postfix}"', "js-services/Dockerfile_hollow")
 	svc('frontend',				'../sources/', dbtks+'-hlw{port_postfix}"', "frontend/Dockerfile_hollow")
 
 	os.set_blocking(sys.stdout.fileno(), False)
