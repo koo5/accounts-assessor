@@ -43,7 +43,7 @@ def frame_input_rdf(converted_request_files):
 
 
 @remoulade.actor(priority=1, time_limit=1000*60*60*24*365, queue_name='postprocessing')
-def postprocess(job, request_directory, converted_request_files, tmp_name, tmp_path, result, user, public_url):
+def postprocess(job, request_directory, converted_request_files, tmp_name, tmp_path, result, user, public_url, result_uri, result_graph):
 	log.info('postprocess...')
 
 	tmp_path = Path(tmp_path)

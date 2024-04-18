@@ -17,22 +17,26 @@ Generic conversion from our table format into a sheet. The sheet's type will be 
 	bn(result_sheet_type, Sheet_type),
 	bn(result_sheet_template_root, Template_root),
 
-	!doc_add(Sheet_instance, excel:is_result_sheet, true, $>result_sheets_graph),
-	!doc_add(Sheet_instance, excel:sheet_instance_has_sheet_name, Title_Text_short, $>result_sheets_graph),
-	!doc_add(Sheet_instance, excel:sheet_instance_has_sheet_type, Sheet_type, $>result_sheets_graph),
-	!doc_add(Sheet_type, excel:root, Template_root, $>result_sheets_graph),
+	result_sheets_graph(G),
+
+	!doc_add($>result, excel:has_result_sheet, Sheet_instance, G), 
+	!doc_add(Sheet_instance, excel:is_result_sheet, true, G),
+	!doc_add(Sheet_instance, excel:sheet_instance_has_sheet_name, Title_Text_short, G),
+	!doc_add(Sheet_instance, excel:sheet_instance_has_sheet_type, Sheet_type, G),
+	!doc_add(Sheet_type, excel:root, Template_root, G),
 	bn(result_template_position, Pos),
-	!doc_add(Pos, excel:col, "A", $>result_sheets_graph),
-	!doc_add(Pos, excel:row, "3", $>result_sheets_graph),
-	!doc_add(Template_root, excel:position, Pos, $>result_sheets_graph),
-	!doc_add(Template_root, excel:title, Title_Text, $>result_sheets_graph),
-	!doc_add(Template_root, excel:cardinality, excel:multi, $>result_sheets_graph),
+	!doc_add(Pos, excel:col, "A", G),
+	!doc_add(Pos, excel:row, "3", G),
+	!doc_add(Template_root, excel:position, Pos, G),
+	!doc_add(Template_root, excel:title, Title_Text, G),
+	!doc_add(Template_root, excel:cardinality, excel:multi, G),
 	bn(investment_report_item_type, Investment_report_item_type),
-	!doc_add(Template_root, excel:class, Investment_report_item_type, $>result_sheets_graph),
+	!doc_add(Template_root, excel:class, Investment_report_item_type, G),
 	excel_template_fields_from_table_declaration(Columns, Fields, Column_id_to_prop_uri_dict),
-	!doc_add(Template_root, excel:fields, $>doc_add_list(Fields, $>result_sheets_graph), $>result_sheets_graph),
+	!doc_add(Template_root, excel:fields, $>doc_add_list(Fields, G), G),
 	maplist(!'table sheet record'(Columns, Column_id_to_prop_uri_dict), Rows, Items),
-	!doc_add_value(Sheet_instance, excel:sheet_instance_has_sheet_data, $>doc_add_list(Items, $>result_sheets_graph), $>result_sheets_graph).
+	!doc_add_value(Sheet_instance, excel:sheet_instance_has_sheet_data, $>doc_add_list(Items, G), G).
+	
 
 
 

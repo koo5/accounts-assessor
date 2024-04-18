@@ -82,11 +82,14 @@ def frame_results(result, tmp_path, result_uri):
 
 		doc_result_sheets_file_path = Path(tmp_path) / url_file(doc_result_sheets)			
 
-		r = requests.post(os.environ['JS_SERVICES_URL'] + '/frame', json=dict(
+		params = dict(
 			input_file_path=str(doc_result_sheets_file_path),
-			destination_dir_path=str(tmp_path))
+			destination_dir_path=str(tmp_path),
 			frame_root_uri=result_uri
 		)
+		log.debug(str(params))
+		
+		r = requests.post(os.environ['JS_SERVICES_URL'] + '/frame', json=params)
 		r.raise_for_status()
 		framed = r.json()['output_file_path']
 		
@@ -174,7 +177,7 @@ def call_prolog_calculator(
 	))
 
 
-	result_uri = public_url + '/rdf/results/' + result_tmp_directory_name
+	result_uri = public_url + '/rdf/results/' + result_tmp_directory_name + '/'
 	result_graph = public_url + '/rdf/results/' + result_tmp_directory_name+'/default'
 
 	frame_results(result, result_tmp_directory_path, result_uri)
@@ -185,7 +188,8 @@ def call_prolog_calculator(
 	
 	
 	log.info('postprocess(%s, %s, %s)' % (result_tmp_directory_path, result, worker_options['user']))
-	trusted_workers.postprocess.send_with_options(kwargs=dict(
+	trusted_workers.postprocess.send_with_options(
+		kwargs=dict(
 			job=params['final_result_tmp_directory_name'],
 			request_directory=request_directory,
 			converted_request_files=converted_request_files,
@@ -195,7 +199,7 @@ def call_prolog_calculator(
 			user=worker_options['user'],
 			public_url=public_url,
 			result_uri=result_uri,
-			result_graph=result_graph,
+			result_graph=result_graph
 		),
 		queue_name='postprocessing',
 		on_failure=print_actor_error

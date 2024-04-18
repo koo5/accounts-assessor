@@ -234,14 +234,16 @@ app.post('/frame', async (req, res) => {
 	const frame_root_uri = body.frame_root_uri;
 	if (frame_root_uri) {
 		//deep copy frame
-		frame = JSON.parse(JSON.stringify(frame));
-		frame['@id'] = frame_root_uri;
+		var frame2 = JSON.parse(JSON.stringify(frame));
+		frame2['@id'] = frame_root_uri;
 	}
+	else
+	    var frame2 = frame;
 
-    console.error('frame', input_file_path, dest);
+    console.error('frame', input_file_path, dest, frame2);
 
 	var doc = await load_n3(input_file_path, false);
-	var r = await do_frame(doc, frame);
+	var r = await do_frame(doc, frame2);
 	clean(r);
 	
 	fs.createWriteStream(dest).write(JSON.stringify(r, null, 4)); 
