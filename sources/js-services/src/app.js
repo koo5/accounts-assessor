@@ -1,5 +1,6 @@
 var jl = require('jsonld');
 var fs = require('fs');
+var n3 = require('n3');
 var path = require('path');
 
 const express = require('express');
@@ -7,6 +8,7 @@ const express = require('express');
 
 
 const app = express();
+app.use(express.json());
 
 
 
@@ -173,39 +175,39 @@ async function do_frame(data, frame)
 
 
 function clean(data) {
-    //console.log(data);
-    var del = [];
-    for (var key in data) {
-        var value = data[key];
-        //console.error(key);
-        
-        /*if (key === "excel:sheet_instance_has_sheet_type") {
-            data[key] = value['@id'];
-        }*/ // this wont translate back without this in the context: "ex:contains": {"@type": "@id"}
+	//console.log(data);
+	var del = [];
+	for (var key in data) {
+		var value = data[key];
+		//console.error(key);
+		
+		/*if (key === "excel:sheet_instance_has_sheet_type") {
+			data[key] = value['@id'];
+		}*/ // this wont translate back without this in the context: "ex:contains": {"@type": "@id"}
 
-        if (
-            (key === "rdf:value" && value === null) ||
-            key === "excel:col" || 
-            key === "excel:row" || 
-            key === "excel:title" || 
-            key === "excel:position" || 
-            key === "excel:has_sheet_name" || 
-            key === "excel:template" ||
-            key === "excel:sheet_type"
-            ) {
-            //console.log('deleting ' + key + '...');
-            del.push(key);
-        }
-        else if ((typeof value) === 'object') {
-            //console.log(value);
-            if (value != null)
-                clean(value);
-        }
-    }
-    for (var k of del) {
-        console.error('deleting ' + k + '...');
-        delete data[k];
-    }
+		if (
+			(key === "rdf:value" && value === null) ||
+			key === "excel:col" || 
+			key === "excel:row" || 
+			key === "excel:title" || 
+			key === "excel:position" || 
+			key === "excel:has_sheet_name" || 
+			key === "excel:template" ||
+			key === "excel:sheet_type"
+			) {
+			//console.log('deleting ' + key + '...');
+			del.push(key);
+		}
+		else if ((typeof value) === 'object') {
+			//console.log(value);
+			if (value != null)
+				clean(value);
+		}
+	}
+	for (var k of del) {
+		console.error('deleting ' + k + '...');
+		delete data[k];
+	}
 }
 
 
@@ -223,25 +225,28 @@ async function load_n3(fn, add_type2_quads=true)
 
 /* frame just request, or also response (in the exact same way?)?*/
 app.post('/frame', async (req, res) => {
-  
-	const input_file_path = req.body.input_file_path;
-	const input_file_name = req.body.input_file_name;
-	const destination_dir_path = req.body.destination_dir_path; // converted/
+
+	const body = req.body;
+	const input_file_path = body.input_file_path;
+	const input_file_name = path.basename(input_file_path);
+	const destination_dir_path = body.destination_dir_path; // converted/
 	const dest = destination_dir_path + '/' + input_file_name + '.jsonld'
+
+    console.error('frame', input_file_path, dest);
 
 	var doc = await load_n3(input_file_path, false);
 	var r = await do_frame(doc, frame);
 	clean(r);
 	
-	JSON.dump(r, fs.createWriteStream(dest));
+	fs.createWriteStream(dest).write(JSON.stringify(r, null, 4)); 
 	
-    res.json({result: dest});
+	res.json({output_file_path: dest});
 })
 
 
 
 app.post('/request_jsonld_to_rdf', async (req, res) => {
-  
+
 	const input_file_path = req.body.input_file_path;
 	const input_file_name = path.basename(input_file_path);
 	const destination_dir_path = req.body.destination_dir_path; // converted/
@@ -250,14 +255,14 @@ app.post('/request_jsonld_to_rdf', async (req, res) => {
 	var j = await JSON.parse(fs.readFileSync(input_file_path, {encoding: 'utf-8'}));
 	j['@context'] = ctx;
 	const rdf_string = await jl.toRDF(j,	{format: 'application/n-quads'});
-    fs.writeFileSync(dest, rdf_string, {encoding: 'utf-8'});
+	fs.writeFileSync(dest, rdf_string, {encoding: 'utf-8'});
 
-    res.json({output_file_path: dest});
+	res.json({output_file_path: dest});
 })
 
 
 app.get('/health', async (req, res) => {
-    res.json({result: 'ok'});
+	res.json({result: 'ok'});
 })
 
 
@@ -265,6 +270,6 @@ app.get('/health', async (req, res) => {
 const port = 17790;
 
 app.listen(port, () => {
-    console.error(`Example app listening at http://localhost:${port}`)
+	console.error(`Example app listening at http://localhost:${port}`)
 });
 
