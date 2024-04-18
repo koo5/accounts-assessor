@@ -5,17 +5,18 @@ frontend (or other caller) imports this file.
 """
 
 import logging, sys
+import ntpath
+import os
 from pathlib import Path
 
 import requests, time
 
 from agraph import repo_by_user
-from fs_utils import files_in_dir
+from fs_utils import files_in_dir, find_report_by_key
 from tasking import remoulade
 from tmp_dir_path import get_tmp_directory_absolute_path, symlink, ln
-from tmp_dir import create_tmp_for_user, create_tmp
+from tmp_dir import create_tmp_for_user, create_tmp, make_converted_dir, copy_repo_status_txt_to_result_dir
 from app.untrusted_task import *
-from app.helpers import *
 
 sys.path.append(os.path.normpath(os.path.join(os.path.dirname(__file__), '../../common/libs/sdk/src/')))
 import robust_sdk.xml2rdf
@@ -64,7 +65,39 @@ def call_prolog_rpc(msg, worker_options=None):
 	))
 
 
+def url_file(url):
+	return url.split('/')[-1]
+def url_base(url):
+	return '/'.join(url.split('/')[:-1]) + '/'
 	
+
+def frame_results(result, tmp_path):
+	
+	if result.get('reports'):
+		
+		# we should start adding something like "server_identifier" into report dicts, but there's also a twist with isolated workers. So maybe after all, it should be just file name, and directory is implicitly tmp_dir?
+		
+		reports = result.get('reports', [])
+		doc_result_sheets = find_report_by_key(reports, 'doc_result_sheets')
+		if doc_result_sheets:
+
+			doc_result_sheets_file_path = Path(tmp_path) / url_file(doc_result_sheets)			
+
+			r = requests.post(os.environ['JS_SERVICES_URL'] + '/frame', json=dict(
+				input_file_path=doc_result_sheets,
+				destination_dir_path=tmp_path))
+			r.raise_for_status()
+			framed = r.json()['output_file_path']
+			
+			reports.append(dict(
+				key='doc_result_sheets_framed',
+				title='doc_result_sheets_framed',
+				val=dict(url=url_base(doc_result_sheets['val']['url']) + ntpath.basename(framed))
+			))
+	
+	
+
+
 @remoulade.actor(time_limit=1000*60*60*24*365)
 def call_prolog_calculator(
 	request_directory: str,
@@ -83,11 +116,12 @@ def call_prolog_calculator(
 
 	# create a tmp directory for results files created by this invocation of the calculator
 	result_tmp_directory_name, result_tmp_directory_path = create_tmp_for_user(worker_options['user'])
-	
+
+	original_input_files = files_in_dir(get_tmp_directory_absolute_path(request_directory))	
 	
 	# potentially convert request files to rdf (this invokes other actors)
 	try:
-		converted_request_files = preprocess_request_files(files_in_dir(get_tmp_directory_absolute_path(request_directory)), xlsx_extraction_rdf_root)
+		converted_request_files = preprocess_request_files(original_input_files, xlsx_extraction_rdf_root)
 	except RobustException as e:
 		log.error('preprocess_request_files failed: %s' % e)
 		return dict(alerts=[str(e)])
@@ -139,14 +173,18 @@ def call_prolog_calculator(
 	))
 
 
+	frame_results(result, result_tmp_directory_path)
+	
+	
 	# mark this calculator result as finished, and the job as completed
 	ln('../' + result_tmp_directory_name, params['final_result_tmp_directory_path'] + '/completed')
-
+	
 	
 	log.info('postprocess(%s, %s, %s)' % (result_tmp_directory_path, result, worker_options['user']))
 	trusted_workers.postprocess.send_with_options(kwargs=dict(
 		job=params['final_result_tmp_directory_name'],
 		request_directory=request_directory,
+		converted_request_files=converted_request_files,
 		tmp_name=result_tmp_directory_name,
 		tmp_path=result_tmp_directory_path,
 		result=result,
@@ -161,10 +199,10 @@ def call_prolog_calculator(
 
 
 def preprocess_request_files(files, xlsx_extraction_rdf_root):
-	for file in files:
-		if file.lower().endswith('.n3'):
-			got_rdf = True
-	return list(filter(None, map(lambda f: preprocess_request_file(xlsx_extraction_rdf_root, f), files)))
+	files = list(filter(None, map(lambda f: preprocess_request_file(xlsx_extraction_rdf_root, f), files)))
+	return files
+	
+	
 
 def preprocess_request_file(xlsx_extraction_rdf_root, file):
 	log.info('convert_request_file?: %s' % file)
@@ -180,19 +218,26 @@ def preprocess_request_file(xlsx_extraction_rdf_root, file):
 		
 	if file.endswith('/request.xml'):
 		converted_dir = make_converted_dir(file)
-		converted_file = robust_sdk.xml2rdf.Xml2rdf().xml2rdf(file, converted_dir)
-		if converted_file is not None:
-			log.info('converted_file: %s' % converted_file)
-			return converted_file
+		converted_file_path = robust_sdk.xml2rdf.Xml2rdf().xml2rdf(file, converted_dir)
+		if converted_file_path is not None:
+			log.info('converted_file_path: %s' % converted_file_path)
+			return converted_file_path
 			
 	if file.lower().endswith('.xlsx'):
-		log.info('make_converted_dir: %s' % file)
 		converted_dir = make_converted_dir(file)
-		converted_file = str(converted_dir.joinpath(str(PurePath(file).name) + '.n3'))
+		converted_file_path = str(converted_dir.joinpath(str(PurePath(file).name) + '.n3'))
 		log.info('convert_excel_to_rdf: %s' % file)
-		convert_excel_to_rdf(file, converted_file, root=xlsx_extraction_rdf_root)
-		log.info('converted_file: %s' % converted_file)
-		return converted_file
+		convert_excel_to_rdf(file, converted_file_path, root=xlsx_extraction_rdf_root)
+		log.info('converted_file_path: %s' % converted_file_path)
+		return converted_file_path
+
+	if file.lower().endswith('.jsonld'):
+		converted_dir = make_converted_dir(file)
+		r = requests.post(os.environ['JS_SERVICES_URL'] + '/request_jsonld_to_rdf', json=dict(
+			input_file_path=file,
+			destination_dir_path=converted_dir))
+		r.raise_for_status()
+		return r.json()['output_file_path']
 	
 	return file
 
@@ -225,3 +270,12 @@ def print_actor_error(actor_name, exception_name, message_args, message_kwargs):
 
 
 remoulade.declare_actors([print_actor_error, call_prolog_rpc, call_prolog_calculator])
+
+
+
+
+
+
+
+#doc_result_sheets_file_path = Path(tmp_path) / '000000_doc_result_sheets.turtle'
+#if doc_result_sheets_file_path.exists():

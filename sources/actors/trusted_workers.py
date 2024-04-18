@@ -1,6 +1,7 @@
 #sys.path.append(os.path.normpath(os.path.join(os.path.dirname(__file__), '../common/libs/misc')))
 import subprocess
 import sys, os
+import logging
 import time
 import urllib
 from pathlib import Path, PosixPath
@@ -13,9 +14,10 @@ import requests
 import agraph
 from fs_utils import find_report_by_key
 from tasking import remoulade
-import logging
-
+from tmp_dir import make_converted_dir
 from tmp_dir_path import get_tmp_directory_absolute_path, ln
+
+
 
 log = logging.getLogger(__name__)
 log.setLevel(logging.DEBUG)
@@ -30,9 +32,20 @@ class RobustException(Exception):
 	pass
 
 
+def frame_input_rdf(converted_request_files):
+	for file in converted_request_files:
+	if any([file.lower().endswith(x) for x in ['nq', 'nt', 'ttl', 'trig', 'n3']]):
+		converted_dir = make_converted_dir(file)
+		r = requests.post(os.environ['JS_SERVICES_URL'] + '/frame', json=dict(
+		input_file_path=file,
+		destination_dir_path=converted_dir))
+	r.raise_for_status()
+	return r.json()['output_file_path']
+
+
 
 @remoulade.actor(priority=1, time_limit=1000*60*60*24*365, queue_name='postprocessing')
-def postprocess(job, request_directory, tmp_name, tmp_path, result, user, public_url):
+def postprocess(job, request_directory, converted_request_files, tmp_name, tmp_path, result, user, public_url):
 	log.info('postprocess...')
 
 	tmp_path = Path(tmp_path)
@@ -42,6 +55,7 @@ def postprocess(job, request_directory, tmp_name, tmp_path, result, user, public
 	result_tmp_directory_name = uris.get('result_tmp_directory_name', '???')
 	result_tmp_directory_url = find_report_by_key(reports, 'task_directory')
 	
+	frame_input_rdf(converted_request_files)
 	
 	sections = {}
 	
@@ -109,9 +123,12 @@ def postprocess(job, request_directory, tmp_name, tmp_path, result, user, public
 
 
 
+
 def generate_result_xlsx(tmp_path):
 	f = tmp_path / '000000_doc_result_sheets.turtle'
 	if f.is_file():
+
+		# parse doc_result_sheets in python
 		# g=rdflib.graph.ConjunctiveGraph()
 		# log.debug(f"load {f} ...")
 		# g.parse(f, format='turtle')
@@ -125,8 +142,6 @@ def generate_result_xlsx(tmp_path):
 		if r.get('error'):
 			raise RobustException(r.get('error'))
 		
-		
-
 
 
 
@@ -136,6 +151,7 @@ def print_actor_error(actor_name, exception_name, message_args, message_kwargs):
   log.error(f"Exception type: {exception_name}")
   log.error(f"Message args: {message_args}")
   log.error(f"Message kwargs: {message_kwargs}")
+
 
 
 
@@ -163,6 +179,7 @@ def generate_doc_nq_from_trig(g, tmp_path):
 
 
 
+
 def put_doc_dump_into_triplestore(nq_fn, uris, user):
 	log.debug("agc(nq_fn=%s, uris=%s, user=%s)...", nq_fn, uris, user)
 	
@@ -180,6 +197,7 @@ def put_doc_dump_into_triplestore(nq_fn, uris, user):
 			prx = result_prefix, uris['result_data_uri_base']
 			log.debug("c.setNamespace(%s)...", prx)
 			c.setNamespace(*prx)
+
 
 
 

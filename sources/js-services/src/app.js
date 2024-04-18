@@ -1,5 +1,7 @@
 var jl = require('jsonld');
 var fs = require('fs');
+var path = require('path');
+
 const express = require('express');
 
 
@@ -60,6 +62,102 @@ const frame = {
 
 
 
+
+function n3lib_quad_to_jld(x)
+{
+	return {
+		subject: n3lib_term_to_jld(x.subject),
+		predicate: n3lib_term_to_jld(x.predicate),
+		object: n3lib_term_to_jld(x.object),
+		graph: n3lib_term_to_jld(x.graph)
+	}
+}
+
+function n3lib_term_to_jld(x)
+{
+	const termType = x.termType;
+	const value = x.value;
+	switch (termType)
+	{
+		case 'NamedNode':
+			return {termType, value}
+		case 'BlankNode':
+			return {termType, value: '_:' + value}
+		case 'Literal':
+			const r = {termType, value}
+			if (x.language)
+				r.language = x.language
+			if (x.datatype)
+				r.datatype = x.datatype
+			return r
+		case 'DefaultGraph':
+			return {termType, value}
+		default:
+			throw Error('unknown termType: ' + termType)
+	}
+}
+
+
+
+async function n3_file_jld_quads(fn)
+{
+	const store = new n3.Store();
+	const parser = new n3.Parser(/*{format: 'N3'}*/);
+	var n3_text = fs.readFileSync(fn, {encoding: 'utf-8'});
+	const quads = await parser.parse(n3_text)
+	const quads2 = quads.map(n3lib_quad_to_jld);
+	return quads2;
+}
+
+
+
+
+
+async function do_add_type2_quads(quads)
+{
+	//hack around json-ld @reverse rdf:type problem by adding "rdf:type2" for each "rdf:type" quad.
+	// i believe the problem was that i wanted things like this in the context:
+	//"is_type_of": {"@reverse": "rdf:type2", "@container": "@set"},
+	// but due to a peculiarity of the library, it wouldn't work with rdf:type
+
+	const to_be_added = [];
+	quads.forEach((q) =>
+	{
+		const p = q.predicate;
+		if (p.termType == "NamedNode" && p.value == "http://www.w3.org/1999/02/22-rdf-syntax-ns#type")
+		{
+			to_be_added.push({
+				subject: q.subject,
+				predicate: {termType: "NamedNode", value: "http://www.w3.org/1999/02/22-rdf-syntax-ns#type2"},
+				object: q.object,
+				graph: q.graph
+			})
+		}
+	})
+
+	to_be_added.forEach((q) =>
+		quads.push(q));
+}
+
+
+
+
+async function simplify(frame)
+{
+	let f = await cars_framed(source);
+	let items = f['@graph'][0]['rdf:value']['@list'];
+	items.forEach(i => {
+		for (const [key, value] of Object.entries(i)) {
+			let v = value['rdf:value'];
+			if (v !== undefined)
+				i[key] = v;
+		}
+	});
+	return items;
+}
+
+
+
 async function do_frame(data, frame)
 {
 	const framed = await jl.frame(data, frame, {
@@ -112,6 +210,14 @@ function clean(data) {
 
 
 
+async function load_n3(fn, add_type2_quads=true)
+{
+	const quads = await n3_file_jld_quads(fn);
+	if (add_type2_quads)
+		do_add_type2_quads(quads);
+	const data = await jl.fromRDF(quads);
+	return data;
+}
 
 
 
@@ -137,7 +243,7 @@ app.post('/frame', async (req, res) => {
 app.post('/request_jsonld_to_rdf', async (req, res) => {
   
 	const input_file_path = req.body.input_file_path;
-	const input_file_name = req.body.input_file_name;
+	const input_file_name = path.basename(input_file_path);
 	const destination_dir_path = req.body.destination_dir_path; // converted/
 	const dest = destination_dir_path + input_file_name + '.nq'
 	
@@ -146,7 +252,7 @@ app.post('/request_jsonld_to_rdf', async (req, res) => {
 	const rdf_string = await jl.toRDF(j,	{format: 'application/n-quads'});
     fs.writeFileSync(dest, rdf_string, {encoding: 'utf-8'});
 
-    res.json({result: dest});
+    res.json({output_file_path: dest});
 })
 
 

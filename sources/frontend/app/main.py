@@ -606,18 +606,19 @@ def process_request(request, request_tmp_directory_name, request_tmp_directory_p
 		jsn = {
 			"alerts": ["job scheduled."],
 			"reports":
-				[{
+				[
+				{
 					"title": "job URL",
 					"key": "job_tmp_url",
 					"val": {"url": job_tmp_url(public_url, job)}},
-					{
-						"title": "job API URL",
-						"key": "job_api_url",
-						"val": {"url": public_url + '/api/job/' + job.message_id}},
-					{
-						"title": "job view URL",
-						"key": "job_view_url",
-						"val": {"url": public_url + '/view/job/' + job.message_id}},
+				{
+					"title": "job API URL",
+					"key": "job_api_url",
+					"val": {"url": public_url + '/api/job/' + job.message_id}},
+				{
+					"title": "job view URL",
+					"key": "job_view_url",
+					"val": {"url": public_url + '/view/job/' + job.message_id}},
 				]
 		}
 		return JSONResponse(jsn), jsn
