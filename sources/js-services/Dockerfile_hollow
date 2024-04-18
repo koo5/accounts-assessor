@@ -18,10 +18,11 @@ RUN echo "ENVxx:" "$APPDIR" "$APPPATH"
 
 
 USER myuser:myuser
-RUN chown -vR myuser:myuser $APPPATH
 WORKDIR $APPPATH
 COPY  --chown=myuser:myuser  $APPDIR/package.json .
 COPY  --chown=myuser:myuser  $APPDIR/package-lock.json .
+
+RUN chown -vR myuser:myuser $APPPATH
 
 RUN pwd
 RUN ls -thrlsa
