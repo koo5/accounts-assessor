@@ -58,7 +58,7 @@ def copy_request_files_to_tmp(tmp_directory_absolute_path, files):
 
 
 def make_converted_dir(file):
-	log.info('make_converted_dir for conversion of: %s' % file)
+	#log.info('make_converted_dir for conversion of: %s' % file)
 	converted_dir = PurePath('/'.join(PurePath(file).parts[:-1] + ('converted',)))
 	os.makedirs(converted_dir, exist_ok=True)
 	return converted_dir

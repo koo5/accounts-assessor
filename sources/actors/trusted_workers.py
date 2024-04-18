@@ -34,13 +34,11 @@ class RobustException(Exception):
 
 def frame_input_rdf(converted_request_files):
 	for file in converted_request_files:
-	if any([file.lower().endswith(x) for x in ['nq', 'nt', 'ttl', 'trig', 'n3']]):
-		converted_dir = make_converted_dir(file)
-		r = requests.post(os.environ['JS_SERVICES_URL'] + '/frame', json=dict(
-		input_file_path=file,
-		destination_dir_path=converted_dir))
-	r.raise_for_status()
-	return r.json()['output_file_path']
+		if any([file.lower().endswith(x) for x in ['nq', 'nt', 'ttl', 'trig', 'n3']]):
+			converted_dir = make_converted_dir(file)
+			r = requests.post(os.environ['JS_SERVICES_URL'] + '/frame', json=dict(
+			input_file_path=str(file),
+			destination_dir_path=str(converted_dir)))
 
 
 

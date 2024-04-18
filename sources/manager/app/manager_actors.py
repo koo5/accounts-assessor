@@ -7,7 +7,7 @@ frontend (or other caller) imports this file.
 import logging, sys
 import ntpath
 import os
-from pathlib import Path
+from pathlib import Path, PurePath
 
 import requests, time
 
@@ -73,27 +73,26 @@ def url_base(url):
 
 def frame_results(result, tmp_path):
 	
-	if result.get('reports'):
-		
-		# we should start adding something like "server_identifier" into report dicts, but there's also a twist with isolated workers. So maybe after all, it should be just file name, and directory is implicitly tmp_dir?
-		
-		reports = result.get('reports', [])
-		doc_result_sheets = find_report_by_key(reports, 'doc_result_sheets')
-		if doc_result_sheets:
+	reports = result.get('reports', [])
 
-			doc_result_sheets_file_path = Path(tmp_path) / url_file(doc_result_sheets)			
+	# we should start adding something like "server_identifier" into report dicts, but there's also a twist with isolated workers. So maybe after all, it should be just file name, and directory is implicitly tmp_dir?
 
-			r = requests.post(os.environ['JS_SERVICES_URL'] + '/frame', json=dict(
-				input_file_path=doc_result_sheets,
-				destination_dir_path=tmp_path))
-			r.raise_for_status()
-			framed = r.json()['output_file_path']
-			
-			reports.append(dict(
-				key='doc_result_sheets_framed',
-				title='doc_result_sheets_framed',
-				val=dict(url=url_base(doc_result_sheets['val']['url']) + ntpath.basename(framed))
-			))
+	doc_result_sheets = find_report_by_key(reports, 'result_sheets')
+	if doc_result_sheets:
+
+		doc_result_sheets_file_path = Path(tmp_path) / url_file(doc_result_sheets)			
+
+		r = requests.post(os.environ['JS_SERVICES_URL'] + '/frame', json=dict(
+			input_file_path=str(doc_result_sheets_file_path),
+			destination_dir_path=str(tmp_path)))
+		r.raise_for_status()
+		framed = r.json()['output_file_path']
+		
+		reports.append(dict(
+			key='doc_result_sheets_framed',
+			title='doc_result_sheets_framed',
+			val=dict(url=url_base(doc_result_sheets) + ntpath.basename(framed))
+		))
 	
 	
 
@@ -234,8 +233,8 @@ def preprocess_request_file(xlsx_extraction_rdf_root, file):
 	if file.lower().endswith('.jsonld'):
 		converted_dir = make_converted_dir(file)
 		r = requests.post(os.environ['JS_SERVICES_URL'] + '/request_jsonld_to_rdf', json=dict(
-			input_file_path=file,
-			destination_dir_path=converted_dir))
+			input_file_path=str(file),
+			destination_dir_path=str(converted_dir)))
 		r.raise_for_status()
 		return r.json()['output_file_path']
 	
