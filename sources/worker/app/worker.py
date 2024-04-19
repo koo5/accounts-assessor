@@ -15,12 +15,15 @@ from app.host import get_unused_cpu_cores
 sys.path.append(os.path.normpath(os.path.join(os.path.dirname(__file__), '../../common/libs/misc')))
 from fs_utils import file_to_json, json_to_file
 
+
+
 log = logging.getLogger(__name__)
 log.setLevel(logging.DEBUG)
-#log.addHandler(logging.StreamHandler())
-print('----')
 log.debug('debug from worker.py')
 log.info('info from worker.py')
+log.warning('warning from worker.py')
+
+
 
 from dotdict import Dotdict
 
@@ -87,7 +90,7 @@ def work_loop():
 						json=dict(
 							task_result=task_result,
 							worker_info=worker_info,
-						)#, timeout=100
+						), timeout=30
 				)
 	
 				log.debug(f'{worker_id} done go get message')

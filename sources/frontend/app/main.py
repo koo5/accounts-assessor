@@ -600,7 +600,10 @@ def process_request(request, request_tmp_directory_name, request_tmp_directory_p
 			
 	elif requested_output_format == 'immediate_json_reports_list':
 			reports = job.result.get(block=True, timeout=1000 * 1000)
-			return RedirectResponse(find_report_by_key(reports['reports'], 'task_directory') + '/result.json'), reports
+			td = find_report_by_key(reports.get('reports', []), 'task_directory')
+			if td:
+				return RedirectResponse(td + '/result.json'), reports
+			return JSONResponse(reports), reports
 			
 	elif requested_output_format == 'job_handle':
 		jsn = {

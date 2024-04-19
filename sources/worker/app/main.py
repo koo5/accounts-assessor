@@ -76,6 +76,12 @@ from div7a import div7a
 
 
 import my_logging
+my_logging.setup()
+log = logging.getLogger(__name__)
+log.setLevel(logging.DEBUG)
+log.debug('test debug')
+log.info('test info')
+log.warning('test warning')
 
 
 
@@ -97,6 +103,10 @@ async def start_worker_if_not_running():
 	
 	# there is no good way to make fastapi call a function after it is initialized
 	await asyncio.sleep(2)
+	log.info('start_worker_if_not_running')
+	log.debug('test debug')
+	log.info('test info')
+	log.warning('test warning')
 	
 	# the check here might be unnecessary depending on how exactly we end up spawning the worker thread.
 	if worker_thread is None:

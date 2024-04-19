@@ -144,7 +144,7 @@ RUN PYTHONUSERBASE=/home/myuser/.local python3 -m pip install -v --upgrade --ign
 WORKDIR $APPPATH
 USER myuser
 ENV APPDIR=${APPDIR}
-CMD ./start.sh --service $APPDIR
+CMD ./start.sh --service ${APPDIR}
 ENV HC="curl -L -S --fail http://127.0.0.1:1111/health --fail" 
 
 

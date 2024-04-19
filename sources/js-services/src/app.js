@@ -258,11 +258,11 @@ app.post('/request_jsonld_to_rdf', async (req, res) => {
 	const input_file_path = req.body.input_file_path;
 	const input_file_name = path.basename(input_file_path);
 	const destination_dir_path = req.body.destination_dir_path; // converted/
-	const dest = destination_dir_path + input_file_name + '.nq'
+	const dest = destination_dir_path + '/' + input_file_name + '.nq'
 	
 	var j = await JSON.parse(fs.readFileSync(input_file_path, {encoding: 'utf-8'}));
 	j['@context'] = ctx;
-	const rdf_string = await jl.toRDF(j,	{format: 'application/n-quads'});
+	const rdf_string = await jl.toRDF(j, {format: 'application/n-quads'});
 	fs.writeFileSync(dest, rdf_string, {encoding: 'utf-8'});
 
 	res.json({output_file_path: dest});

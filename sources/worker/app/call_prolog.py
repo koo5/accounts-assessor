@@ -177,34 +177,42 @@ def call_prolog(
 			readable, _, _ = select.select(reads, [], [], 0.1)
 		
 			if p.stdout in readable:
-				stdout_line = p.stdout.readline()
-				if stdout_line:
-					log.info(stdout_line.rstrip())
-					stdout_data += stdout_line
+				while True:
+					line = p.stdout.readline()
+					if not line:
+						break
+					log.info(line.rstrip())
+					stdout_data += line
 		
 			if p.stderr in readable:
-				stderr_line = p.stderr.readline()
-				if stderr_line:
-					if worker_options.get('worker_log'):
-						log.info(stderr_line.rstrip())
+				while True:
+					line = p.stderr.readline()
+					if not line:
+						break
+					#if worker_options.get('worker_log'):
+					log.info(line.rstrip())
 		
 			if end:
 				if p.stdout in readable:
-					stdout_line = p.stdout.read()
-					if stdout_line:
-						log.info(stdout_line.rstrip())
-						stdout_data += stdout_line
+					while True:
+						line = p.stdout.read()
+						if not line:
+							break
+						log.info(line)
+						stdout_data += line
 			
 				if p.stderr in readable:
-					stderr_line = p.stderr.read()
-					if stderr_line:
-						if worker_options.get('worker_log'):
-							log.info(stderr_line.rstrip())
+					while True:
+						line = p.stderr.read()
+						if not line:
+							break
+						#if worker_options.get('worker_log'):
+						log.info(line)
 				
 				break
 			ret = p.poll()
 			if ret is not None:
-				log.info(f'invoke_rpc: process ended with return code {ret}')
+				log.warning(f'invoke_rpc: process ended with return code {ret}')
 				time.sleep(1)#hacke
 				end = True
 		

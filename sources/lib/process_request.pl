@@ -17,7 +17,7 @@
 
 
  process_request_rpc_calculator(Params) :-
-	set_unique_tmp_directory_name(loc(tmp_directory_name, Params.result_tmp_directory_name)),
+ 	set_unique_tmp_directory_name(loc(tmp_directory_name, Params.result_tmp_directory_name)),
 	doc_init,
 	%init_doc_dump_server,
 	context_trace_init_trail_0,
@@ -385,7 +385,7 @@ alert_to_html also has key available - 'error'
 			add_report_file(_, -20,'request_xml', 'request_xml', Url),
 			Type = xml
 		)
-	;	(	(loc_icase_endswith(Path, "n3");loc_icase_endswith(Path, "trig");loc_icase_endswith(Path, "trig.gz"))
+	;	(	(loc_icase_endswith(Path, "n3");loc_icase_endswith(Path, "trig");loc_icase_endswith(Path, "trig.gz");loc_icase_endswith(Path, "nq");loc_icase_endswith(Path, "nt"))
 		->	(
 				add_report_file(_, -20,'request_n3', 'request_n3', Url),
 				Type = n3
@@ -400,9 +400,8 @@ alert_to_html also has key available - 'error'
 
 
  load_request_rdf(loc(absolute_path, Rdf_Tmp_File_Path)) :-
-
 	rdf_load(Rdf_Tmp_File_Path, [
-		anon_prefix(bn),
+		anon_prefix('_:bl'),
 		on_error(error)
 	]),
 	%findall(_, (rdf(S,P,O),format(user_error, 'raw_rdf:~q~n',(S,P,O))),_),

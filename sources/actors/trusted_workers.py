@@ -76,8 +76,12 @@ def postprocess(job, request_directory, converted_request_files, tmp_name, tmp_p
 
 	result_sheets_fn = tmp_path / '000000_doc_result_sheets.turtle'
 	if result_tmp_directory_url and result_sheets_fn.is_file():
-		generate_result_xlsx(tmp_path)
-		reports_dict['excel sheets'] = result_tmp_directory_url + '/result.xlsx'
+		try:
+			generate_result_xlsx(tmp_path)
+		except Exception as e:
+			log.error(f"generate_result_xlsx failed: {e}")
+		else:
+			reports_dict['excel sheets'] = result_tmp_directory_url + '/result.xlsx'
 
 	sections['Job']=dict(
 			Archive=f'../../view/archive/{job}/{tmp_name}',

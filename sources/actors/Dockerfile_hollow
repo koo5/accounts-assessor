@@ -40,5 +40,5 @@ USER myuser:myuser
 WORKDIR $APPPATH
 USER myuser
 ENV APPDIR=${APPDIR}
-CMD ./start.sh --service $APPDIR
+CMD ./start.sh --service ${APPDIR}
 HEALTHCHECK  --interval=2s --timeout=60s CMD /bin/true

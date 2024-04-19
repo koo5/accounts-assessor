@@ -44,7 +44,7 @@ RUN curl -L https://fly.io/install.sh | sh
 WORKDIR $APPPATH
 USER myuser
 ENV APPDIR=${APPDIR}
-CMD ./start.sh --service $APPDIR
+CMD ./start.sh --service ${APPDIR}
 ENV HC="curl -L -S --fail http://127.0.0.1:9111/health" 
 
 
