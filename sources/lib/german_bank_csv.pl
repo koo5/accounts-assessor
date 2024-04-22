@@ -1,6 +1,21 @@
 :- use_module(library(uri)).
 
 /*
+glossary:
+
+ursprung
+	source
+	origin
+
+zinsen
+	interest(rate)
+
+soll
+	debit(debited from your bank account)
+
+haben
+	credit(credited to your bank acount)
+
 fixme:
 doesnt assert l:bank_account currenty
 */
