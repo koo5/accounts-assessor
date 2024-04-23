@@ -218,8 +218,14 @@
 	;	Value = evaluation_failed(Term, $>gensym(evaluation_failure))).
 
 
- evaluate2(_Crosscheck_uri, Sd, report_value(Key), Values_List) :-
-	path_get_dict(Key, Sd, Values_List).
+ evaluate2(_Crosscheck_uri, Sd, report_value(Key), Vec) :-
+	path_get_dict(Key, Sd, Values_List),
+	(	is_list(Values_List)
+	->	(
+			doc_new_vec(Values_List, Vec),
+			doc_add(Vec, l:origin, Key)
+		)
+	;	Vec = Values_List).
 		
 
  evaluate2(Crosscheck_uri, Sd, account_balance(Report_Id, Acct), Values_List) :-
