@@ -129,16 +129,14 @@ def call_prolog(
 
 	goal_opts = ['-g', debug_goal + worker_options['prolog_flags'] + goal + halt_goal]
 
+	
+	tm = ['/usr/bin/time', '-v', '--output', worker_tmp_path + '/time.txt']
+
 	if worker_options.get('skip_dev_runner', False):
-		cmd = flatten_lists([
-			#'/usr/bin/time', '-v', 
-			'mprof', 'run', '--nopython', '-C', '-E', '-o', worker_options['MPROF_OUTPUT_PATH'], 'swipl', '-O', '--stack_limit=100G', '-s', sources(entry_file), goal_opts
+		cmd = flatten_lists(tm + ['mprof', 'run', '--nopython', '-C', '-E', '-o', worker_options['MPROF_OUTPUT_PATH'], 'swipl', '-O', '--stack_limit=100G', '-s', sources(entry_file), goal_opts
 		])
 	else:
-		cmd = flatten_lists([
-			#'/usr/bin/time',
-			#	'-v',
-			#	--f', "user time :%U secs, max mem: %M kb",
+		cmd = flatten_lists(tm + [
 			git("sources/public_lib/lodgeit_solvers/tools/dev_runner/dev_runner.pl"),
 			['--problem_lines_whitelist',
 			 git("sources/public_lib/lodgeit_solvers/tools/dev_runner/problem_lines_whitelist")],
@@ -160,7 +158,11 @@ def call_prolog(
 
 	stdout_data = ''
 
-	with open(worker_tmp_path + '/mem_prof.txt', 'w') as stderr_log:
+	def log_worker_output(line):
+		log.info(line.rstrip())
+		worker_log.write(line)
+
+	with open(worker_tmp_path + '/log.txt', 'w') as worker_log:
 	
 		p = subprocess.Popen(cmd, universal_newlines=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE, env=env)
 	
@@ -181,7 +183,7 @@ def call_prolog(
 					line = p.stdout.readline()
 					if not line:
 						break
-					log.info(line.rstrip())
+					log_worker_output(line)
 					stdout_data += line
 		
 			if p.stderr in readable:
@@ -189,8 +191,7 @@ def call_prolog(
 					line = p.stderr.readline()
 					if not line:
 						break
-					#if worker_options.get('worker_log'):
-					log.info(line.rstrip())
+					log_worker_output(line)
 		
 			if end:
 				if p.stdout in readable:
@@ -198,7 +199,7 @@ def call_prolog(
 						line = p.stdout.read()
 						if not line:
 							break
-						log.info(line)
+						log_worker_output(line)
 						stdout_data += line
 			
 				if p.stderr in readable:
@@ -206,14 +207,12 @@ def call_prolog(
 						line = p.stderr.read()
 						if not line:
 							break
-						#if worker_options.get('worker_log'):
-						log.info(line)
+						log_worker_output(line)
 				
 				break
 			ret = p.poll()
 			if ret is not None:
 				log.warning(f'invoke_rpc: process ended with return code {ret}')
-				time.sleep(1)#hacke
 				end = True
 		
 	p.stdout.close()
