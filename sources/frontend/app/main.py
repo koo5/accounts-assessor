@@ -515,7 +515,7 @@ def create_archive(task_directory, message, archive_dir_path, final_zip_path):
 
 
 @app.post("/upload")
-def upload(request: Request, file1: Optional[UploadFile]=None, file2: Optional[UploadFile]=None, file3: Optional[UploadFile]=None, request_format:str='rdf', requested_output_format:str='job_handle', xlsx_extraction_rdf_root:str=None):
+def upload(request: Request, file1: Optional[UploadFile]=None, file2: Optional[UploadFile]=None, file3: Optional[UploadFile]=None, request_format:str='rdf', requested_output_format:str='job_handle', xlsx_extraction_rdf_root:str=None) -> dict:
 	"""
 	Trigger a calculator by uploading one or more input files.
 	"""

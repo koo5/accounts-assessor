@@ -4,7 +4,7 @@
 Prolog is the only codebase where we implement the RDF UI logic, (and where we'd probably continue its development.) */
 
 
- process_request_loan_rdf :-
+ process_request_div7a_rdf :-
 	ct(
 		"is this a Div7A Calculator query?",
 		?get_optional_singleton_sheet_data(div7a_ui:sheet, Loan)

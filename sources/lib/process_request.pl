@@ -3,7 +3,7 @@
 %:- use_module(library(prolog_stack)).
 
 
-:- [process_request_loan].
+:- [process_request_div7a].
 :- [process_request_ledger].
 :- [process_request_livestock].
 %:- use_module(process_request_investment, []).
@@ -424,7 +424,7 @@ alert_to_html also has key available - 'error'
  process_xml_request(File_Path, Dom) :-
 /*+   request_xml_to_doc(Dom),*/
 	(process_request_car(File_Path, Dom);
-	(process_request_loan(File_Path, Dom);
+	(process_request_div7a(File_Path, Dom);
  	process_request_livestock(File_Path, Dom)
 	%(process_request_investment:process(File_Path, Dom);
 	)).

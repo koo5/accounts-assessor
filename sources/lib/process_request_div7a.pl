@@ -29,7 +29,7 @@ is it the case that at least one payment is expected / assumed, each year? That'
 
 
 
- process_request_loan(Request_File, DOM) :-
+ process_request_div7a(Request_File, DOM) :-
 %gtrace,
 	% startDate and endDate in the request xml are ignored.
 	% they are not used in the computation.
