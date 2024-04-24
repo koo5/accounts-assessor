@@ -144,7 +144,7 @@ class RpcCommand(BaseModel):
 app = FastAPI(
 	title="Robust API",
 	summary="invoke accounting calculators and other endpoints",
-	servers = [dict(url=os.environ['PUBLIC_URL'][:-1])],
+	servers = [dict(url=os.environ['PUBLIC_URL'].rstrip('/'))],
 	
 )
 
