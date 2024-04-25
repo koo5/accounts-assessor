@@ -1,0 +1,91 @@
+
+https://github.com/lodgeit-labs/accounts-assessor-private-data/blob/main/doc/xbrl/6-Warren%20Future%20of%20XBRL%20Calculations%20and%20Formula.pdf
+
+https://xbrl.us/xule-training-intro/
+
+
+
+ The concept core dimension MUST be present on all facts (oime:missingConceptDimension).
+
+The concept core dimension MUST identify a concept from the taxonomy (oime:unknownConcept). 
+
+
+
+
+
+    The concept identified as the source of the relationship is referred to as the total concept.
+    The concept identified as the target of the relationship is referred to as a contributing concept.
+    The value of the defining arc's weight attribute is referred to as the contribution weight.
+
+
+
+
+A calculation binds wherever the following conditions are met:
+
+    A reported data point T, exists with a concept core dimension of the calculation's total concept;
+    The set of contributing reported data points, SS, consisting of reported data points which have a concept core dimension of any of the calculations's contributing concepts and which are dimensionally aligned to T is not empty.
+
+
+
+
+
+
+
+
+The fact value interval for a fact is the range of possible values that the reported fact value is consistent with having been rounded from, allowing for a "half" value to have been rounded either up or down. For a fact with {value} v, and finite {decimals} property d, it is defined as:
+
+[v-0.5*10^(0-d), v+0.5*10^(0-d)]
+
+For a fact with a {decimals} property of "infinity", it is defined as the single point interval:
+
+[v, v]
+
+For example, a fact with a value of 5,000 and decimals = -3 represents an interval of:
+
+  [5000 - 0.5 * 10^3, 5000 + 0.5 * 10^3] 
+= [5000 - 500, 5000 + 500]
+= [4500, 5500]
+
+
+
+
+
+
+
+4.5 Interval arithmetic
+
+The process described above requires two interval arithmetic operations: multiplication and addition.
+
+Addition of two intervals, is defined as:
+
+[x1, x2] + [y1, y2] = [x1 + y1, x2 + y2]
+
+
+
+
+
+
+
+
+https://xbrl.us/xule-training-intro/
+
+
+output examplesum
+$nca = [@concept.local-name = 'AssetsNoncurrent' @period = $period @unit = $unit]
+$ca = [@concept.local-name = 'AssetsCurrent' @period = $period @unit = $unit]
+$a = [@concept.local-name = 'Assets' @period = $period @unit = $unit]
+$ncaa = $nca + $ca
+$a == $ncaa
+message
+   {if $a == $ncaa
+    "In the report, the sum of the values of " + $nca.concept.local-name.string + ", which is " + $nca + " " + $unit.string + " and " + $ca.concept.local-name.string + ", which is " + $ca + " " + $unit.string + " for " + $period.end.string + " is equal to " + $ncaa + " " + $unit.string + ", which is the value of Assets: " + $a + " " + $unit.string + "."
+   else
+   "There might be an issue in the calculation for " + $a.concept.local-name.string + " at " + $period.end.string + ", which is calculated as " + $ncaa + " " + $unit.string + " and reported as " + $a + " " + $unit.string + " in this report."} 
+
+
+https://xbrlus.github.io/docs/tdh.html
+https://github.com/xbrlus/xule
+
+
+
+

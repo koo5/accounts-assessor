@@ -5,9 +5,6 @@ todo: continue migrating from https://github.com/lodgeit-labs/accounts-assessor/
 
 
 
-
-
-
 # new architecture with untrusted workloads and isolated workers
 
 ## internetwork these "local" services with worker containers running in fly.io:

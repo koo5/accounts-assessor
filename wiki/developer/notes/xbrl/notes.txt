@@ -1,0 +1,88 @@
+```
+I have a ton of examples. The two best are the following: (just read the XBRL instance and
+trace back to the XBRL formulas
+Proof: http://xbrlsite.azurewebsites.net/2020/master/proof/index.html
+http://xbrlsite.azurewebsites.net/2019/Prototype/conformance-suite/Production/1000-
+ConceptArangementPatterns/99-Proof/99-TestCase-Proof.xml
+XASB: http://xbrlsite.azurewebsites.net/2020/reporting-scheme/xasb/documentation
+/Index.html
+http://xbrlsite.azurewebsites.net/2019/Prototype/conformance-suite/Production/2000-
+Valid/15-XASB/15-TestCase-XASB.xml
+The biggest thing to understand is DO NOT just read the specification and implement that as
+an interface to create the XBRL formulas. USE PATTERNS. Have different interfaces for
+different formula patterns. You can see the primary interfaces here in this Microsoft Access
+database of the Proof (above):
+http://xbrlsite-app.azurewebsites.net/Proof/Download.aspx
+Lots of opportunities to screw this up. Best to avoid those.
+Charlie
+
+
+
+
+	
+XF features
+Same functionality as XBRL Formula Linkbase
+Arelle open source on GitHub
+ Linkbase to xf: plugin formulaSaver.py
+ GUI: load, Tools->Save Xbrl Formula File
+ Cmd line: arelleCmdLine -f {dts} --plugins formulaSaver.py --save-xbrl-formula {file-name.xf}
+ Xf to linkbase: plugin formulaLoader.py
+ Stand-alone or integrated xf-to-linkbase converter
+ python3.5 formulaLoader.py [--debug] {files}
+ Linkbase outputs saved as {file}-formula.xml
+ Interactive
+ load in arelle GUI; Tools->Save Xbrl Formula File
+ run in production with xf files instead of formula linkbase files
+
+
+Paul Warren:
+• Need to break the tie between XBRL Formula evaluation and XML documents
+• XPath remains a reasonable choice for the expression language
+• Restricted subset:
+• No node navigation
+• No context nodes
+
+
+
+
+TDH-public-exposure.pdf :
+	
+Using Arelle ................................................................................................................................. 86
+
+
+
+
+
+
+
+
+full-def:
+	rhizomik or fnogatz/xsd
+	
+
+
+
+
+
+
+
+
+gepsio:
+	useful to corroborate basic XBRL taxonomy (Locator, Label), but no formulas
+	
+	
+	
+
+
+
+
+
+
+
+xule
+	different semantics
+	factsets, filtering, ..
+	
+	
+	
+```
