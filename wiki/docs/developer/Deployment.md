@@ -1,7 +1,4 @@
 
-
-
-
 ## backup and cleanup
 
 when VPS hdd is getting full, you can delete the contents of tmp/, (atomically):

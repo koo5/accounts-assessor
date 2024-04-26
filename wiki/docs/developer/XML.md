@@ -1,6 +1,4 @@
-## notes
 
-### general
 
 "XML is almost always misused"
  https://www.devever.net/~hl/xml

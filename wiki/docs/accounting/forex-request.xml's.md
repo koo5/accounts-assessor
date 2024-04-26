@@ -1,3 +1,5 @@
+```
+
 Our market & currency investments gains calculations only consider the endpoints of the investment period (purchase/opening and sale/closing). When making the calculation, it is implicitly treated as though all the market gains happen at once, and then all the currency gains happen at once, in sequence. If we create a report where there's a currency rate change, followed by a market rate change, we get potentially unintuitive results. A potentially deeper problem is that if we split this up into two reports, one which has the currency rate change, and a later one that has the market rate change, the split up reports reflect the expected results. So just by breaking up the report into two periods we actually get different values of market and currency gains, even though the two reports contain exactly the same accounting information as the original report.
 
 Essentially the computed values of market and currency would not match up with a running totals of their balances. We currently don't have any generic notion of "running totals" in the system but this is basically what's being simulated by splitting the original report into two reports.

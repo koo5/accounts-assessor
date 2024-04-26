@@ -1,3 +1,5 @@
+
+
 Numbers are best represented as rationals. These don't suffer from machine-specific maximums and minimums, and don't lose any precision, so, results are deterministic and free of error. But in practice, current Robust system would do just fine with floats too.
 Ideally, we'd have "Interval Constraint Logic Programming". This is because our input numbers are naturally intervals. For example, it's 5.58768 precise to 5 decimal (after decimal point) digits. This means anything from 5.587675 to 5.587684
 

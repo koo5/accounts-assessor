@@ -1,4 +1,4 @@
-
+```
 Understanding the Differences Between Consolidated and Combined Financial Statements
 	https://blog.embarkwithus.com/understanding-the-differences-between-consolidated-and-combined-financial-statements
 
@@ -71,11 +71,4 @@ txs(just generally):
 		
 		
 		
-		
-		
-python - prolog interop:
-	:Request a l:consolidated_entity_ledger
-
-
-
-
+```

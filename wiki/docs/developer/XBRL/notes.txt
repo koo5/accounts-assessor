@@ -1,3 +1,4 @@
+
 ```
 I have a ton of examples. The two best are the following: (just read the XBRL instance and
 trace back to the XBRL formulas

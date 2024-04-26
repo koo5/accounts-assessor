@@ -1,3 +1,4 @@
+
 ### code style
 
 nothing's set in stone, this is mainly an explanation of some inconsistencies currently found in the codebase. Some of the style elements i'm migrating towards are:

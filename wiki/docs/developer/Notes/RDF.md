@@ -1,3 +1,5 @@
+
+```
 see also https://github.com/koo5/hackery2/blob/master/notes2/rdf.md 
 and https://github.com/koo5/hackery2/blob/master/notes2/graph_visualization
 
@@ -37,12 +39,4 @@ i think the principially sanest default is:
 
 #:section a rdfs:Class.
 #:title a rdf:Property; rdfs:domain :section; rdfs:range rdfs:Literal.
-
-
-
-
-
-
-
-
-
+```

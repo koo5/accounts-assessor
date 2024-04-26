@@ -1,3 +1,4 @@
+
 three situations:
 ```
 1)exchange rate is 2

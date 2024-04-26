@@ -1,33 +1,4 @@
-<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
-<html>
-<head>
-	<meta http-equiv="content-type" content="text/html; charset=utf-8"/>
-	<title>General Ledger Viewer documentation</title>
-	<meta name="generator" content="LibreOffice 6.0.7.3 (Linux)"/>
-	<meta name="created" content="00:00:00"/>
-	<meta name="changed" content="2021-05-05T14:22:32.221414132"/>
-	<meta name="" content=""/>
-	<meta name="created" content="00:00:00">
-	<meta name="created" content="00:00:00">
-	<meta name="created" content="00:00:00">
-	<meta name="created" content="00:00:00">
-	<style type="text/css">
-		h1 { text-align: center }
-		h1.western { font-family: "Liberation Sans", sans-serif; font-size: 28pt; font-weight: normal }
-		h2.cjk { font-family: "Noto Sans CJK SC" }
-		h2.ctl { font-family: "Lohit Devanagari" }
-		h4.cjk { font-family: "Noto Sans CJK SC" }
-		h4.ctl { font-family: "Lohit Devanagari" }
-		pre.cjk { font-family: "DejaVu Sans Mono", monospace }
-		h3.cjk { font-family: "Noto Sans CJK SC" }
-		h3.ctl { font-family: "Lohit Devanagari" }
-	</style>
-</head>
-<body lang="en-US" dir="ltr">
-<h1 class="western" style="margin-top: 0.02in; margin-bottom: 0.02in; font-weight: normal">
-<font face="Lato Semibold"><font size="7" style="font-size: 36pt">Robust</font></font></h1>
-<h1 class="western" style="margin-top: 0.02in; margin-bottom: 0.02in">
-Investment calculator</h1>
+
 <h2 class="western" style="margin-top: 0.02in; margin-bottom: 0.02in">
 things to keep in mind</h2>
 <h3 class="western" style="margin-top: 0.02in; margin-bottom: 0.02in">
@@ -412,12 +383,17 @@ such hypothetical issues, in ledger's core logic.</p>
 <p><br/>
 <br/>
 
-</p>
-<p><br/>
-<br/>
+#### opening balances
 
-</p>
-<p> 
-</p>
-</body>
-</html>
+not implemented method:
+
+
+files/picturemessage_pa5mqqi0.pwd.png
+
+
+implemented: `<v1.n3#ic_ui:GL_input>`
+
+
+
+
+
