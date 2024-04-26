@@ -1,4 +1,6 @@
-# monitoring
+# debugging
+
+## monitoring
 
 ## portainer
 http://localhost:9000
@@ -25,12 +27,12 @@ http://localhost:8082/
 
 ..
 
-# swipl
+## swipl
 * https://swi-prolog.discourse.group/t/bug-hunting-toolbox/710
 * https://swi-prolog.discourse.group/t/trace-on-error/1333/2
 
 
-# debugging checklist:
+## debugging checklist:
 
 ## container startup
 `--container_startup_sequencing True` for debugging issues manifesting at container startup

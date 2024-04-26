@@ -4,14 +4,15 @@ products:robust kb:project_name ?x.
 ?x rdf:value ?y.
 ")
 
-# Accounts Assessor - introduction
+# Robust
+## introduction
 
 [](mrkev2entity: "
 the “This repository” below corresponds to:
 codebases:labs_accounts_assessor
 ")
 
-This repository hosts practical research into leveraging logic programming to solve accounting problems.
+Robust represents practical research into leveraging logic programming and RDF to solve accounting problems.
 The core logic runs in SWI-Prolog, and is aided by several smaller python codebases.
 
 We use it at http://www.nobleaccounting.com.au to automate reporting and auditing tasks.
@@ -34,7 +35,7 @@ investment calculator kb:investment_calculator rdfs:label ?x.
 * division 7A loan calculator
 
 
-## investment calculator
+## investment calculator ("ledger")
 The most complex endpoint is the investment calculator; it validates and processes financial data of a financial entity for a given period:
 * bank statements
 * general ledger transactions

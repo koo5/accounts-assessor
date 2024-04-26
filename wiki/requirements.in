@@ -1,0 +1,6 @@
+mkdocs
+mkdocstrings[python]
+markdown-include
+pip-tools
+mkdocs-awesome-pages-plugin
+mkdocs-git-revision-date-localized-plugin
