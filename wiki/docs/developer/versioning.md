@@ -1,5 +1,5 @@
 
-# current good version combinations 
+## current good version combinations 
 (to be done)
 ```
 currently shaping up:
@@ -12,7 +12,7 @@ currently shaping up:
 
 ```
 
-# theory
+## theory
 ```
 :request l:templates_version "2".
 ```

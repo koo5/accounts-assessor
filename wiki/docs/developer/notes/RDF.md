@@ -2,7 +2,7 @@ see also https://github.com/koo5/hackery2/blob/master/notes2/rdf.md
 and https://github.com/koo5/hackery2/blob/master/notes2/graph_visualization
 
 
-# how to edit RdfTemplates.n3
+## how to edit RdfTemplates.n3
 
 LodgeITSmart is where the master version of `RdfTemplates.n3` is. It is sometimes copied over to `labs-accounts-assessor`, so that `Update RDF Templates` may work correctly. This currently isn't automated.
 

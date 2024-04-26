@@ -1,4 +1,4 @@
-# CNLS and reasoning
+## CNLS and reasoning
 
 "and the event is a transfer of an asset by a transferor to a transferee"
 "the event"
@@ -64,7 +64,7 @@ forward:
 
 
 
-# how to make the reasoning process, and, the processed and generated data more accessible?
+## how to make the reasoning process, and, the processed and generated data more accessible?
 
 the reasoner can have "plug-in" points, kind of like AOP, poossibly trigerred by a matcher on a context trace item:
 	user has a sheet that says: after "extract_bank_accounts", execute rules: ...
@@ -81,7 +81,7 @@ the reasoner can have "plug-in" points, kind of like AOP, poossibly trigerred by
 
 
 
-# cattle unit inference
+## cattle unit inference
 https://dbpedia.org/page/Beef
 https://dbpedia.org/page/List_of_cattle_breeds
 https://dbpedia.org/page/Ankole_(cattle)
@@ -90,7 +90,7 @@ https://www.ebi.ac.uk/ols/ontologies/lbo
 
 
 
-# code editing
+## code editing
 http://attempto.ifi.uzh.ch/race/
 https://blockyquery.toolforge.org/
 
@@ -103,5 +103,5 @@ https://blockyquery.toolforge.org/
 
 
 
-# Some declarative approaches in tackling hard combinatorial problems
+## Some declarative approaches in tackling hard combinatorial problems
 http://users.dimi.uniud.it/~agostino.dovier/CLPASP/

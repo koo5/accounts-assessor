@@ -1,11 +1,11 @@
-## formats
+### formats
 https://www.xbrl.org/tag/xbrl-csv/
 
 "simplifying the standard in several important respects and opening it up to being used with a range of different formats. These include xBRL-JSON,"
 XBRL-XML is definitely awfully overcomplicated. XML is a format that concerns itself with form instead of content.
 
 
-## gui softwares
+### gui softwares
 
 ubmatrix - outdated, discontinued, but Waqas uses it to edit the taxonomy
 
@@ -19,7 +19,7 @@ xmlspy?
 
 there's lots more, search "xbrl taxonomy editor"
 
-## libraries
+### libraries
 
 arelle  - we use this to extract data from taxonomies
 	python
@@ -37,15 +37,15 @@ gepsio:
 	prolog, auditchain
 	
 
-# xsd
+## xsd
 	https://link.springer.com/chapter/10.1007/978-3-030-00801-7_12
 	
 
 
-## resources
+### resources
 http://xbrlsite.azurewebsites.net/2020/introduction/
 
-## useful xbrl resources:
+### useful xbrl resources:
 ```
 	ok(?)
 		http://what-when-how.com/xbrl/finding-tools-and-services-to-make-xbrl-work/
@@ -75,7 +75,7 @@ http://xbrlsite.azurewebsites.net/2020/introduction/
 
 ```
 
-## useful xbrl sw:
+### useful xbrl sw:
 ```
 	taxonomy editing:
 		altova
@@ -109,7 +109,7 @@ http://xbrlsite.azurewebsites.net/2020/introduction/
 
 ```
 
-## the data model
+### the data model
 
 ```
 possibly a promising direction:
@@ -524,43 +524,43 @@ element(
 
 
 
-# Explicit filtering
+## Explicit filtering
 
-## a formula linkbase filter resource
-## kinds
-### boolean filters, which serve to build groups of filter terms
+### a formula linkbase filter resource
+### kinds
+#### boolean filters, which serve to build groups of filter terms
 
-### For example, a group filter may restrict data to a specific period or dimension value,
-### a fact variable filter may bind a fact variable to a certain concept element name, or relate it to a period
-## evaluation contexts
-### related to a variable set
-#### group filtering behavior
-### related to a fact variable
-#### fact variable filtering behavior
-
-
-# Implicit filtering
-## can match the aspects not otherwise covered (e.g. excluding concept name, but matching dates, dimensions, entity and units as applicable).
+#### For example, a group filter may restrict data to a specific period or dimension value,
+#### a fact variable filter may bind a fact variable to a certain concept element name, or relate it to a period
+### evaluation contexts
+#### related to a variable set
+##### group filtering behavior
+#### related to a fact variable
+##### fact variable filtering behavior
 
 
-# Each aspect has a specific matching test implied by the aspect.
-## Concept aspects match by QName of the element,
-## periods by their dates,
-## entity identifiers by their scheme and value,
-## units by their measures,
-## dimensions (if dimensional) by their explicit members and typed contents,
-### For the case of typed dimension aspects, a custom matching test can be supplied by user XPath expressions
-## and segment and scenario by XML contents
+## Implicit filtering
+### can match the aspects not otherwise covered (e.g. excluding concept name, but matching dates, dimensions, entity and units as applicable).
 
 
+## Each aspect has a specific matching test implied by the aspect.
+### Concept aspects match by QName of the element,
+### periods by their dates,
+### entity identifiers by their scheme and value,
+### units by their measures,
+### dimensions (if dimensional) by their explicit members and typed contents,
+#### For the case of typed dimension aspects, a custom matching test can be supplied by user XPath expressions
+### and segment and scenario by XML contents
 
 
 
-# what to model
-## taxonomy
-### concept declarations
-#### concept declaration
-##### name
+
+
+## what to model
+### taxonomy
+#### concept declarations
+##### concept declaration
+###### name
 by XBRL standard, a QName. are non-namespaced taxonomies allowed? Ideally, the name will be just the uri, although this could sacrifice some flexibility, let's say some functionality for comparing taxonomies.
 
 

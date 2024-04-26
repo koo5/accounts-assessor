@@ -1,11 +1,11 @@
-# notes
+## notes
 
-## general
+### general
 
 "XML is almost always misused"
  https://www.devever.net/~hl/xml
 
-## XLink
+### XLink
 https://melonfire.com/archives/trog/article/xlink-basics
 
 "Although xlink: role describes the resource, xlink: arcrole defines how they relate", 
@@ -19,7 +19,7 @@ goes beyond plain rdf, supplying a particular ontology for interlinking and anno
 or, the other way around, rdf made some of this built-in, and some of it ommited due to no widespread use (xbrl being probably the only 
 serious user of xlink)
 
-## alternative syntax for XML 
+### alternative syntax for XML 
 
 * https://github.com/koo5/hackery2/tree/master/data/SML
 * https://news.ycombinator.com/item?id=24944496

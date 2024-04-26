@@ -1,4 +1,4 @@
-# building v 8.1.14
+## building v 8.1.14
 ```
 git clone https://github.com/SWI-Prolog/swipl-devel.git
 cd swipl-devel
@@ -41,8 +41,8 @@ really do run those tests.
 
 
 
-# pain points
-### overlooking syntax errors. swipl keeps going. strange errors happen.
+## pain points
+#### overlooking syntax errors. swipl keeps going. strange errors happen.
 
 this should be mitigated by dev_runner.pl. If you have a usecase that it doesn't work for, let me know.
 
@@ -54,7 +54,7 @@ reset;echo -e "\e[3J";   swipl -s ../lib/dev_runner.pl   --problem_lines_whiteli
 ```
 i want to have a system worked out for exposing some parts of the command line as arguments. 
 
-### findall vs maplist, fails: 
+#### findall vs maplist, fails: 
 forgetting that a predicate is called from a findall and indicating error with a failure
     findall doesn't seem to be a good choice ever, as it's easy to hide unintended failures with it,
     and these happen a lot. could be mitigated by rdet, but, even if i'm able to fix the macro unexpansion so that it doesnt mess up variable names in gtrace,
@@ -62,11 +62,11 @@ it's still a severy DRY violation to try to keep rdet() declarations in sync wit
     before importing rdet, import a macro that expands something like r(head :- body). But it wouldnt surprise me if this messed up var names again.
     Another reason to stay away from findall is doc.
 
-### functional notation:
+#### functional notation:
 https://github.com/jarble/functional-prolog/blob/master/functional_prolog.pl (?)
 https://github.com/mndrix/func/issues/12 (?)
 
-### https://github.com/awto/fnotation
+#### https://github.com/awto/fnotation
 	confuses gtrace? with so many bugs, it would be better if gtrace showed the generated code, like it happens with my dict macro, but it doesnt
 	put statements in the wrong place: 
 		doesnt play with ( -> ; ), 
@@ -78,14 +78,14 @@ https://github.com/mndrix/func/issues/12 (?)
 * https://github.com/SWI-Prolog/swipl-devel/issues/774
 
 
-### https://www.j-paine.org/dobbs/grips.html
+#### https://www.j-paine.org/dobbs/grips.html
 	proprietary
 
-### issues
+#### issues
 https://stackoverflow.com/questions/58758471/swi-prolog-yall-conflict-with-dicts
 
 
-### things to study to improve current codebase
+#### things to study to improve current codebase
 
 https://www.swi-prolog.org/pldoc/man?section=printmsg
 
@@ -100,7 +100,7 @@ https://rlaanemets.com/post/show/reporting-exception-stack-traces-in-a-swi-prolo
 https://www.google.com/search?q=prolog+declarative+debugging
 
 
-# in_case_we_are_stuck_with_pure_swipl
+## in_case_we_are_stuck_with_pure_swipl
 
 https://arxiv.org/pdf/0911.2899.pdf
 
@@ -132,12 +132,12 @@ https://github.com/TeamSPoon/gvar_syntax
 
 https://github.com/TeamSPoon/multimodal_dcg/blob/master/prolog/multimodal_dcg.pl
 
-# profiling
+## profiling
 
 http://www.swi-prolog.org/pldoc/doc_for?object=profile/2
 
 
-# atoms vs strings
+## atoms vs strings
 
 As a general rule, use atoms for internal identifiers and use strings if the data is to be used in I/O. Consider the following:
 
@@ -173,7 +173,7 @@ It hides the conceptual difference between text and program symbols. Where conte
 %
 ```
 
-# pecularities of swipl plunit
+## pecularities of swipl plunit
 variables arent preserved during the macro expansion phase as you would expect? The fact that plunit is based on macro expansion makes it possibe that your tests are silently ignored because of expansion errors / conflicts wiith other libraries..
 ```
 :- begin_tests(x).
@@ -202,7 +202,7 @@ test(0, forall(x(X)), all((X=X))) :-
 ```
 
 
-# parsing prolog code
+## parsing prolog code
 ##	https://github.com:SWI-Prolog/packages-indent
 		seems to be the way to go. queries prolog_read_source_term, then we can pattern-match the clause terms..
 		```
@@ -218,7 +218,7 @@ test(0, forall(x(X)), all((X=X))) :-
 		my attempt ... seems to work well on a limited codebase. uses `read_clause` and implements its own tracking of currently active operators, and uses `push_operators`.
 ##	https://www.swi-prolog.org/pldoc/doc/_SWI_/library/prolog_colour.pl?show=src#prolog_colourise_stream/3
 		uses xref stuff
-## 	https://github.com/fnogatz/plammar
+### 	https://github.com/fnogatz/plammar
 		almost works but not quite, chokes on itself
 ##	github.com:JanWielemaker/reindent
 		just tokenizes and then does some smartness to fix indentation, not useful
@@ -227,7 +227,7 @@ test(0, forall(x(X)), all((X=X))) :-
 		
 	
 
-# SWIPL RPC
+## SWIPL RPC
 
 https://swi-prolog.discourse.group/t/windows-interopservices-for-libswipl-dll/4409
 

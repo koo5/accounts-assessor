@@ -1,4 +1,4 @@
-# Difference transactions
+## Difference transactions
 
 
 the simple kind of transaction on the ledger could be called "instant". A set of these debits and credits some accounts, their sum total is zero, but the presence of those transactions change the balances of the accounts.

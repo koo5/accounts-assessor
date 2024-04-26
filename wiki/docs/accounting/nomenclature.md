@@ -10,6 +10,6 @@ An "Entry": a list of lines. Arbitrarily many accounts involved.
 a bst() term: current s_transaction, that is, statement transaction, that is, bank statement transaction
 
 
-#### more resources:
+##### more resources:
 
 https://businessecon.org/2016/03/14/bookkeeping-complex-entries-lesson-15/

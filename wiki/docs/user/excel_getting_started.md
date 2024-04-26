@@ -1,5 +1,5 @@
-# excel plugin
-## getting started
+## excel plugin
+### getting started
 After installing LSU, first thing is to select the right Robust server:
 
 ![screenshot](https://raw.githubusercontent.com/koo5/accounts-assessor-public-wiki/master/excel_usage/20210903004539.png)

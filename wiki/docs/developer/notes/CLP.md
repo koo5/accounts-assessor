@@ -46,7 +46,7 @@ This package will not work as intended if these flag values are not respected.``
 
 
 
-# SICSTUS
+## SICSTUS
 bundled clpfd is constrained to "[-2^60,2^60-1] on 64-bit platforms". This means we wouldn't be able to emulate rationals.
 ^ err not anymore?
 how far along is https://github.com/triska/clpz ?

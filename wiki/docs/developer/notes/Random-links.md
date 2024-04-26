@@ -1,4 +1,4 @@
-# accounting for developers
+## accounting for developers
 
 the accounting equation is maybe better expressed as "(magnitude of) assets = (magnitude of) debt to owner (equity; owner is the creditor) + (magnitude of) debt to others (liabilities; other creditors)"
 
@@ -30,14 +30,14 @@ Definitions:
 
 https://news.ycombinator.com/item?id=9616034
 
-# accounting
+## accounting
 http://www.warrenhenke.com/writing/essays/triple-entry-accounting
 
 https://www.myaccountingcourse.com/accounting-dictionary/internal-transactions
 
 Inter-Entity Bookkeeping Networks: Representations and Applications - https://rady.ucsd.edu/docs/Liang%20Paper.pdf
 
-# random
+## random
 
 http://www.amzi.com/knowledgewright/docs/overview/knowledgewright_overview.html
 
@@ -47,15 +47,15 @@ https://github.com/DeMaCS-UNICAL/LoIDE
 
 
 
-# AGI
-## nars
+## AGI
+### nars
 
 https://github.com/opennars/opennars/wiki
 Focus on getting right basic building blocks of thinking. This is well explained in the papers, worth reading.
 The system is then left to interact with a model world through some input and output channels, and left to
 make random inferences and actions, and relies on feedback (probably has or should have some innate reward feedback for discovering relations / causing new kinds of changes in the world?)
 
-## others
+### others
 opencog - real world agents framework?
 
 openai - ML?

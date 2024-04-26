@@ -1,13 +1,13 @@
-## XBRL dimensions
+### XBRL dimensions
 
-### resources
+#### resources
 
 https://www.xbrl.org/specification/dimensions/rec-2012-01-25/dimensions-rec-2006-09-18+corrected-errata-2012-01-25-clean.html
 http://www.xbrlsite.com/Examples/Dimensions/
 https://docs.oracle.com/en/cloud/saas/enterprise-performance-reporting-cloud/udepr/about_dimensions_172x8e51bd9a.html
 
 
-### notes on the spec
+#### notes on the spec
 
 
 explicit dimension = enumerated dimension
@@ -53,9 +53,9 @@ Specifying a default value serves two purposes:
 
 
 
-### how to model this
+#### how to model this
 
-#### link a primary item to a hypercube:
+##### link a primary item to a hypercube:
  
 ```
 <link:definitionArc 
@@ -66,7 +66,7 @@ Specifying a default value serves two purposes:
     order="1.0"
 />
 ```
-#### declare a hypercube:
+##### declare a hypercube:
 ```
 <xs:element name="Banks_hc" id="xbrldt_hypercubeItem_Banks_hc" abstract="true" substitutionGroup="xbrli:item" type="xbrli:stringItemType" xbrli:periodType="duration"/>
 ```
@@ -76,7 +76,7 @@ Specifying a default value serves two purposes:
 <link:definitionArc xlink:type="arc" xlink:arcrole="http://xbrl.org/int/dim/arcrole/hypercube-dimension" xlink:from="DisclosureOfConsolidatedAndSeparateFinancialStatementsTable" xlink:to="ConsolidatedAndSeparateFinancialStatementsAxis" xlink:title="definition: DisclosureOfConsolidatedAndSeparateFinancialStatementsTable to ConsolidatedAndSeparateFinancialStatementsAxis" order="1.0"/>
 ```
 
-#### declaration of a typed dimension:
+##### declaration of a typed dimension:
 ```
 <element 
     id="basic_Dimension_BankAccounts_Duration" 
@@ -92,7 +92,7 @@ Specifying a default value serves two purposes:
 xbrldt:typedDomainRef attribute is used in a Typed Dimension Element to locate the element in an XML Schema that defines the content of the typed dimension. 
 
 
-#### declare an element type, that can be used in <scenario> to add a dimension value to a context:
+##### declare an element type, that can be used in <scenario> to add a dimension value to a context:
 ```
 <element id="basic_Dimension_BankAccounts_Duration_DomainDeclaration" name="BankAccount_Duration">
     <simpleType>

@@ -1,4 +1,4 @@
-# ACE View 
+## ACE View 
 
 
 
@@ -7,7 +7,7 @@ https://github.com/Kaljurand/aceview
 requires Protege 4.1 Build 213+, which is pretty much impossible to install anymore.
 
 
-# AceWiki
+## AceWiki
 ```
 sudo apt install docker.io
 docker build  -f  Dockerfile.txt  .
@@ -15,7 +15,7 @@ docker run  -p 9077:9077 -it <hash>
 ```
 https://github.com/AceWiki/AceWiki/blob/master/docker/plain/Dockerfile
 
-## updated version:
+### updated version:
 ```
 FROM ubuntu:latest
 WORKDIR /opt/application
@@ -38,15 +38,15 @@ EXPOSE 9077
 CMD LD_PRELOAD=/usr/lib/libswipl.so LD_LIBRARY_PATH=/usr/lib/swi-prolog/lib/amd64/libjpl.so java -Xmx400m -Xss4m -Djava.library.path=/usr/lib/swi-prolog/lib/amd64/ -Djava.awt.headless=true -jar jetty-runner.jar --port 9077 --jar /usr/lib/swi-prolog/lib/jpl.jar acewiki.war
 ```
 
-## even better version
+### even better version
 ```
-# this should run acewiki without apparent errors.
-# java7 is only available in this old ubuntu release.
-# the old jetty throws errors with newer java.
-# newer jetty does not find some xmls or whatever.
-# the then-distro-current swipl's jpl throws an error, 7.6.4 from ppa works
+## this should run acewiki without apparent errors.
+## java7 is only available in this old ubuntu release.
+## the old jetty throws errors with newer java.
+## newer jetty does not find some xmls or whatever.
+## the then-distro-current swipl's jpl throws an error, 7.6.4 from ppa works
 
-# adding new words in aceeditor sometimes works, but mostly not. This is also the case in the official demo instance. Acewiki supports a smaller range of grammar.
+## adding new words in aceeditor sometimes works, but mostly not. This is also the case in the official demo instance. Acewiki supports a smaller range of grammar.
 
 but adding new words still doesn't work in aceeditor, only in the wiki. It works on their demo server.
 

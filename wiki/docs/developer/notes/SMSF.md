@@ -1,4 +1,4 @@
-## glossary
+### glossary
 ```
 COA -
     chart of accounts
@@ -17,7 +17,7 @@ sundry:
     - google
 ```
 
-## COA:
+### COA:
 ```
 
 What i suppose the program should do, in phases:

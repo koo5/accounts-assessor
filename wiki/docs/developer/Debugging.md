@@ -1,50 +1,50 @@
-# debugging
+## debugging
 
-## monitoring
+### monitoring
 
-## portainer
+### portainer
 http://localhost:9000
 
 * for debugging docker/containers
 * not part of the stack, but recommended to spin up separately
 
-## RabbitMQ console
+### RabbitMQ console
 http://localhost:15672
 * guest / guest (RABBITMQ_DEFAULT_USER and RABBITMQ_DEFAULT_PASS...)
 * monitor all messagess and queues
 
-## superbowl
+### superbowl
 http://localhost:1238/
 * monitor remoulade tasks
 
-## agraph
+### agraph
 http://0.0.0.0:10035/#
 * secrets/AGRAPH_SUPER_USER, secrets/AGRAPH_SUPER_PASSWORD
 
-## test runner (luigi)
+### test runner (luigi)
 http://localhost:8082/
 
 
 ..
 
-## swipl
+### swipl
 * https://swi-prolog.discourse.group/t/bug-hunting-toolbox/710
 * https://swi-prolog.discourse.group/t/trace-on-error/1333/2
 
 
-## debugging checklist:
+### debugging checklist:
 
-## container startup
+### container startup
 `--container_startup_sequencing True` for debugging issues manifesting at container startup
 
 
-## `robust run` flags:
+### `robust run` flags:
 	
 * `--mount_host_sources_dir true` - this ensures that all source etc directories are mounted rather than copied. This means that you can always just modify any prolog source file and re-run a request.
 	
 * `--django_noreload false` - applies only to some services, makes django watch for and reload files on modification.
 
-## exceptions
+### exceptions
 there are two general cases:
 * our code calls `throw_string`/`throw_value`. `DONT_GTRACE` and `DISPLAY` applies.
 * something else throws an exception, like a division by zero: `DISABLE_GRACEFUL_RESUME_ON_UNEXPECTED_ERROR` controls if it gets converted into an alert or caught by swipl toplevel, possibly causing gtrace to be invoked.
@@ -52,7 +52,7 @@ there are two general cases:
 not sure if, at this point, it still makes sense to have the option to invoke gtrace in `throw_string`, as opposed to having it just throw the exception, and letting it propagate like "normal" exceptions do, controlled by `DISABLE_GRACEFUL_RESUME_ON_UNEXPECTED_ERROR`.   
 
 
-## `sources/config/worker_config.json`:
+### `sources/config/worker_config.json`:
 	this is loaded by call_prolog on every request.
     
 * "DEBUG" : pass `--debug true` to dev_runner. Causes SWIPL_NODEBUG to be off, --debug to be passed to swipl, and `debug` called as a goal.  
@@ -68,7 +68,7 @@ If unset:
 		* false: catch exceptions and convert them into alerts, finish producing reports - this should be the default in production
 
 
-## gtrace	
+### gtrace	
 
 configuration: `sources/swipl/xpce/Defaults`: adjust font size as needed.
 
@@ -96,39 +96,39 @@ this makes it possible to get guitracer once an exceptions propagates all the wa
 If gtrace shows up on `process_multifile_request`, do a redo followed by a skip and you'll get a readable stack trace in terminal. (?)
 	
 
-## python
+### python
 various parts use various levels of logging severity, eg.: `logging.getLogger().info(msg)`. We don't yet have a method to control current severity (when spawning django server, or when running a worker from the command line).
 
-## apache
+### apache
 adjust `LogLevel` in httpd.conf, for example `trace6`
 
-## fastapi / pydantic
+### fastapi / pydantic
 * ```sudo tcpdump -i lo  -A -s 0 'tcp port 7788'```
 * `debug.py`
 
-## network
+### network
  watch http trafic from and to endpoint:
 ```sudo tcpdump -A -s 0 'tcp port 7778 and (((ip[2:2] - ((ip[0]&0xf)<<2)) - ((tcp[12]&0xf0)>>2)) != 0)'```
 
-## git
+### git
 
 given you are on a commit with some tests failing, find last commit with no tests failing:
 		(tests need fixing right now)
 ```git bisect start; git bisect bad HEAD; git bisect good master; git bisect run ./bisect_helper.sh```
 
 
-## test requests/responses
+### test requests/responses
 
 overwrite differing response files:
 swipl -s ../tests/endpoint_tests/endpoint_tests.pl  -g "set_flag(overwrite_response_files, true), run_tests."
 
 
 
-## determinancy_checker
+### determinancy_checker
 `DETERMINANCY_CHECKER__USE__ENFORCER` env var applies.
 
 
-## running `workers` outside docker for debugging
+### running `workers` outside docker for debugging
 run all services except workers, under compose
 `./develop.sh --omit_service workers`
 
@@ -153,7 +153,7 @@ and do what start.sh does:
 remoulade --threads 1 invoke_rpc
 ```
 
-## running requests manually in swipl toplevel in docker
+### running requests manually in swipl toplevel in docker
 1) grab the envvars as printend when stack is brought up. Maybe we should save it alongside last.yml.
 
 ```
@@ -162,9 +162,9 @@ PP='' DISPLAY='' RABBITMQ_URL='localhost:5672' REDIS_HOST='redis://localhost' AG
  
 
 
-# docker
+## docker
 
-## gtrace
+### gtrace
 
 first you must run `xhost +local:docker` on your host.
 after that, make sure you have this in your docker stack declaration:
@@ -181,7 +181,7 @@ doing the same without docker-stack:
 
 
 
-## inotify limit reached
+### inotify limit reached
 https://www.suse.com/support/kb/doc/?id=000020048
 
 
