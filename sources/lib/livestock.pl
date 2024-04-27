@@ -83,9 +83,9 @@ infer_livestock_action_verb(S_Transaction, NS_Transaction) :-
 
 preprocess_livestock_buy_or_sell(S_Transaction, [Bank_Txs, Livestock_Count_Transaction, Pl_Transaction]) :-
 	s_transaction_is_livestock_buy_or_sell(S_Transaction, Day, Livestock_Type, Livestock_Coord, Money_Coord),
-	(   is_debit(Money_Coord)
-	->  Description = 'livestock sale'
-	;   Description = 'livestock purchase'),
+	(	is_debit(Money_Coord)
+	->	Description = 'livestock sale'
+	;	Description = 'livestock purchase'),
 	livestock_count_account(Livestock_Type, Count_Account),
 	make_transaction(S_Transaction, Day, Description, Count_Account, [Livestock_Coord], Livestock_Count_Transaction),
 	affect_first_account(S_Transaction, Description, Bank_Txs),

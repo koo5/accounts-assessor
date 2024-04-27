@@ -69,5 +69,4 @@ You can make any pair of accounts (foo, bar) behave like Financial_Investments a
 
 This is used for livestock accounting. A method of "adjustment transactions" is used, where individual changes in livestock population do not affect the gl directly, but are instead recorded in a subsidiary ledger - livestock inventory. Cumulative changes in the inventory are used once at the report period end to adjust COGS and other accounts.
 
-## documentation TODO
-would be nice to have clickable links to predicate definitions / documentation. In theory this should be possible with pldoc, but i have not had much luck with it yet. 
+

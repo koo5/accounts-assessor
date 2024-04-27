@@ -3,7 +3,9 @@
 
 update:
 django has now been completely replaced by fastapi. Twisted was abandoned, remoulade was eventually adopted for a task queue.
-------
+
+  
+
 we chose django because of familiarity but this comparison is worth reading. Also one of the alternative frameworks i think supports a linked data backend.
 https://www.airpair.com/python/posts/django-flask-pyramid
 

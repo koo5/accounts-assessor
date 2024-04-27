@@ -1,4 +1,5 @@
 
+```
 https://github.com/lodgeit-labs/accounts-assessor-private-data/blob/main/doc/xbrl/6-Warren%20Future%20of%20XBRL%20Calculations%20and%20Formula.pdf
 
 https://xbrl.us/xule-training-intro/
@@ -87,5 +88,4 @@ https://xbrlus.github.io/docs/tdh.html
 https://github.com/xbrlus/xule
 
 
-
-
+```
