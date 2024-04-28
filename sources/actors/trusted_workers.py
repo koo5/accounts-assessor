@@ -53,7 +53,8 @@ def postprocess(job, request_directory, converted_request_files, tmp_name, tmp_p
 	result_tmp_directory_name = uris.get('result_tmp_directory_name', '???')
 	result_tmp_directory_url = find_report_by_key(reports, 'task_directory')
 	
-	frame_input_rdf(converted_request_files)
+	if alerts == []:
+		frame_input_rdf(converted_request_files)
 	
 	sections = {}
 	

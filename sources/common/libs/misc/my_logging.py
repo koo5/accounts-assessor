@@ -29,7 +29,7 @@ def setup():
     root_logger = logging.getLogger()
     root_logger.setLevel(logging.DEBUG)
     # this should be the only and default, stderr, handler of root logger:
-    root_logger.handlers[0].setLevel(logging.DEBUG)
+    root_logger.handlers[0].setLevel(logging.INFO)
     root_logger.addHandler(mqtt_handler)
     mqtt_handler.setFormatter(logging.Formatter('%(asctime)s - '+ os.environ.get('APPDIR','') +' - %(name)s - %(levelname)s - %(message)s'))
 

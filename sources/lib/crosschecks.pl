@@ -238,20 +238,14 @@
 	Entries = Report_wrapper.entries,
 	assertion(is_list(Entries)),
 
-
-
-	% fixme, if i'm not mistaken, this would have multiple results, and we don't account for that, it would either backtrack, we we'd miss some accounts!
-	resolve_account(Acct, Account_uri),
-
-
-
-	accounts_report_entry_by_account_uri(Entries, Account_uri, Entry),
-	entry_normal_side_values(Entry, Account_uri, Values_List0),
-	assertion(t(Values_List0, l:vec)),
-	
-	doc_add(Entry, kb:crosscheck, Crosscheck_uri), % this would be extraneous if vectors were actualy rdf objects everywhere. % Arent they now?
-	
-	vec_sum([Values_List0], Values_List).  % isnt this extraneous?
+	findall(
+		Account_uri,
+		resolve_account(Acct, Account_uri),
+		Account_uris
+	),
+		
+	maplist(evaluate2_account_balance_helper(Crosscheck_uri, Entries), Account_uris, Values_Lists),
+	vec_sum(Values_Lists, Values_List).
 
 
 
@@ -264,6 +258,12 @@
 	t(Vec, l:vec).
 
 
+ evaluate2_account_balance_helper(Crosscheck_uri, Entries, Account_uri, Values) :-
+ 	accounts_report_entry_by_account_uri(Entries, Account_uri, Entry),
+	entry_normal_side_values(Entry, Values),
+	assertion(t(Values, l:vec)),
+	doc_add(Entry, kb:crosscheck, Crosscheck_uri).
+	
 
  check_account_is_zero(Sr, Specifier) :-
 	Crosscheck = equality(
