@@ -148,7 +148,7 @@ cf_scheme_0_entry_for_account(
 	!cf_scheme_0_entry_for_account0(Sd, $>account_by_role_throw(rl('Cash_and_Cash_Equivalents')), Entry).
 
  add_entry_balance_desc(_Sd, Entry, Balance, Column, Text, Type) :-
-	!format_vec(html, [], _, xxx, 'https://rdf.lodgeit.net.au/v1/kb#debit', Balance, Balance_Text),
+	!format_vec(text, [], _, xxx, 'https://rdf.lodgeit.net.au/v1/kb#debit', Balance, Balance_Text),
 	flatten([Text, ':', Balance_Text], Desc0),
 	atomics_to_string(Desc0, Desc),
 	!add_report_entry_misc(Entry, Column, Desc, Type). /*todo add Tag, Value*/

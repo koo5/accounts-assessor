@@ -32,7 +32,7 @@ pesseract_style_table_rows(Report_Uri,
  pesseract_style_table_rows(Report_Uri,
 	Report_Currency,
 	Entries,
-	[Lines2|Lines_Tail]
+	[Lines|Lines_Tail]
 ) :-
 	[Entry|Entries_Tail] = Entries,
 	!doc_add(Report_Uri, report_entries:entry, Entry),
@@ -49,9 +49,6 @@ pesseract_style_table_rows(Report_Uri,
 	(	Children_Rows = []
 	->	!entry_row_childless(Name, Balance_Lines, Entry, Lines)
 	;	!entry_row_childful(Name, Entry, Children_Rows, Balance_Lines, Lines)),
-	
-	link(Entry, Link),
-	append(Lines, [Link], Lines2),
 	
 	/*recurse on Entries_Tail*/
 	!pesseract_style_table_rows(Report_Uri, Report_Currency, Entries_Tail, Lines_Tail).
@@ -159,7 +156,7 @@ cols_dict_to_row_helper3(Item, I) :-
 		)
 	),
 	
-	(	format = html
+	(	Format = html
 	->	(
 			Out = span(
 				$>append(
