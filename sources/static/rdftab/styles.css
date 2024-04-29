@@ -48,9 +48,15 @@ button {
    font-family: monospace;
 }
 
+.expandable {
+    border-width: 0.1em;
+    border-style: hidden;
+
+}
+
 .expanded {
     border-style: solid;
-    border-width: 0.1em;
+    
 }
 
 .v-enter-active,
