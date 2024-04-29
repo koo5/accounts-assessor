@@ -130,7 +130,7 @@
 
   app.component('node', {
     inject: ['focused_graph'],
-		props: ['node', 'is_list_tail'],
+		props: ['node'],
     template: `
       <span :class="{ 'focusedGraph' : false }">
         <span v-for="source in node.sources">
@@ -139,60 +139,53 @@
             </div>
         </span>
 
-        <li v-if="node.is_list_tail">
-      <node :node="node.list_item"/>
-        </li>
-
-			<span v-else-if="node.list_item">
-				<ol>
-					<li>
-						<node :node="node.list_item" :is_list_tail="true"/>
-					</li>
-				</ol>
-			</span>
-
-			<span v-else-if="node.uri=='http://www.w3.org/1999/02/22-rdf-syntax-ns#nil'">
-				<small>(list end)</small>
-			</span>
-
-          <table v-else-if="node.props">
-                <thead>
-                      <tr>
-                        <th>property</th>
-                        <th>value</th>
-                        <th>source</th>
-                      </tr>
-                    </thead>
-  
-                <tbody>             
-                      <tr v-for="prop in node.props" :key="prop.id">
-
-                          <td :class="{ 'general' : prop.category?.fake == 'general' }">
-                              <term :node="node"  :term="prop.p" :key="prop.p.id" />
-                          </td>
-                          <td>                           
-                              <term_expandable :node="node"  :term="prop.o" :key="prop.o.id" :interesting="prop.g.uri == this.focused_graph && prop.category?.fake == 'general'"/>
-                          </td>
-                          <td :class="{ 'focusedGraph' : prop.g.uri == this.focused_graph, graph : true }">
-                              <term_expandable :node="node"  :term="prop.g" :key="prop.g.id"/>
-                          </td>
-
-                      </tr>
-              </tbody>
-          </table>
-          
-          <small v-if="node.tools">
-              browse {{ node.term.n3 }} also in:
-              <ul>
-              
-                  <li  v-for="tool in node.tools">
-                      <a v-bind:href="tool.url">{{ tool.label }}</a>
-                  </li>   
-
-              </ul>
-          </small>
-          
+        <span v-if="node.list_item">
+          * <node :node="node.list_item" />
+          <node :node="node.list_tail" />
         </span>
+  
+        <span v-else-if="node.uri=='http://www.w3.org/1999/02/22-rdf-syntax-ns#nil'">
+          <small>(list end)</small>
+        </span>
+
+        <table v-else-if="node.props">
+              <thead>
+                    <tr>
+                      <th>property</th>
+                      <th>value</th>
+                      <th>source</th>
+                    </tr>
+                  </thead>
+
+              <tbody>             
+                    <tr v-for="prop in node.props" :key="prop.id">
+
+                        <td :class="{ 'general' : prop.category?.fake == 'general' }">
+                            <term :node="node"  :term="prop.p" :key="prop.p.id" />
+                        </td>
+                        <td>                           
+                            <term_expandable :node="node"  :term="prop.o" :key="prop.o.id" :interesting="prop.g.uri == this.focused_graph && prop.category?.fake == 'general'"/>
+                        </td>
+                        <td :class="{ 'focusedGraph' : prop.g.uri == this.focused_graph, graph : true }">
+                            <term_expandable :node="node"  :term="prop.g" :key="prop.g.id"/>
+                        </td>
+
+                    </tr>
+            </tbody>
+        </table>
+          
+        <small v-if="node.tools">
+            browse {{ node.term.n3 }} also in:
+            <ul>
+            
+                <li  v-for="tool in node.tools">
+                    <a v-bind:href="tool.url">{{ tool.label }}</a>
+                </li>   
+
+            </ul>
+        </small>
+          
+      </span>
     `
   });
   
@@ -277,8 +270,7 @@
 	}
 
 	function assign_node_data1(node, result) {
-		console.log("assign_node_data1");
-		console.log(result);
+		console.log("assign_node_data1:\nnode:\n" + JSON.stringify(node, null, 2) + "\nresult:\n" + JSON.stringify(result, null, 2));
 		//node.props.push(result.props);
 		for (var key in result) {
 			if (result.hasOwnProperty(key)) {
@@ -288,9 +280,9 @@
 		load_list_item(node);
 
 	}
-
+  
 	function load_list_item(node) {
-		console.log("load_list_item:"+(node.node_n3));
+		console.log("load_list_item:"+JSON.stringify(node, null, 2));
 		let first = undefined;
 		let rest = undefined;
 
@@ -306,9 +298,13 @@
 
 		console.log("first:");console.log(first);
 		console.log("rest:");console.log(rest);
+		
 		if (first && rest) {
-			node.list_item = new Node(first.node_n3);
-			load_node_data_all(rest);
+			node.list_item = new Node(first.n3);
+			node.list_tail = new Node(rest.n3);
+      load_node_data_all(node.list_item);
+			if (rest.node_n3 != '<http://www.w3.org/1999/02/22-rdf-syntax-ns#nil>')
+			  load_node_data_all(node.list_tail);
 		}
 	}
 
