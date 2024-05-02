@@ -116,6 +116,7 @@ def div7a_from_json2(ooo,j):
 		pass
 	else:
 		if principal is not None and ciy == creation_income_year + 1:
+			# this is under the semantics that if you want to calculate for first loan year, you must specify principal, but if you want to calculate for subsequent years, you must specify opening balance, and opening balance is understood to be the opening balance of the computation income year.
 			raise MyException(f'opening balance for income year {ciy} must be equal to principal, or one must be omitted.')
 		
 		rec_add(records, opening_balance(date(ciy-1, 6, 30), dict(amount=ob)))
@@ -161,8 +162,9 @@ def div7a_from_json2(ooo,j):
 def div7a(ooo, records):
 
 	# we begin with loan_start, optional opening_balance, possible lodgement day, and then repayments.
-	tables = [list(records)]
-	step(ooo, tables, input)
+
+	tables = []
+	step(ooo, tables, lambda table: table.extend((records)))
 	# insert opening_balance record if it's not there
 	step(ooo, tables, ensure_opening_balance_exists)
 	# we insert accrual points for each income year, and for each repayment.
@@ -177,17 +179,17 @@ def div7a(ooo, records):
 	step(ooo, tables, with_myr_checks)
 	# was minimum yearly repayment met?
 	step(ooo, tables, evaluate_myr_checks, True)
-	# one final check
-	check_invariants(tables[-1])
-	
+
 	return tables[-1]
 
 
 
 def step(ooo, tables, f, final=False):
-	t1 = tables[-1]
-	check_invariants(t1)
-	t2 = [r.copy() for r in t1] 
+	if len(tables) == 0:
+		t1 = []
+	else:
+		t1 = tables[-1]
+	t2 = [r.copy() for r in t1]
 	f(t2)
 	tables.append(t2)
 
@@ -226,6 +228,8 @@ def step(ooo, tables, f, final=False):
 		], overwrite=False)
 		sss.set_td_classes(pd.DataFrame(diff_colors(dicts1, dicts2)))
 		print(sss.to_html(), file=ooo)
+
+	check_invariants(t2)
 
 
 def diff_colors(dicts1, dicts2):
@@ -501,13 +505,17 @@ def div7a2_ingest(j):
 	ob = float(j['opening_balance'])
 	oby = int(j['opening_balance_year'])
 	last_calculation_income_year = div7a2_calculation_income_year(loan_year, full_term, repayments(records))
+
 	if oby < loan_year:
-		raise MyException('opening balance year must be after loan year')
-	if oby == loan_year:
+		raise MyException('an income year for which opening balance is provided, must not be before, or the same as, the income year when the loan was made.')
+	elif oby == loan_year:
+		principal = ob
+	if oby == loan_year + 1:
 		principal = ob
 	else:
 		principal = None
-		rec_add(records, opening_balance(date(oby, 7, 1), dict(amount=ob)))
+		rec_add(records, opening_balance(date(oby-1, 7, 1), dict(amount=ob)))
+
 	rec_add(records, loan_start(date(loan_year, 6, 30), dict(principal=principal, term=full_term, calculation_income_year=last_calculation_income_year)))
 
 	rec_add(records, calculation_start(date(oby, 7, 1)))
@@ -516,11 +524,11 @@ def div7a2_ingest(j):
 
 	ld = j['lodgement_date']
 	if ld == -1:
-		if oby == loan_year:
-			raise MyException('lodgement_date must be specified')
+		pass
 	else:
 		lodgement_date = datetime.strptime(ld, '%Y-%m-%d').date()
 		rec_add(records, lodgement(lodgement_date))
+
 	return full_term, principal, records, warnings
 
 

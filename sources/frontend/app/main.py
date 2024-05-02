@@ -707,7 +707,7 @@ def div7a(
 		example=100000
 	)],
 	opening_balance_year: Annotated[int, Query(
-		title="Income year of opening balance. If opening_balance_year is the income year following the income year in which the loan was made, then opening_balance is the principal amount, of the loan. If user provides principal amount, then opening_balance_year should be the year after loan_year. If opening_balance_year is not specified, it is usually the current income year. Any repayments made before opening_balance_year are ignored.",
+		title="Income year of opening balance. If opening_balance_year is the first income year after the income year when the loan was made (first income year when repayments should be made), then opening_balance is equivalent to the principal amount of the loan. In other words, if you want to calculate starting with the principal amount of loan, then opening_balance_year should be loan_year + 1. If opening_balance_year is not specified, it is usually the current income year. Any repayments made before opening_balance_year are ignored.",
 		example=2020
 	)],
 	lodgement_date: Annotated[Optional[date], Query(
