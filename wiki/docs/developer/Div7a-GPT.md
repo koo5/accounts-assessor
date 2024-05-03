@@ -10,6 +10,7 @@ loan start is 2015, lodgement day is 30/6/2016, principal is 100000, term is 7 y
 loan start is 1915, lodgement day is 30/6/2016, principal is 100000, term is 7 years, repayments are: 30/6/2016 $20000, 30/6/2017 $20001, 30/6/2018 $20002, 30/6/2019 $20003   
 
 loan start is 2015, lodgement day is 12/12/2015, principal is 100000, repayments are 10/10/1015 50000, 1/1/2016 50000
+^ It seems there might be a typo in one of the repayment dates you've provided: "10/10/1015." Did you mean "10/10/2015"? Please confirm or correct this date so I can proceed with the correct calculations for your Division 7A loan scenario.
 
 
 ====
