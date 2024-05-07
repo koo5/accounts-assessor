@@ -554,5 +554,5 @@ def post_div7a2(
 ):
 	log.info(json.dumps(request, indent=2))
 	result = div7a2_from_json(request['request'], request['tmp_dir'])
-	log.info(json.dumps(result, indent=2))
+	log.info(json.dumps(result, cls=MyEncoder, indent=2))
 	return result
