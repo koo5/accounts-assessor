@@ -324,8 +324,8 @@ def input(x):
 
 
 def div7a2_from_json(j,tmp_dir=['.','none']):
-	f = pathlib.PosixPath(tmp_dir[1]) / 'details.html'
-	details_url = os.environ['PUBLIC_URL'] + '/tmp/' + tmp_dir[0] + '/details.html'
+	f = pathlib.PosixPath(tmp_dir[1]) / 'loan.html'
+	details_url = os.environ['PUBLIC_URL'] + '/tmp/' + tmp_dir[0] + '/loan.html'
 	with open(f, 'w') as ooo:
 		print("""<!DOCTYPE html>
 <html lang="en">
@@ -348,7 +348,7 @@ def div7a2_from_json(j,tmp_dir=['.','none']):
 		except Exception as e:
 			traceback_message = traceback.format_exc()
 			result = dict(error=traceback_message)
-		result['details_url'] = details_url
+		result['report'] = details_url
 
 		if ooo:
 			print(f'<h2>Robust response</h2>', file=ooo)
