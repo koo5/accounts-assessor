@@ -1,6 +1,6 @@
 jinja2
 pyyaml
-fastapi==0.110.0
+fastapi==0.111.0
 starlette>=0.36.2
 python-multipart
 agraph-python==101.0.7

@@ -711,9 +711,9 @@ def div7a(
 		example=2020
 	)],
 	lodgement_date: Annotated[Optional[date], Query(
-		title="Date of lodgement of the income year in which the loan was made. Required if opening_balance_year is loan_year.",
+		title="Date of lodgement of the income year in which the loan was made. Required if opening_balance_year is loan_year + 1, in other words, if we will calculate starting from first year of repayments.",
 		example="2021-06-30"
-	)],
+	)] = None,
 	repayment_dates: Annotated[list[date], Query(
 		example=["2021-06-30", "2022-06-30", "2023-06-30"]
 	)],

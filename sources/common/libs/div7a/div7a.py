@@ -508,9 +508,7 @@ def div7a2_ingest(j):
 
 	if oby < loan_year:
 		raise MyException('an income year for which opening balance is provided, must not be before, or the same as, the income year when the loan was made.')
-	elif oby == loan_year:
-		principal = ob
-	if oby == loan_year + 1:
+	elif oby == loan_year or oby == loan_year + 1:
 		principal = ob
 	else:
 		principal = None
@@ -523,7 +521,7 @@ def div7a2_ingest(j):
 	rec_add(records, loan_term_end(date(loan_year + full_term, 6, 30)))
 
 	ld = j['lodgement_date']
-	if ld == -1:
+	if ld == None:
 		pass
 	else:
 		lodgement_date = datetime.strptime(ld, '%Y-%m-%d').date()

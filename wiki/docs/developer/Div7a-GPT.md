@@ -14,6 +14,13 @@ loan start is 2015, lodgement day is 12/12/2015, principal is 100000, repayments
 
 
 ====
+
+more prompts
+
+loan start is 2020, lodgement day is 1/3/2021, principal is 100000, term is 7 years, repayments are: 3/3/2021 $20000
+
+====
+
 problems
 
 https://www.youtube.com/watch?v=Gh2EhFTnY7U
