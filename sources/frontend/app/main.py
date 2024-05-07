@@ -684,9 +684,9 @@ ai3 = FastAPI(
 
 
 
-@ai3.get("/")
-def index():
-	return "ok"
+# @ai3.get("/")
+# def index():
+# 	return "ok"
 
 
 
@@ -707,7 +707,7 @@ def div7a(
 		example=100000
 	)],
 	opening_balance_year: Annotated[int, Query(
-		title="Income year of opening balance. If opening_balance_year is the first income year after the income year when the loan was made (first income year when repayments should be made), then opening_balance is equivalent to the principal amount of the loan. In other words, if you want to calculate starting with the principal amount of loan, then opening_balance_year should be loan_year + 1. If opening_balance_year is not specified, it is usually the current income year. Any repayments made before opening_balance_year are ignored.",
+		title="Income year of opening balance. If opening_balance_year is the first income year after the income year when the loan was made (first income year when repayments should be made), then opening_balance is equivalent to the principal amount of the loan. In other words, if you want to calculate starting with the principal amount of loan, then opening_balance_year should be loan_year + 1.",
 		example=2020
 	)],
 	repayment_dates: Annotated[list[date], Query(
@@ -724,9 +724,10 @@ def div7a(
 ):
 	"""
 	Return a breakdown, year by year, of relevant events and values of a Division 7A loan. Calculate the minimum yearly repayment, opening and closing balance, repayment shortfall, interest, and other information for each year.
-	"""
 
-	# todo, optionally create job directory if needed. This isn't much of a blocking operation, and it's done exactly the same in /upload etc.
+	To calculate Div7A, we must start with the opening balance for the calculation.	A principal balance of loan is entered by entering corresponding opening_balance with opening_balance_year = loan_year + 1. In effect, a loan principal is the opening balance of the first year when repayments should be made. Where a principal is not provided, a calculation starting from any year can be performed, if opening balance of that year is provided.
+	
+	"""
 
 	logging.getLogger().info(f'{loan_year=}, {full_term=}, {opening_balance=}, {opening_balance_year=}, {lodgement_date=}, {repayment_dates=}, {repayment_amounts=}')
 
