@@ -134,7 +134,7 @@ def div7a_from_json2(ooo,j):
 
 
 	if not in_notebook():
-		log.warn(records)
+		log.debug(records)
 	records = div7a(ooo, records)
 
 	myr_info = get_myr_check_of_income_year(records, ciy).info
@@ -388,7 +388,7 @@ def div7a2_from_json2(ooo,j):
 	# debug
 
 	if not in_notebook():
-		log.warn(records)
+		log.debug(records)
 
 	# computation
 
@@ -396,12 +396,13 @@ def div7a2_from_json2(ooo,j):
 
 	# answer
 	
-	overview = {}
+	result = dict(years={})
+	years = result['years']
 
 	loan_start_record = get_loan_start_record(records)
 	first_year = loan_start_record.income_year
 	
-	overview[first_year] = dict(
+	years[first_year] = dict(
 		events=[dict(
 			type="loan created", 
 			date=loan_start_record.date, 
@@ -417,7 +418,7 @@ def div7a2_from_json2(ooo,j):
 			events=[]
 		)
 
-		overview[year] = y
+		years[year] = y
 
 		iyr = records_of_income_year(records, year)
 
@@ -474,9 +475,9 @@ def div7a2_from_json2(ooo,j):
 		year += 1
 
 	if len(warnings) != 0:
-		overview['warnings'] = ' '.join(warnings)
+		result['warnings'] = ' '.join(warnings)
 		
-	return overview
+	return result
 
 
 def div7a2_ingest(j):
@@ -551,7 +552,7 @@ def div7a2_calculation_income_year(loan_year, term, repayments):
 def post_div7a2(
 	request: dict
 ):
-	log.info(json.dumps(request))
+	log.info(json.dumps(request, indent=2))
 	result = div7a2_from_json(request['request'], request['tmp_dir'])
-	log.info(result)
+	log.info(json.dumps(result, indent=2))
 	return result
