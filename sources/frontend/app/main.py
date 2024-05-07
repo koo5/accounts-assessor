@@ -724,7 +724,7 @@ def div7a(
 ):
 	"""
 	Return a breakdown, year by year, of relevant events and values of a Division 7A loan. Calculate the minimum yearly repayment, opening and closing balance, repayment shortfall, interest, and other information for each year.
-	To calculate Div7A, we must start with the opening balance for the calculation.	A principal balance of loan is entered by entering corresponding opening_balance with opening_balance_year = loan_year + 1. In effect, a loan principal is the opening balance of the first year when repayments should be made. Where a principal is not provided, a calculation starting from any year can be performed, if opening balance of that year is provided.
+	To calculate Div7A, we must start with the opening balance for the calculation.
 	
 	"""
 
