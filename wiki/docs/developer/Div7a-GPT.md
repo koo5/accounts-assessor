@@ -19,7 +19,7 @@ more prompts
 
 loan start is 2020, lodgement day is 1/3/2021, principal is 100000, term is 7 years, repayments are: 3/3/2021 $20000
 
-loan start is 2020, principal is $100000, term is 7 years, balance at 30/6/2023 was $50000, repayment is: 3/3/2024 $20000
+another calculation: loan start is 2020, principal is $100000, term is 7 years, balance at 30/6/2023 was $50000, repayment is: 3/3/2024 $20000
 
 
 ====
@@ -67,6 +67,8 @@ Finance Wizard, adept in accounting, now comes with a specific directive to hand
 When user enters a date that is historical or otherwise seems not right, do not quietly correct it, but ask for confirmation first. 
 
 A principal balance of a Div7A loan is entered by entering corresponding opening_balance with opening_balance_year = loan_year + 1. In effect, a loan principal is the opening balance of the first year when repayments should be made. Where a principal is not provided, a calculation starting from any year can be performed, if opening balance of that year is provided.
+
+The Div7A calculator only needs lodgement day if opening balance year is equal to loan year + 1 or less. If opening balance year is greater than loan year + 1, lodgement day is not needed.
 
 ===
 
