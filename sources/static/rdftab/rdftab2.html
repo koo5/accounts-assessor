@@ -22,9 +22,11 @@
 </head>
 <body>
 
+
 <div id="app">
 	<node_outer :node="node"></node_outer>
 </div>
+
 
 <script type="module">
 	'use strict';
@@ -40,11 +42,18 @@
   });
 
 
-	function Node(node_n3)
+	function Node(n3)
 	{
-		this.node_n3 = node_n3;
-		this.term={short: node_n3};
-		this.sources=[{msg: "loading " + node_n3 + "..."}];
+	  /* n3 is the n3 representation of the node. It is the unique identifier. */
+		this.n3 = n3;
+		/* term contains data for presenting the identifier or literal as a string. */
+		this.term={short: n3};
+		/* UI state. loading, expanded, etc. */
+		this.state={};
+		/* per-source information and state */
+		this.sources=[{msg: "loading " + n3 + "..."}];
+		/* properties of the node */
+		this.props=[];
 	}
   
 
@@ -70,7 +79,7 @@
     props: ['node'],
     template: `
       <span>
-        <b><term :node="node" :term="node.term"></term></b>
+        <b><term :term="node.term"></term></b>
         properties:
         <node :node="node"/>
       </span>
@@ -80,7 +89,7 @@
   
   app.component('term', {
     inject: ['focused_graph'],
-		props: ['term', 'node'],
+		props: ['term'],
 		template: `<span>
             <span v-if="term?.reverse">is </span>
             <span v-else-if="term?.forward">has </span>
@@ -128,6 +137,24 @@
   });
 
 
+  app.component('quad', {
+      inject: ['focused_graph'],
+      props: ['quad'],
+      template: `
+		
+        <td :class="{ 'general' : prop.category?.fake == 'general' }">
+            <term :node="node"  :term="prop.p" :key="prop.p.id" />
+        </td>
+        <td>                           
+            <term_expandable :node="node"  :term="prop.o" :key="prop.o.id" :interesting="prop.g.uri == this.focused_graph && prop.category?.fake == 'general'"/>
+        </td>
+        <td :class="{ 'focusedGraph' : prop.g.uri == this.focused_graph, graph : true }">
+            <term_expandable :node="node"  :term="prop.g" :key="prop.g.id"/>
+        </td>
+
+  `
+  });
+
   app.component('node', {
     inject: ['focused_graph'],
 		props: ['node'],
@@ -141,11 +168,10 @@
 
         <span v-if="node.list_item">
           * <node :node="node.list_item" />
-          <node :node="node.list_tail" />
-        </span>
-  
-        <span v-else-if="node.uri=='http://www.w3.org/1999/02/22-rdf-syntax-ns#nil'">
-          <small>(list end)</small>
+          <node v-if="node.list_tail" :node="node.list_tail" />
+          <span v-else>
+            <small>(list end)</small>
+          </span>
         </span>
 
         <table v-else-if="node.props">
@@ -158,18 +184,8 @@
                   </thead>
 
               <tbody>             
-                    <tr v-for="prop in node.props" :key="prop.id">
-
-                        <td :class="{ 'general' : prop.category?.fake == 'general' }">
-                            <term :node="node"  :term="prop.p" :key="prop.p.id" />
-                        </td>
-                        <td>                           
-                            <term_expandable :node="node"  :term="prop.o" :key="prop.o.id" :interesting="prop.g.uri == this.focused_graph && prop.category?.fake == 'general'"/>
-                        </td>
-                        <td :class="{ 'focusedGraph' : prop.g.uri == this.focused_graph, graph : true }">
-                            <term_expandable :node="node"  :term="prop.g" :key="prop.g.id"/>
-                        </td>
-
+                    <tr v-for="quad in node.props" :key="quad.id">
+                      <quad :quad="quad"/>
                     </tr>
             </tbody>
         </table>
@@ -191,32 +207,29 @@
   
     
   app.component('term_expandable', {
-     props: ['term', 'node', 'interesting'],
+     props: ['node', 'interesting'],
      template: `
-<div class="expandable" :class="{ 'expanded' : term.wtf }"  >
+<div class="expandable" :class="{ 'expanded' : node.state.expanded }"  >
     <div :class="{ 'focusedGraphAndGeneral' : interesting }">
-        <button v-if="(term.literal_str !== undefined) || term.uri" @click="toggle_expanded" >{{ term.wtf ? '-' : ' + ' }}</button><term :term="term" :node="node"/>
+        <button v-if="(node.term.literal_str !== undefined) || node.term.uri" @click="toggle_expanded" >{{ node.state.expanded ? '-' : ' + ' }}</button><term :node="node"/>
     </div>
     
     <Transition>
-       <node v-if="term.wtf" :node="term.embedded_node" :key="term.id" />
+       <node v-if="node.state.expanded" :node="node" />
     </Transition>
 </div>          
     `,
      methods: {
          toggle_expanded: function () {
-             var wtf = !this.term.wtf;
-             console.log("toggle_expanded:" + wtf);
-             if (wtf && !this.term.loading && !this.term.embedded_node.node_n3) 
+             let expanded = !this.node.state.expanded;
+             console.log("expanded:" + expanded);
+             if (expanded && !this.node.state.loading) 
              {
-                 this.term.loading = true;
-                 let n = new Node(this.term.n3);
-                 n.term.href = this.term.href;
-                 load_node_data_all(n, (e) => {this.term.loading = false;}).then(
+                 this.node.state.loading = true;
+                 load_node_data_all(this.node, (e) => {this.node.state.loading = false;}).then(
                      () => {
-                         console.log("loaded");
-                         this.term.embedded_node = n;
-                         this.term.loading = false;
+                         console.log("loaded.");
+                         this.node.state.loading = false;
                      }
                  ).catch(
                      (error) => {
@@ -224,7 +237,7 @@
                      }
                  );
     		     }
-             this.term.wtf = wtf;
+             this.node.state.expanded = expanded;
          }
      }
  });
@@ -235,7 +248,7 @@
 	function load_node_data_all(node, fail_callback)
 	{
 		return Promise.all([
-			load_node_data1(node.node_n3).then(
+			load_node_data1(node.n3).then(
 						results => {
 							assign_node_data1(node, results);
 							node.sources[0].msg = 'loaded';
@@ -249,11 +262,11 @@
 		]);
 	};
 
-	function load_node_data1(node_n3) {
+	function load_node_data1(n3) {
 		return new Promise(
 			function(resolve, reject)
 			{
-				var url = '/api/rdftab?node='+encodeURIComponent(node_n3);
+				var url = '/api/rdftab?node='+encodeURIComponent(n3);
 				$.ajax({
 					dataType: "json",
 					mimeType: "application/json",
@@ -271,11 +284,8 @@
 
 	function assign_node_data1(node, result) {
 		console.log("assign_node_data1:\nnode:\n" + JSON.stringify(node, null, 2) + "\nresult:\n" + JSON.stringify(result, null, 2));
-		//node.props.push(result.props);
-		for (var key in result) {
-			if (result.hasOwnProperty(key)) {
-				node[key] = result[key];
-			}
+		result.props.forEach(function (p) {
+			node.props.push(p);
 		}
 		load_list_item(node);
 
@@ -299,12 +309,13 @@
 		console.log("first:");console.log(first);
 		console.log("rest:");console.log(rest);
 		
-		if (first && rest) {
+		if (first) {
 			node.list_item = new Node(first.n3);
-			node.list_tail = new Node(rest.n3);
       load_node_data_all(node.list_item);
-			if (rest.node_n3 != '<http://www.w3.org/1999/02/22-rdf-syntax-ns#nil>')
-			  load_node_data_all(node.list_tail);
+		}
+		if (rest && (rest.n3 != '<http://www.w3.org/1999/02/22-rdf-syntax-ns#nil>')) {
+			node.list_tail = new Node(rest.n3);
+		  load_node_data_all(node.list_tail);
 		}
 	}
 
