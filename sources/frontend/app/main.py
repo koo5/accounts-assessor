@@ -724,9 +724,7 @@ def div7a(
 ):
 	"""
 	Return a breakdown, year by year, of relevant events and values of a Division 7A loan. Calculate the minimum yearly repayment, opening and closing balance, repayment shortfall, interest, and other information for each year.
-	To calculate Div7A, we must start with the opening balance for the calculation.
-	
-	"""
+	To calculate Div7A, we must start with the opening balance for the calculation."""
 
 	logging.getLogger().info(f'{loan_year=}, {full_term=}, {opening_balance=}, {opening_balance_year=}, {lodgement_date=}, {repayment_dates=}, {repayment_amounts=}')
 
