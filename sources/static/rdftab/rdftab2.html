@@ -54,6 +54,8 @@
 		this.sources=[{msg: "loading " + n3 + "..."}];
 		/* properties of the node */
 		this.props=[];
+		/* external links for browsing the node */
+		this.tools=[];
 	}
   
 
@@ -143,13 +145,13 @@
       template: `
 		
         <td :class="{ 'general' : prop.category?.fake == 'general' }">
-            <term :node="node"  :term="prop.p" :key="prop.p.id" />
+            <term :term="quad.p.term"" />
         </td>
         <td>                           
-            <term_expandable :node="node"  :term="prop.o" :key="prop.o.id" :interesting="prop.g.uri == this.focused_graph && prop.category?.fake == 'general'"/>
+            <term_expandable :node="quad.o" :interesting="quad.g.uri == this.focused_graph && quad.category?.fake == 'general'"/>
         </td>
-        <td :class="{ 'focusedGraph' : prop.g.uri == this.focused_graph, graph : true }">
-            <term_expandable :node="node"  :term="prop.g" :key="prop.g.id"/>
+        <td :class="{ 'focusedGraph' : quad.g.uri == this.focused_graph, graph : true }">
+            <term_expandable :node="quad.g"/>
         </td>
 
   `
@@ -284,8 +286,11 @@
 
 	function assign_node_data1(node, result) {
 		console.log("assign_node_data1:\nnode:\n" + JSON.stringify(node, null, 2) + "\nresult:\n" + JSON.stringify(result, null, 2));
-		result.props.forEach(function (p) {
-			node.props.push(p);
+		result.props.forEach(function (x) {
+			node.props.push({p: new Node(x.p.n3), o: new Node(x.o.n3), g: new Node(x.g.n3), category: x.category, id: x.id});
+		}
+		result.tools.forEach(function (x) {
+			node.tools.push(x);
 		}
 		load_list_item(node);
 
@@ -298,9 +303,9 @@
 
 		if (node.props) {
 			node.props.forEach(function (prop) {
-				if (prop.p.uri == 'http://www.w3.org/1999/02/22-rdf-syntax-ns#first') {
+				if (prop.p.n3 == '<http://www.w3.org/1999/02/22-rdf-syntax-ns#first>') {
 					first = prop.o;
-				} else if (prop.p.uri == 'http://www.w3.org/1999/02/22-rdf-syntax-ns#rest') {
+				} else if (prop.p.n3 == '<http://www.w3.org/1999/02/22-rdf-syntax-ns#rest>') {
 					rest = prop.o;
 				}
 			});
@@ -320,13 +325,11 @@
 	}
 
 
-  
-  
+    
   app.provide('focused_graph', searchParams.get('focused-graph'));
 
 
   app.mount('#app');
-
 
 
 
