@@ -90,7 +90,7 @@ def postprocess(job, request_directory, converted_request_files, tmp_name, tmp_p
 			Inputs=f'../{request_directory}',
 			Rdftab='/static/rdftab/rdftab.html?'+urllib.parse.urlencode(
 					{
-						'node':					'<'+result_uri+'/>',
+						'node':					'<'+result_uri+'>',
 						'focused-graph':			result_graph
 					}
 				),
