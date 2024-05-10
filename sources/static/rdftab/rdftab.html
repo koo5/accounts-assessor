@@ -7,7 +7,7 @@
   <script type="importmap">
     {
       "imports": {
-        "vue": "https://unpkg.com/vue@3/dist/vue.esm-browser.js"
+        "vue": "./vue.esm-browser.js"
       }
     }
   </script>
@@ -42,12 +42,16 @@
   });
 
 
-	function Node(n3)
+	function Node(n3, term)
 	{
 	  /* n3 is the n3 representation of the node. It is the unique identifier. */
 		this.n3 = n3;
 		/* term contains data for presenting the identifier or literal as a string. */
-		this.term={short: n3};
+		if (term) {
+			this.term=term;
+		} else {
+			this.term = {short: n3};
+		}
 		/* UI state. loading, expanded, etc. */
 		this.state={};
 		/* per-source information and state */
@@ -95,7 +99,7 @@
 		template: `<span>
             <span v-if="term?.reverse">is </span>
             <span v-else-if="term?.forward">has </span>
-            <span  v-if="term === undefined">-</span>
+            <span  v-if="term === undefined">(undefined)-</span>
             <span  v-else-if="term.fake !== undefined">{{ term.fake }}</span>
             <template v-else-if="typeof term == 'string'">
               s: <span class="identifier">{{ term }}</span>
@@ -213,7 +217,7 @@
      template: `
 <div class="expandable" :class="{ 'expanded' : node.state.expanded }"  >
     <div :class="{ 'focusedGraphAndGeneral' : interesting }">
-        <button v-if="(node.term.literal_str !== undefined) || node.term.uri" @click="toggle_expanded" >{{ node.state.expanded ? '-' : ' + ' }}</button><term :node="node"/>
+        <button v-if="(node.term.literal_str !== undefined) || node.term.uri" @click="toggle_expanded" >{{ node.state.expanded ? '-' : ' + ' }}</button><Term :node="node"/>
     </div>
     
     <Transition>
@@ -291,9 +295,9 @@
 		result.props.forEach(function (x) {
 			node.props.push(
 					{
-						p: new Node(x.p.n3),
-						o: new Node(x.o.n3),
-						g: new Node(x.g.n3),
+						p: new Node(x.p.n3, x.p),
+						o: new Node(x.o.n3, x.o),
+						g: new Node(x.g.n3, x.g),
 						category: x.category,
 						id: x.id
 					}
