@@ -1,11 +1,11 @@
 body {
     overflow-y: scroll;
     white-space:nowrap;
-    background-color: #B0D0FF;
+    /*background-color: #B0D0FF;*/
 }
 
 table {
-  background-color: #B0D0FF;
+  /*background-color: #B0D0FF;*/
     border: 1px;
 }
 
