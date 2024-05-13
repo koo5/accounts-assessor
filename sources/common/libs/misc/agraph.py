@@ -6,7 +6,12 @@ from franz.openrdf.model.utils import parse_term
 from franz.openrdf.repository.repositoryconnection import RepositoryConnection
 from franz.openrdf.connect import ag_connect
 from config import secret
+import threading
 
+
+
+
+namespaces_old = set()
 
 # see also doc.pl RdfTemplates.trig agraph.py
 namespaces = {
@@ -46,7 +51,7 @@ namespaces = {
 	'report_entries': 'https://rdf.lodgeit.net.au/v1/report_entries#',
 	'rdftab': 'https://rdf.lodgeit.net.au/v1/rdftab#',
 
-	'jj' : 'http://jj.internal:8877/tmp/',
+	'jj': 'http://jj.internal:8877/tmp/',
 
 
 }
@@ -61,7 +66,7 @@ def generateUniqueUri(prefix):
 	#if prefix not in registered_prefixes:
 	#	registered_prefixes[prefix] =
 	#registerPrefix(a, prefix)
-	r = _agc.allocateEncodedIds(prefix)[0]
+	r = _agcs['a'].allocateEncodedIds(prefix)[0]
 	logging.getLogger().info(f'allocateEncodedIds: {r}')
 	return URI(r)
 
@@ -73,6 +78,8 @@ def registerEncodedIdPrefix(a, prefix):
 _agcs = {}
 
 def agc(repo='a') -> RepositoryConnection:
+	global namespaces_old
+	
 	if repo in _agcs:
 		return _agcs[repo]
 
@@ -90,15 +97,18 @@ def agc(repo='a') -> RepositoryConnection:
 	)
 	a.setDuplicateSuppressionPolicy('spog')
 	
-
-	for k,v in namespaces.items():
-		a.setNamespace(k,v)
+	with threading.Lock():
+		must_update_namespaces = set(namespaces) != namespaces_old
+		namespaces_old = set(namespaces)
+	if must_update_namespaces:
+		for k,v in namespaces.items():
+			a.setNamespace(k,v)
 
 	registerEncodedIdPrefix(a, 'session')
 	registerEncodedIdPrefix(a, 'testcase')
 
-	_agc = a
-	return _agc
+	_agcs[repo] = a
+	return a
 
 
 

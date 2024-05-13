@@ -144,7 +144,7 @@ class RpcCommand(BaseModel):
 app = FastAPI(
 	title="Robust API",
 	summary="invoke accounting calculators and other endpoints",
-	servers = [dict(url=os.environ['PUBLIC_URL'].rstrip('/'))],
+	servers=[dict(url=os.environ['PUBLIC_URL'].rstrip('/'))],
 	
 )
 
@@ -152,41 +152,22 @@ app = FastAPI(
 
 
 if True: # os.environ.get('PROFILING_ENABLED'):
-	from pyinstrument import Profiler
-	from pyinstrument.renderers.html import HTMLRenderer
-	from pyinstrument.renderers.speedscope import SpeedscopeRenderer
+	from app.profiler import ProfilingContextManager				
 
-	@app.middleware("http")
-	async def profile_request(request: Request, call_next):
-		"""Profile the current request
-
-		Taken from https://pyinstrument.readthedocs.io/en/latest/guide.html#profile-a-web-request-in-fastapi
-		with slight improvements.
-
-		"""
-		profile_type_to_ext = {"html": "html", "speedscope": "speedscope.json"}
-		profile_type_to_renderer = {
-			"html": HTMLRenderer,
-			"speedscope": SpeedscopeRenderer,
-		}
-		if request.query_params.get("profile", False):
-			profile_type = request.query_params.get("profile_format", "speedscope")
-			with Profiler(interval=0.001, async_mode="enabled") as profiler:
-				response = await call_next(request)
-			extension = profile_type_to_ext[profile_type]
-			renderer = profile_type_to_renderer[profile_type]()
+	if False:
+		@app.middleware("http")
+		async def profile_request(request: Request, call_next):
+			"""Profile the current request
+	
+			Taken from https://pyinstrument.readthedocs.io/en/latest/guide.html#profile-a-web-request-in-fastapi
+			with slight improvements.
+	
+			"""
+			profile_type = request.query_params.get("profile_format", 'html')#"speedscope")
 			
-			fn = '.'.join([
-				'../profile',
-				'UTC' + datetime.datetime.utcnow().strftime('%Y_%m_%d__%H_%M_%S'),
-				str(os.getpid()),
-				extension])
+			with ProfilingContextManager(profile_type) as profiler:
+				return await call_next(request)
 			
-			with open(fn, "w") as out:
-				out.write(profiler.output(renderer=renderer))
-			return response
-		return await call_next(request)
-
 
 
 
@@ -212,7 +193,8 @@ def index():
 
 @app.get("/api/rdftab")
 def get(request: Request, node: str):
-	result = rdftab.get(get_user(request), node)
+	with ProfilingContextManager() as profiler:
+		result = rdftab.get(get_user(request), node)
 	del result['conn']
 	result = json.dumps(result, cls=CustomJSONEncoder, indent=4)
 	#logger.info(f"{result=}")
