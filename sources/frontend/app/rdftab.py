@@ -11,6 +11,7 @@ from rdflib import URIRef, Literal, BNode
 
 
 
+
 logger = logging.getLogger(__name__)
 logger.setLevel(logging.DEBUG)
 
@@ -177,8 +178,6 @@ def add_list(node):
 def add_href(node):
 	if node.get('n3'):
 		node['href'] = '/static/rdftab/rdftab.html?node=' + urllib.parse.quote_plus(node['n3'])
-	node['wtf'] = False
-	node['embedded_node'] = {}
 
 	
 def xnode_str(result,xn):

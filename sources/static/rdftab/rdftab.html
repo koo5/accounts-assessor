@@ -102,7 +102,7 @@
             <span  v-if="term === undefined">(undefined)-</span>
             <span  v-else-if="term.fake !== undefined">{{ term.fake }}</span>
             <template v-else-if="typeof term == 'string'">
-              s: <span class="identifier">{{ term }}</span>
+              <span class="term_string">{{ term }}</span>
             </template>
             <template v-else-if="term.literal_str === ''">
               <small>
@@ -110,8 +110,8 @@
               </small>
             </template>
             <template v-else-if="term.literal_str !== undefined">
-              <span>
-                s: <a :href="term.href + '&focused-graph=' + this.focused_graph">{{ term.literal_str }}</a>
+              <span class="term_literal">
+                <a :href="term.href + '&focused-graph=' + this.focused_graph">{{ term.literal_str }}</a>
               </span>
             </template>
             <template v-else-if="term.label">
@@ -120,20 +120,18 @@
               </span>
             </template>
             <template v-else-if="term.short">
-            (short: )
-              <span class="identifier">
+              <span class="term_short">
                 <a :href="term.href + '&focused-graph=' + this.focused_graph">{{ term.short }}</a>
               </span>
             </template>
             <template v-else-if="term.uri">
-            (uri: )
-              <span class="identifier">
+              <span class="term_uri">
                 <a :href="term.href + '&focused-graph=' + this.focused_graph">{{ term.uri }}</a>
               </span>
             </template>
             
             <template v-else>
-              ??? {{ JSON.stringify(term) }}
+              ??? {{ JSON.stringify(term) }} ???
             </template>
             <span v-if="term?.reverse">
               of
@@ -163,53 +161,76 @@
 
   app.component('Node', {
     inject: ['focused_graph'],
-		props: ['node'],
+		props: ['node', 'is_list_tail'],
     template: `
-      <span :class="{ 'focusedGraph' : false }">
+      <div :class="{ 'focusedGraph' : false }">
         <span v-for="source in node.sources">
             <div v-if="source.msg!='loaded'">
               <small>({{ source.msg }})</small>
             </div>
         </span>
 
-        <span v-if="node.list_item">
-              * item: {{ node.list_item.n3 }}
-<!--          * <Node :node="node.list_item" />-->
-			tail ( {{ node.list_tail.n3 }} ):
-          <Node v-if="node.list_tail" :node="node.list_tail" />
-          <span v-else>
-            <small>(list end)</small>
-          </span>
+        <span v-if="node.n3 == '<http://www.w3.org/1999/02/22-rdf-syntax-ns#nil>'">
+          <small>(list with no items)</small>
         </span>
 
-        <table v-if="!node.list_item && node.props">
-              <thead>
-                    <tr>
-                      <th>property</th>
-                      <th>value</th>
-                      <th>source</th>
-                    </tr>
-                  </thead>
+        <span v-else>
+          <span v-if="node.list_item">
 
-              <tbody>             
-                    <tr v-for="quad in node.props" :key="quad.id">
-                      <quad :quad="quad"/>
-                    </tr>
-            </tbody>
-        </table>
-          
-        <small v-if="node.tools && !node.list_item">
-            browse {{ node.n3 }} also in:
-            <ul>
+            <span v-if="!is_list_tail">this node is a list with items:<br>
+            <ol>
+              <li>
+                <Term_expandable :node="node.list_item" :interesting="true" />
+              </li>
+              <Node v-if="node.list_tail" :node="node.list_tail" :is_list_tail="true"/>
+              <span v-else>
+                <small>(end of list)</small>
+              </span>                        
+            </ol>
+            </span>
             
-                <li v-for="tool in node.tools">
-                    <a v-bind:href="tool.url">{{ tool.label }}</a>
-                </li>   
-
-            </ul>
-        </small>
+            <span v-else>
+              <li>
+                <Term_expandable :node="node.list_item" :interesting="true" />
+              </li>
+              <Node v-if="node.list_tail" :node="node.list_tail" :is_list_tail="true"/>
+              <span v-else>
+                <small>(end of list)</small>
+              </span>            
+            </span>
           
-      </span>
+          </span>
+          
+          <table v-if="!node.list_item && node.props">
+                <thead>
+                      <tr>
+                        <th>property</th>
+                        <th>value</th>
+                        <th>source</th>
+                      </tr>
+                    </thead>
+  
+                <tbody>             
+                      <tr v-for="quad in node.props" :key="quad.id">
+                        <quad :quad="quad"/>
+                      </tr>
+              </tbody>
+          </table>
+            
+          <small v-if="node.tools && !node.list_item">
+              browse {{ node.n3 }} also in:
+              <ul>
+              
+                  <li v-for="tool in node.tools">
+                      <a v-bind:href="tool.url">{{ tool.label }}</a>
+                  </li>   
+  
+              </ul>
+          </small>
+        
+        </span>
+        
+      </div>
     `
   });
   
@@ -218,9 +239,11 @@
      props: ['node', 'interesting'],
      template: `
 <div class="expandable" :class="{ 'expanded' : node.state.expanded }"  >
-    <div :class="{ 'focusedGraphAndGeneral' : interesting }">
+    <span :class="{ 'focusedGraphAndGeneral' : interesting }">
+        
+<!--        bbb{{ JSON.stringify(node, null, 2) }}zzz-->
         <button v-if="(node.term.literal_str !== undefined) || node.term.uri" @click="toggle_expanded" >{{ node.state.expanded ? '-' : ' + ' }}</button><Term :term="node.term"/>
-    </div>
+    </span>
     
     <Transition>
        <Node v-if="node.state.expanded" :node="node" />
@@ -291,8 +314,27 @@
 	}
 
 	function assign_node_data1(node, result) {
+	
+	  /*
+	  result is the object coming from the backend,
+	  {
+	    "repo":
+	    "props":
+	    "tools":
+	    "namespaces":
+	    "term": // this is basic data for presenting the node in a short form, like the n3 string, literal value, uri, etc.
+	  }
+	  */
 
 		console.log("assign_node_data1:\nnode:\n" + JSON.stringify(node, null, 2) + "\nresult:\n" + JSON.stringify(result, null, 2));
+		
+		node.namespaces = result.namespaces;
+		node.repo = result.repo;
+		node.user = result.user;
+		
+		for(let key in result.term) {
+      node.term[key] = result.term[key];
+    };
 
 		result.props.forEach(function (x) {
 			node.props.push(
@@ -308,8 +350,7 @@
 		result.tools.forEach(function (x) {
 			node.tools.push(x);
 		});
-		load_list_item(node);
-
+    load_list_item(node);
 	}
   
 	function load_list_item(node) {
@@ -320,9 +361,13 @@
 		if (node.props) {
 			node.props.forEach(function (prop) {
 				if (prop.p.n3 == '<http://www.w3.org/1999/02/22-rdf-syntax-ns#first>') {
-					first = prop.o;
+				  //console.log(JSON.stringify(prop.p, null, 2));
+				  if (prop.p.term.forward)
+					  first = prop.o;
 				} else if (prop.p.n3 == '<http://www.w3.org/1999/02/22-rdf-syntax-ns#rest>') {
-					rest = prop.o;
+				  //console.log(JSON.stringify(prop.p, null, 2));
+				  if (prop.p.term.forward)
+					  rest = prop.o;
 				}
 			});
 		}
@@ -332,11 +377,16 @@
 		
 		if (first) {
 			node.list_item = new Node(first.n3);
-			load_node_data_all(node.list_item);
+      setTimeout(() => {
+  			load_node_data_all(node.list_item);
+      }, 10);
+
 		}
 		if (rest && (rest.n3 != '<http://www.w3.org/1999/02/22-rdf-syntax-ns#nil>')) {
 			node.list_tail = new Node(rest.n3);
-			load_node_data_all(node.list_tail);
+      setTimeout(() => {
+  			load_node_data_all(node.list_tail);
+      }, 10);
 		}
 	}
 

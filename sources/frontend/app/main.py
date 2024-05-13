@@ -151,6 +151,45 @@ app = FastAPI(
 
 
 
+if True: # os.environ.get('PROFILING_ENABLED'):
+	from pyinstrument import Profiler
+	from pyinstrument.renderers.html import HTMLRenderer
+	from pyinstrument.renderers.speedscope import SpeedscopeRenderer
+
+	@app.middleware("http")
+	async def profile_request(request: Request, call_next):
+		"""Profile the current request
+
+		Taken from https://pyinstrument.readthedocs.io/en/latest/guide.html#profile-a-web-request-in-fastapi
+		with slight improvements.
+
+		"""
+		profile_type_to_ext = {"html": "html", "speedscope": "speedscope.json"}
+		profile_type_to_renderer = {
+			"html": HTMLRenderer,
+			"speedscope": SpeedscopeRenderer,
+		}
+		if request.query_params.get("profile", False):
+			profile_type = request.query_params.get("profile_format", "speedscope")
+			with Profiler(interval=0.001, async_mode="enabled") as profiler:
+				response = await call_next(request)
+			extension = profile_type_to_ext[profile_type]
+			renderer = profile_type_to_renderer[profile_type]()
+			
+			fn = '.'.join([
+				'../profile',
+				'UTC' + datetime.datetime.utcnow().strftime('%Y_%m_%d__%H_%M_%S'),
+				str(os.getpid()),
+				extension])
+			
+			with open(fn, "w") as out:
+				out.write(profiler.output(renderer=renderer))
+			return response
+		return await call_next(request)
+
+
+
+
 app.add_middleware(
     CORSMiddleware,
     allow_origin_regex='http://localhost:.*',
