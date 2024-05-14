@@ -1,5 +1,6 @@
 import logging, os
 import urllib
+from threading import Lock
 
 import cachetools
 
@@ -239,7 +240,7 @@ def add_uri_labels(result, xn):
 		xn['label']=False
 
 
-@cachetools.cached({})
+@cachetools.cached(cache=cachetools.LRUCache(maxsize=640 * 1024), lock=Lock())
 def uri_labels(conn, node):
 
 	labels = []

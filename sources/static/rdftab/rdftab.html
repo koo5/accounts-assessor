@@ -31,8 +31,8 @@
 <script type="module">
 	'use strict';
 	
-	import { createApp, defineComponent, h } from 'vue';
-
+	import { createApp, onMounted } from 'vue';
+  
  	const searchParams = new URLSearchParams(window.location.search);
 
 
@@ -52,10 +52,10 @@
 		} else {
 			this.term = {short: n3};
 		}
-		/* UI state. loading, expanded, etc. */
+		/* loading state */
 		this.state={};
 		/* per-source information and state */
-		this.sources=[{msg: "loading " + n3 + "..."}];
+		this.sources=[{msg: "loading..." + n3 + "..."}];
 		/* properties of the node */
 		this.props=[];
 		/* external links for browsing the node */
@@ -85,7 +85,7 @@
     props: ['node'],
     template: `
       <span>
-        <b><Term :term="node.term"></Term></b>
+        <b><Term :term="node.term" /></b>
         properties:
         <Node :node="node"/>
       </span>
@@ -95,7 +95,12 @@
   
   app.component('Term', {
     inject: ['focused_graph'],
-		props: ['term'],
+		props: ['term', 'interesting', 'node'],
+		mounted() {
+      if (this.interesting && this.node) {
+        load_node_data_all(this.node);
+      }
+    },
 		template: `<span>
             <span v-if="term?.reverse">is </span>
             <span v-else-if="term?.forward">has </span>
@@ -116,7 +121,7 @@
             </template>
             <template v-else-if="term.label">
               <span class="identifier" >
-                l: <a :href="term.href + '&focused-graph=' + this.focused_graph">{{ term.label.l }}</a>
+                <a :href="term.href + '&focused-graph=' + this.focused_graph">{{ term.label.l }}</a>
               </span>
             </template>
             <template v-else-if="term.short">
@@ -136,6 +141,9 @@
             <span v-if="term?.reverse">
               of
             </span>
+            <span v-if="node?.rdf_value">
+             -> <Term_expandable :node="node.rdf_value" />
+            </span>
           </span>
 		`,
   });
@@ -143,14 +151,19 @@
 
   app.component('Quad', {
       inject: ['focused_graph'],
-      props: ['quad'],
+      props: ['quad', 'parent'],
       template: `
 		
         <td :class="{ 'general' : quad.category?.fake == 'general' }">
             <Term :term="quad.p.term" />
         </td>
-        <td>                           
-            <Term_expandable :node="quad.o" :interesting="(quad.g.uri == this.focused_graph && quad.category?.fake == 'general')"/>
+        <td>
+        
+<!--        t{{ this.focused_graph }}t-->
+<!--        tt{{ quad.g.term.uri }}tt-->
+<!--        f{{ quad.g.uri == this.focused_graph }}f-->
+<!--        g{{ quad.category?.fake == 'general' }}g                           -->
+            <Term_expandable :parent="parent" :leadin="quad" :node="quad.o" :interesting="(quad.g.term.uri == this.focused_graph && quad.category?.fake == 'general')"/>
         </td>
         <td :class="{ 'focusedGraph' : quad.g.uri == this.focused_graph, graph : true }">
             <Term_expandable :node="quad.g"/>
@@ -161,7 +174,31 @@
 
   app.component('Node', {
     inject: ['focused_graph'],
-		props: ['node', 'is_list_tail'],
+		props: ['node', 'is_list_tail', 'leadin', 'parent'],
+		computed: {
+		
+		  /* the "leadin" quad is the quad that led from parent node to this node. 
+		  we find the id of the own quad that corresponds to the leadin quad, to hide it from the list of properties.
+		  This is different from the QuadLad approach, where each quad would be displayed only once. Here we just hide an obvious duplicity between two spatially close elements */
+        
+  		leadin_id() {
+        if (!this.leadin) return 'no leadin';
+        if (!this.parent) return 'no parent';
+        for (let quad of this.node.props)
+        {
+          // console.log('leadin_id: '+JSON.stringify(quad.p.n3, null, 2) + ' ' + JSON.stringify(this.leadin.p.n3, null, 2));
+          if (
+            this.leadin.p.n3 == quad.p.n3 /*&& 
+            this.leadin.p.term.reverse == !quad.p.term.reverse && 
+            this.parent.n3 == quad.o.n3 && 
+            this.leadin.g.n3 == quad.g.n3*/)
+          {
+            return quad.id;
+          }
+        }
+        return 'no match'+JSON.stringify(this.node.props.length, null, 2);
+      }
+    },
     template: `
       <div :class="{ 'focusedGraph' : false }">
         <span v-for="source in node.sources">
@@ -169,6 +206,10 @@
               <small>({{ source.msg }})</small>
             </div>
         </span>
+<!--<pre>-->
+<!--%{{ JSON.stringify(this.leadin?.p.n3, null, 2) }}%-->
+<!--%{{ JSON.stringify(this.node.props, null, 2) }}%-->
+<!--</pre>-->
 
         <span v-if="node.n3 == '<http://www.w3.org/1999/02/22-rdf-syntax-ns#nil>'">
           <small>(list with no items)</small>
@@ -211,10 +252,15 @@
                     </thead>
   
                 <tbody>             
-                      <tr v-for="quad in node.props" :key="quad.id">
-                        <quad :quad="quad"/>
+                    <template v-for="quad in node.props" :key="quad.id">
+                      <tr v-if="quad.id != leadin_id">
+<!--                      {{ quad.id }}-->
+<!--                          |{{ JSON.stringify( this.leadin_id, null, 2) }}|-->
+<!--                        quad{{ JSON.stringify(quad, null, 2) }}-->
+                        <quad :quad="quad" :parent="node" />
                       </tr>
-              </tbody>
+                    </template>
+                </tbody>
           </table>
             
           <small v-if="node.tools && !node.list_item">
@@ -236,39 +282,32 @@
   
     
   app.component('Term_expandable', {
-     props: ['node', 'interesting'],
+     props: ['node', 'interesting', 'leadin', 'parent'],
+     data() {
+       return {
+         expanded: false
+       }
+     }, 
      template: `
-<div class="expandable" :class="{ 'expanded' : node.state.expanded }"  >
+<span class="expandable" :class="{ 'expanded' : node.state.expanded }"  >
+<!--i{{ interesting }}i-->
     <span :class="{ 'focusedGraphAndGeneral' : interesting }">
         
 <!--        bbb{{ JSON.stringify(node, null, 2) }}zzz-->
-        <button v-if="(node.term.literal_str !== undefined) || node.term.uri" @click="toggle_expanded" >{{ node.state.expanded ? '-' : ' + ' }}</button><Term :term="node.term"/>
+        <button v-if="(node.term.literal_str !== undefined) || node.term.uri" @click="toggle_expanded" >{{ expanded ? '-' : ' + ' }}</button><Term :term="node.term" :node="node" :interesting="interesting" />
     </span>
     
     <Transition>
-       <Node v-if="node.state.expanded" :node="node" />
+       <Node v-if="expanded" :node="node" :leadin="leadin" :parent="parent"/>
     </Transition>
-</div>          
+</span>          
     `,
      methods: {
          toggle_expanded: function () {
-             let expanded = !this.node.state.expanded;
-             console.log("expanded:" + expanded);
-             if (expanded && !this.node.state.loading) 
-             {
-                 this.node.state.loading = true;
-                 load_node_data_all(this.node, (e) => {this.node.state.loading = false;}).then(
-                     () => {
-                         console.log("loaded.");
-                         this.node.state.loading = false;
-                     }
-                 ).catch(
-                     (error) => {
-                         console.log("error: " + error);
-                     }
-                 );
-    		     }
-             this.node.state.expanded = expanded;
+             this.expanded = !this.expanded;
+             console.log("expanded:" + this.expanded);
+             if (this.expanded) 
+                 load_node_data_all(this.node);
          }
      }
  });
@@ -278,9 +317,17 @@
   
 	function load_node_data_all(node, fail_callback)
 	{
+    
+    if (node.state.loaded || node.state.loading) return Promise.all([]);
+    node.state.loading = true;
+      
 		return Promise.all([
 			load_node_data1(node.n3).then(
 						results => {
+						  
+						  node.state.loaded = true;
+						  node.state.loading = false;
+						  
 							assign_node_data1(node, results);
 							node.sources[0].msg = 'loaded';
 						}
@@ -288,6 +335,7 @@
 							(error) => {
 							  node.sources[0].msg = "error: " + error;
 							  fail_callback && fail_callback(error)
+							  node.state.loading = false;
               }
             )
 		]);
@@ -350,6 +398,7 @@
 		result.tools.forEach(function (x) {
 			node.tools.push(x);
 		});
+    
     load_list_item(node);
 	}
   
@@ -358,46 +407,34 @@
 		let first = undefined;
 		let rest = undefined;
 
-		if (node.props) {
-			node.props.forEach(function (prop) {
-				if (prop.p.n3 == '<http://www.w3.org/1999/02/22-rdf-syntax-ns#first>') {
-				  //console.log(JSON.stringify(prop.p, null, 2));
-				  if (prop.p.term.forward)
-					  first = prop.o;
-				} else if (prop.p.n3 == '<http://www.w3.org/1999/02/22-rdf-syntax-ns#rest>') {
-				  //console.log(JSON.stringify(prop.p, null, 2));
-				  if (prop.p.term.forward)
-					  rest = prop.o;
-				}
-			});
-		}
-
-		console.log("first:");console.log(first);
-		console.log("rest:");console.log(rest);
-		
-		if (first) {
-			node.list_item = new Node(first.n3);
-      setTimeout(() => {
-  			load_node_data_all(node.list_item);
-      }, 10);
-
-		}
-		if (rest && (rest.n3 != '<http://www.w3.org/1999/02/22-rdf-syntax-ns#nil>')) {
-			node.list_tail = new Node(rest.n3);
-      setTimeout(() => {
-  			load_node_data_all(node.list_tail);
-      }, 10);
-		}
+    for (let prop of node.props)
+    {
+      if (prop.p.term.forward) {
+          if (prop.p.n3 == '<http://www.w3.org/1999/02/22-rdf-syntax-ns#first>') {
+              // console.log("first:");console.log(first);
+              //console.log(JSON.stringify(prop.p, null, 2));
+              node.list_item = prop.o;
+              setTimeout(() => {
+                load_node_data_all(node.list_item);
+              }, 10);
+          } else if (prop.p.n3 == '<http://www.w3.org/1999/02/22-rdf-syntax-ns#rest>' && prop.o.n3 != '<http://www.w3.org/1999/02/22-rdf-syntax-ns#nil>') {
+              // console.log("rest:");console.log(rest);
+              //console.log(JSON.stringify(prop.p, null, 2));
+              node.list_tail = prop.o;
+              setTimeout(() => {
+                load_node_data_all(node.list_tail);
+              }, 10);
+          }
+          else if (prop.p.n3 == '<http://www.w3.org/1999/02/22-rdf-syntax-ns#value>') {
+              node.rdf_value = prop.o;
+          }
+      }
+    }
 	}
-
 
     
   app.provide('focused_graph', searchParams.get('focused-graph'));
-
-
   app.mount('#app');
-
-
 
 </script>
 

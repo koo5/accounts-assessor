@@ -31,8 +31,14 @@ td.source:hover {
   background: green;
 }
 
+
+/* the intersection of the set of quads that are in the focused graph and the set of quads that have category "general" */
 .focusedGraphAndGeneral {
-    background-color: #97fb55;
+    /*background-color: #C7fbC5;*/
+    background-color: #A7fbC5;
+    font-weight: bold;
+    /*font-size: 1.2em;*/
+    /*border: 10px solid black;*/
 }
 
 label{
