@@ -143,7 +143,7 @@
               of
             </span>
             <span v-if="node?.rdf_value">
-             -> <Term_expandable :node="node.rdf_value" />
+             → <Term_expandable :node="node.rdf_value" />
             </span>
           </span>
 		`,
@@ -152,18 +152,18 @@
 
   app.component('Quad', {
       inject: ['focused_graph'],
-      props: ['quad', 'parent'],
+      props: ['quad', 'parent', 'is_leadin'],
       computed: {
         interesting() {
-          return this.quad.g.term.uri == this.focused_graph && this.quad.category?.fake == 'general';
+          return !this.is_leadin && this.quad.g.term.uri == this.focused_graph && this.quad.category?.fake == 'general';
         }
       },
       template: `
 		
-        <td :class="{ 'general' : quad.category?.fake == 'general' }">
+        <td :class="{ 'general' : quad.category?.fake == 'general', 'uninteresting': is_leadin }">
             <Term :term="quad.p.term" />
         </td>
-        <td :class="{ 'interesting' : interesting }">
+        <td :class="{ 'uninteresting': is_leadin }">
         
 <!--        t{{ this.focused_graph }}t-->
 <!--        tt{{ quad.g.term.uri }}tt-->
@@ -171,7 +171,7 @@
 <!--        g{{ quad.category?.fake == 'general' }}g                           -->
             <Term_expandable :parent="parent" :leadin="quad" :node="quad.o" :interesting="interesting"/>
         </td>
-        <td :class="{ 'focusedGraph' : quad.g.uri == this.focused_graph, graph : true }">
+        <td :class="{ 'focusedGraph' : quad.g.uri == this.focused_graph, 'graph' : true, 'uninteresting': true }">
             <Term_expandable :node="quad.g"/>
         </td>
 
@@ -206,7 +206,7 @@
       }
     },
     template: `
-      <div :class="{ 'focusedGraph' : false }">
+      <div :class="{ 'focusedGraph' : false, 'interesting': false }">
         <span v-for="source in node.sources">
             <div v-if="source.msg!='loaded'">
               <small>({{ source.msg }})</small>
@@ -259,26 +259,27 @@
   
                 <tbody>             
                     <template v-for="quad in node.props" :key="quad.id">
-                      <tr v-if="quad.id != leadin_id">
+<!--                  <tr v-if="quad.id != leadin_id">-->
+                      <tr>
 <!--                      {{ quad.id }}-->
 <!--                          |{{ JSON.stringify( this.leadin_id, null, 2) }}|-->
 <!--                        quad{{ JSON.stringify(quad, null, 2) }}-->
-                        <quad :quad="quad" :parent="node" />
+                        <quad :quad="quad" :parent="node" :is_leadin="quad.id == leadin_id" />
                       </tr>
                     </template>
                 </tbody>
           </table>
             
-          <small v-if="node.tools && !node.list_item">
+          <span v-if="node.tools && !node.list_item" :class="{ 'uninteresting' : true }">
               browse {{ node.n3 }} also in:
-              <ul>
+              <span :class="{ 'tools' : true }">
               
-                  <li v-for="tool in node.tools">
-                      <a v-bind:href="tool.url">{{ tool.label }}</a>
-                  </li>   
+                  <template v-for="tool in node.tools">
+                      <ToolLink :tool="tool" />
+                  </template>   
   
-              </ul>
-          </small>
+              </span>
+          </span>
         
         </span>
         
@@ -287,6 +288,14 @@
   });
   
     
+  app.component('ToolLink', {
+    props: ['tool'],
+    template: `
+      🡕<a v-bind:href="tool.url">{{ tool.label }}</a>
+    `
+  });
+  
+  
   app.component('Term_expandable', {
      props: ['node', 'interesting', 'leadin', 'parent'],
      data() {
@@ -295,7 +304,13 @@
        }
      }, 
      template: `
-<span class="expandable" :class="{ 'expanded' : node.state.expanded }"  >
+
+
+
+<span class="{ 'expandable': true, 'expanded' : node.state.expanded, 'interesting' : false }"  >
+
+
+
 <!--i{{ interesting }}i-->
     <span :class="{ 'interesting' : interesting }">
         

@@ -41,6 +41,21 @@ td.source:hover {
     /*border: 10px solid black;*/
 }
 
+.graph {
+    background-color: #cccccc;
+}
+
+.uninteresting {
+    font-size: 0.7em;
+}
+
+
+ul.tools li{
+  width: auto;
+  float: left;
+}
+
+
 label{
     display: inline-block;
 }
