@@ -31,7 +31,7 @@
 <script type="module">
 	'use strict';
 	
-	import { createApp, onMounted } from 'vue';
+	import { createApp } from 'vue';
   
  	const searchParams = new URLSearchParams(window.location.search);
 
@@ -102,6 +102,7 @@
       }
     },
 		template: `<span>
+x{{ this.interesting }}x{{ true && this.node }}x
             <span v-if="term?.reverse">is </span>
             <span v-else-if="term?.forward">has </span>
             <span  v-if="term === undefined">(undefined)-</span>
@@ -152,18 +153,23 @@
   app.component('Quad', {
       inject: ['focused_graph'],
       props: ['quad', 'parent'],
+      computed: {
+        interesting() {
+          return this.quad.g.term.uri == this.focused_graph && this.quad.category?.fake == 'general';
+        }
+      },
       template: `
 		
         <td :class="{ 'general' : quad.category?.fake == 'general' }">
             <Term :term="quad.p.term" />
         </td>
-        <td>
+        <td :class="{ 'interesting' : interesting }">
         
 <!--        t{{ this.focused_graph }}t-->
 <!--        tt{{ quad.g.term.uri }}tt-->
 <!--        f{{ quad.g.uri == this.focused_graph }}f-->
 <!--        g{{ quad.category?.fake == 'general' }}g                           -->
-            <Term_expandable :parent="parent" :leadin="quad" :node="quad.o" :interesting="(quad.g.term.uri == this.focused_graph && quad.category?.fake == 'general')"/>
+            <Term_expandable :parent="parent" :leadin="quad" :node="quad.o" :interesting="interesting"/>
         </td>
         <td :class="{ 'focusedGraph' : quad.g.uri == this.focused_graph, graph : true }">
             <Term_expandable :node="quad.g"/>
@@ -291,7 +297,7 @@
      template: `
 <span class="expandable" :class="{ 'expanded' : node.state.expanded }"  >
 <!--i{{ interesting }}i-->
-    <span :class="{ 'focusedGraphAndGeneral' : interesting }">
+    <span :class="{ 'interesting' : interesting }">
         
 <!--        bbb{{ JSON.stringify(node, null, 2) }}zzz-->
         <button v-if="(node.term.literal_str !== undefined) || node.term.uri" @click="toggle_expanded" >{{ expanded ? '-' : ' + ' }}</button><Term :term="node.term" :node="node" :interesting="interesting" />

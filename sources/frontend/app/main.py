@@ -151,7 +151,7 @@ app = FastAPI(
 
 
 
-if True: # os.environ.get('PROFILING_ENABLED'):
+if os.environ.get('PROFILING_ENABLED'):
 	from app.profiler import ProfilingContextManager				
 
 	if False:
@@ -193,8 +193,8 @@ def index():
 
 @app.get("/api/rdftab")
 def get(request: Request, node: str):
-	with ProfilingContextManager() as profiler:
-		result = rdftab.get(get_user(request), node)
+	#with ProfilingContextManager() as profiler:
+	result = rdftab.get(get_user(request), node)
 	del result['conn']
 	result = json.dumps(result, cls=CustomJSONEncoder, indent=4)
 	#logger.info(f"{result=}")
