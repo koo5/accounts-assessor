@@ -1,0 +1,94 @@
+{
+  "alerts": [],
+  "reports": [
+    {
+      "key": "alerts_html",
+      "title": "alerts",
+      "val": {
+        "url": "http://dev3-hp.internal:8877/tmp/UTC2024_05_19__10_09_03.323.2.xCEA438Dx939/000000_alerts.html"
+      }
+    },
+    {
+      "key": "context_trace_html",
+      "title": "context_trace",
+      "val": {
+        "url": "http://dev3-hp.internal:8877/tmp/UTC2024_05_19__10_09_03.323.2.xCEA438Dx939/000000_context_trace.html"
+      }
+    },
+    {
+      "key": "alerts_json",
+      "title": "alerts",
+      "val": {
+        "url": "http://dev3-hp.internal:8877/tmp/UTC2024_05_19__10_09_03.323.2.xCEA438Dx939/000000_alerts.json"
+      }
+    },
+    {
+      "key": "response.n3",
+      "title": "response.n3",
+      "val": {
+        "url": "http://dev3-hp.internal:8877/tmp/UTC2024_05_19__10_09_03.323.2.xCEA438Dx939/000000_response.n3"
+      }
+    },
+    {
+      "key": "result_sheets",
+      "title": "doc_result_sheets.turtle",
+      "val": {
+        "url": "http://dev3-hp.internal:8877/tmp/UTC2024_05_19__10_09_03.323.2.xCEA438Dx939/000000_doc_result_sheets.turtle"
+      }
+    },
+    {
+      "key": "doc_final.turtle",
+      "title": "doc_final.turtle",
+      "val": {
+        "url": "http://dev3-hp.internal:8877/tmp/UTC2024_05_19__10_09_03.323.2.xCEA438Dx939/000000_doc_final.turtle"
+      }
+    },
+    {
+      "key": "doc_final.trig",
+      "title": "doc_final.trig",
+      "val": {
+        "url": "http://dev3-hp.internal:8877/tmp/UTC2024_05_19__10_09_03.323.2.xCEA438Dx939/000000_doc_final.trig"
+      }
+    },
+    {
+      "key": "request_n3",
+      "title": "request_n3",
+      "val": {
+        "url": "http://dev3-hp.internal:8877/tmp/UTC2024_05_19__10_09_03.323.2.xCEA438Dx939/depr_pl.xlsx.n3"
+      }
+    },
+    {
+      "key": "request_file",
+      "title": "request_file",
+      "val": {
+        "url": "http://dev3-hp.internal:8877/tmp/UTC2024_05_19__10_09_03.323.2.xCEA438Dx939/depr_pl.xlsx.n3"
+      }
+    },
+    {
+      "key": "job_tmp_url",
+      "title": "job_tmp_url",
+      "val": {
+        "url": "http://dev3-hp.internal:8877/tmp/UTC2024_05_19__10_09_03.323.2.xCEA438Dx939/../64364def-3ddd-40d6-9775-14fba30342e9"
+      }
+    },
+    {
+      "key": "task_directory",
+      "title": "task_directory",
+      "val": {
+        "url": "http://dev3-hp.internal:8877/tmp/UTC2024_05_19__10_09_03.323.2.xCEA438Dx939/"
+      }
+    },
+    {
+      "key": "doc_result_sheets_framed",
+      "title": "doc_result_sheets_framed",
+      "val": {
+        "url": "http://dev3-hp.internal:8877/tmp/UTC2024_05_19__10_09_03.323.2.xCEA438Dx939/000000_doc_result_sheets.turtle.jsonld"
+      }
+    }
+  ],
+  "uris": {
+    "result_tmp_directory_name": "UTC2024_05_19__10_09_03.323.2.xCEA438Dx939",
+    "result_data_uri_base": "http://dev3-hp.internal:8877/rdf/results/UTC2024_05_19__10_09_03.323.2.xCEA438Dx939/",
+    "request_uri": "http://dev3-hp.internal:8877/rdf/requests/UTC2024_05_19__10_09_03.323.2.xCEA438Dx939"
+  }
+}

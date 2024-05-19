@@ -1,0 +1,23 @@
+	Command being timed: "mprof run --nopython -C -E -o /app/server_root/tmp/UTC2024_05_19__10_09_03.323.2.xCEA438Dx939/mem_prof.txt swipl -O --stack_limit=100G -s /app/sources/lib/rpc_server.pl -g set_prolog_flag(debug,false),true,utils:print_debugging_checklist,lib:process_request_rpc_cmdline_json_text('{\"method\": \"calculator\", \"params\": {\"request_files\": [\"//app/server_root/tmp/UTC2024_05_19__10_09_03.333.2.xCEA438Dx929/converted/depr_pl.xlsx.n3\"], \"request_format\": \"rdf\", \"request_tmp_directory_name\": \"UTC2024_05_19__10_09_03.333.2.xCEA438Dx929\", \"result_tmp_directory_name\": \"UTC2024_05_19__10_09_03.323.2.xCEA438Dx939\", \"public_url\": \"http://dev3-hp.internal:8877\", \"rdf_explorer_base\": \"/static/rdftab/rdftab.html?node=\", \"final_result_tmp_directory_name\": \"64364def-3ddd-40d6-9775-14fba30342e9\", \"final_result_tmp_directory_path\": \"/app/server_root/tmp/64364def-3ddd-40d6-9775-14fba30342e9\", \"result_data_uri_base\": \"http://dev3-hp.internal:8877/rdf/results/UTC2024_05_19__10_09_03.323.2.xCEA438Dx939/\", \"request_uri\": \"http://dev3-hp.internal:8877/rdf/requests/UTC2024_05_19__10_09_03.323.2.xCEA438Dx939\", \"rdf_namespace_base\": \"http://dev3-hp.internal:8877/rdf/\"}}'),halt"
+	User time (seconds): 12.79
+	System time (seconds): 0.58
+	Percent of CPU this job got: 99%
+	Elapsed (wall clock) time (h:mm:ss or m:ss): 0:13.43
+	Average shared text size (kbytes): 0
+	Average unshared data size (kbytes): 0
+	Average stack size (kbytes): 0
+	Average total size (kbytes): 0
+	Maximum resident set size (kbytes): 82584
+	Average resident set size (kbytes): 0
+	Major (requiring I/O) page faults: 80
+	Minor (reclaiming a frame) page faults: 47262
+	Voluntary context switches: 1052
+	Involuntary context switches: 932
+	Swaps: 0
+	File system inputs: 13728
+	File system outputs: 8120
+	Socket messages sent: 0
+	Socket messages received: 0
+	Signals delivered: 0
+	Page size (bytes): 4096
+	Exit status: 0

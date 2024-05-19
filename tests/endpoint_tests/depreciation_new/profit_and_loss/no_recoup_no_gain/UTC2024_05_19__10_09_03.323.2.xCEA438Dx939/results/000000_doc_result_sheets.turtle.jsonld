@@ -1,0 +1,109 @@
+{
+    "@context": {
+        "xsd": "http://www.w3.org/2001/XMLSchema#",
+        "rdf": "http://www.w3.org/1999/02/22-rdf-syntax-ns#",
+        "rdfs": "http://www.w3.org/2000/01/rdf-schema#",
+        "excel": "https://rdf.lodgeit.net.au/v1/excel#",
+        "depr": "https://rdf.lodgeit.net.au/v1/calcs/depr#",
+        "depr_ui": "https://rdf.lodgeit.net.au/v1/calcs/depr/ui#",
+        "smsf": "https://rdf.lodgeit.net.au/v1/calcs/smsf#",
+        "smsf_ui": "https://rdf.lodgeit.net.au/v1/calcs/smsf/ui#",
+        "smsf_distribution": "https://rdf.lodgeit.net.au/v1/calcs/smsf/distribution#",
+        "smsf_distribution_ui": "https://rdf.lodgeit.net.au/v1/calcs/smsf/distribution_ui#",
+        "excel:optional": {
+            "@type": "xsd:boolean"
+        },
+        "excel:cardinality": {
+            "@type": "@id"
+        },
+        "excel:type": {
+            "@type": "@id"
+        },
+        "excel:sheets": {
+            "@type": "@id"
+        },
+        "excel:has_sheet": {
+            "@type": "@id"
+        },
+        "excel:multiple_sheets_allowed": {
+            "@type": "xsd:boolean"
+        },
+        "excel:is_horizontal": {
+            "@type": "xsd:boolean"
+        },
+        "is_type_of": {
+            "@reverse": "rdf:type2",
+            "@container": "@set"
+        },
+        "is_range_of": {
+            "@reverse": "rdfs:range"
+        }
+    },
+    "@id": "http://dev3-hp.internal:8877/rdf/results/UTC2024_05_19__10_09_03.323.2.xCEA438Dx939/",
+    "@type": "https://rdf.lodgeit.net.au/v1/request#Result",
+    "excel:has_result_sheet": {
+        "excel:is_result_sheet": {
+            "@type": "xsd:boolean",
+            "@value": "true"
+        },
+        "excel:sheet_instance_has_sheet_data": {
+            "rdf:value": {
+                "@list": [
+                    {
+                        "@type": "depr:depreciation_query",
+                        "depr:depreciation_query_asset_id": {
+                            "rdf:value": "car123"
+                        },
+                        "depr:depreciation_query_capital_gain": {
+                            "@id": "http://dev3-hp.internal:8877/rdf/results/UTC2024_05_19__10_09_03.323.2.xCEA438Dx939/x6_value",
+                            "rdf:value": {
+                                "@type": "xsd:decimal",
+                                "@value": "0.0"
+                            }
+                        },
+                        "depr:depreciation_query_has_type": {
+                            "rdf:value": {
+                                "@id": "depr:profit_and_loss",
+                                "@type": "depr:depreciation_query_type"
+                            }
+                        },
+                        "depr:depreciation_query_method": {
+                            "rdf:value": {
+                                "@id": "depr:diminishing_value",
+                                "@type": "depr:depreciation_query_method_type"
+                            }
+                        },
+                        "depr:depreciation_query_recup": {
+                            "@id": "http://dev3-hp.internal:8877/rdf/results/UTC2024_05_19__10_09_03.323.2.xCEA438Dx939/x5_value",
+                            "rdf:value": {
+                                "@type": "xsd:decimal",
+                                "@value": "0.0"
+                            }
+                        },
+                        "depr:depreciation_query_termination_date": {
+                            "rdf:value": {
+                                "@type": "xsd:date",
+                                "@value": "2025-04-01"
+                            }
+                        },
+                        "depr:depreciation_query_termination_value": {
+                            "rdf:value": {
+                                "@type": "xsd:decimal",
+                                "@value": "11111.0"
+                            }
+                        }
+                    }
+                ]
+            }
+        },
+        "excel:sheet_instance_has_sheet_name": "depreciation_queries",
+        "excel:sheet_instance_has_sheet_type": {
+            "@id": "depr_ui:depreciation_calculator_sheet_queries"
+        }
+    },
+    "https://rdf.lodgeit.net.au/v1/request#job_handle": "64364def-3ddd-40d6-9775-14fba30342e9",
+    "https://rdf.lodgeit.net.au/v1/request#rdf_explorer_base": "/static/rdftab/rdftab.html?node=",
+    "https://rdf.lodgeit.net.au/v1/request#result_data_uri_base": {
+        "@id": "http://dev3-hp.internal:8877/rdf/results/UTC2024_05_19__10_09_03.323.2.xCEA438Dx939/"
+    }
+}

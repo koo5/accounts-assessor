@@ -1,0 +1,40 @@
+options:
+{
+    "ROBUST_DOC_NO_CHECKS": false,
+    "ENABLE_CONTEXT_TRACE_TRAIL": false,
+    "DISABLE_GRACEFUL_RESUME_ON_UNEXPECTED_ERROR": false,
+    "GTRACE_ON_OWN_EXCEPTIONS": false,
+    "ROBUST_ENABLE_NICETY_REPORTS": true,
+    "skip_dev_runner": true,
+    "dev_runner_options": [],
+    "prolog_flags": "true",
+    "debug_loading": null,
+    "prolog_debug": false,
+    "halt": true,
+    "pipe_rpc_json_to_swipl_stdin": false,
+    "dry_run": false,
+    "MPROF_OUTPUT_PATH": "/app/server_root/tmp/UTC2024_05_19__10_09_03.323.2.xCEA438Dx939/mem_prof.txt",
+    "x": "x",
+    "user": "nobody"
+}
+request:
+{
+    "method": "calculator",
+    "params": {
+        "request_files": [
+            "//app/server_root/tmp/UTC2024_05_19__10_09_03.333.2.xCEA438Dx929/converted/depr_pl.xlsx.n3"
+        ],
+        "request_format": "rdf",
+        "request_tmp_directory_name": "UTC2024_05_19__10_09_03.333.2.xCEA438Dx929",
+        "result_tmp_directory_name": "UTC2024_05_19__10_09_03.323.2.xCEA438Dx939",
+        "public_url": "http://dev3-hp.internal:8877",
+        "rdf_explorer_base": "/static/rdftab/rdftab.html?node=",
+        "final_result_tmp_directory_name": "64364def-3ddd-40d6-9775-14fba30342e9",
+        "final_result_tmp_directory_path": "/app/server_root/tmp/64364def-3ddd-40d6-9775-14fba30342e9",
+        "result_data_uri_base": "http://dev3-hp.internal:8877/rdf/results/UTC2024_05_19__10_09_03.323.2.xCEA438Dx939/",
+        "request_uri": "http://dev3-hp.internal:8877/rdf/requests/UTC2024_05_19__10_09_03.323.2.xCEA438Dx939",
+        "rdf_namespace_base": "http://dev3-hp.internal:8877/rdf/"
+    }
+}
+
+machine:

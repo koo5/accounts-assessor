@@ -35,6 +35,7 @@
 :- [cashflow].
 :- [crosschecks].
 :- [detail_accounts].
+:- [div7a].
 :- [exchange].
 :- [exchange_dates].
 :- [exchange_rates].
@@ -60,7 +61,6 @@
 :- [livestock_extract].
 :- [livestock_misc].
 :- [livestock].
-:- [loans].
 :- [pacioli_rdf].
 :- [pricing].
 :- [process_request].

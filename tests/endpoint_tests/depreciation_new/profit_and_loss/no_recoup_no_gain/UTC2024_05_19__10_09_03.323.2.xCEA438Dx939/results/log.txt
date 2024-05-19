@@ -1,0 +1,160 @@
+flag('ROBUST_ENABLE_NICETY_REPORTS', 'True')
+flag('DETERMINANCY_CHECKER__USE__ENFORCER', true)
+flag('ROBUST_DAYS_ENABLE_SENSIBLE_YEAR_CHECK', true)
+flag('ROBUST_DOC_ENABLE_TRAIL', false)
+flag('ROBUST_DOC_NO_CHECKS', 'False')
+flag('ROBUST_ROL_ENABLE_CHECKS', false)
+flag('ENABLE_CONTEXT_TRACE_TRAIL', 'False')
+flag('ENABLE_CONTEXT_TRACE', true)
+flag('PYTHONUNBUFFERED', '1')
+flag('GTRACE_ON_OWN_EXCEPTIONS', 'False')
+% Debug mode is off
+% No exception traps
+% Debug Topic             Activated To
+――――――――――――――――――――――――――――――――――――――――――――――――
+% doc                             ✔
+% numbers                         ✔
+% http(error)                     ✔
+% d                               ✔
+flag(generate_debug_info, true)
+* generate_debug_info true
+flag('DISABLE_GRACEFUL_RESUME_ON_UNEXPECTED_ERROR', 'False')
+* DISABLE_GRACEFUL_RESUME_ON_UNEXPECTED_ERROR 'False'
+* GTRACE_ON_OWN_EXCEPTIONS 'False'
+* DISPLAY ':0.0'
+* topics: []
+* misc_check on
+* DETERMINANCY_CHECKER__USE__ENFORCER true
+* ROBUST_ROL_ENABLE_CHECKS false
+* ENABLE_CONTEXT_TRACE_TRAIL false
+* ROBUST_ENABLE_NICETY_REPORTS true
+* doc_dump_server(off)
+flag('DISABLE_DOC_EXCEPTION_HOOK', false)
+load_request_rdf ...
+Warning: /app/server_root/tmp/UTC2024_05_19__10_09_03.333.2.xCEA438Dx929/converted/depr_pl.xlsx.n3:38:4: Syntax error: Unexpected "<graph> {" in Turtle format (assuming TriG, ignoring graphs)
+% Parsed "depr_pl.xlsx.n3" in 0.33 sec; 15,362 triples
+doc_from_rdf ...
+
+query:
+
+profit_and_loss("car123",11111,date(2025,4,1),diminishing_value,_2785164,_2785492)
+
+written_down_value("car123",date(2025,4,1),diminishing_value,_2785896,_2785880)
+
+depreciationAsset("car123",12143,12234,60000,54016.438356164384,diminishing_value,1,[[60000,not_in_pool("car123"),12143,12234,54016.438356164384,5983.5616438356155,40]],false,_2786190,0,5983.5616438356155)
+
+depreciationAsset("car123",12234,12600,54016.438356164384,32350.666916869955,diminishing_value,2,[[54016.438356164384,not_in_pool("car123"),12234,12600,32350.666916869955,21665.77143929443,40]],false,_2786190,0,21665.77143929443)
+
+depreciationAsset("car123",12600,12874,32350.666916869955,22636.603645393385,diminishing_value,3,[[32350.666916869955,not_in_pool("car123"),12600,12874,22636.603645393385,9714.063271476569,40]],false,_2786190,0,9714.063271476569)
+
+T1:12600,date(2024,7,1)
+T2:12874,date(2025,4,1)
+depreciation_between_start_date_and_other_date(32350.666916869955,diminishing_value,date(2024,7,1),date(2025,4,1),"car123",[[[32350.666916869955,not_in_pool("car123"),12600,12874,22636.603645393385,9714.063271476569,40]]|_2786820],3,false,_2786190,27649.333083130045,37363.396354606615)
+
+T1:12234,date(2023,7,1)
+T2:12600,date(2024,7,1)
+depreciation_between_start_date_and_other_date(54016.438356164384,diminishing_value,date(2023,7,1),date(2025,4,1),"car123",[[[54016.438356164384,not_in_pool("car123"),12234,12600,32350.666916869955,21665.77143929443,40]],[[32350.666916869955,not_in_pool("car123"),12600,12874,22636.603645393385,9714.063271476569,40]]|_2786820],2,false,_2786190,5983.5616438356155,37363.396354606615)
+
+T1:12143,date(2023,4,1)
+T2:12234,date(2023,7,1)
+depreciation_between_start_date_and_other_date(60000,diminishing_value,date(2023,4,1),date(2025,4,1),"car123",[[[60000,not_in_pool("car123"),12143,12234,54016.438356164384,5983.5616438356155,40]],[[54016.438356164384,not_in_pool("car123"),12234,12600,32350.666916869955,21665.77143929443,40]],[[32350.666916869955,not_in_pool("car123"),12600,12874,22636.603645393385,9714.063271476569,40]]|_2786820],1,false,_2786190,0,37363.396354606615)
+% Saved 3,151 triples about 8,143 subjects into '/app/server_root/tmp/UTC2024_05_19__10_09_03.323.2.xCEA438Dx939/000000_doc_result_sheets.turtle' (0.824 sec)
+'process_rdf_request is finished.' ...
+make_rdf_response_report ...
+% Saved 3,151 triples about 8,143 subjects into '/app/server_root/tmp/UTC2024_05_19__10_09_03.323.2.xCEA438Dx939/000000_response.n3' (0.668 sec)
+collect_alerts ...
+make_alerts_report ...
+make_doc_dump_report ...
+% Saved 3,191 triples about 8,151 subjects into '/app/server_root/tmp/UTC2024_05_19__10_09_03.323.2.xCEA438Dx939/000000_doc_final.turtle' (0.772 sec)
+% Saved 4 graphs, 3,191 triples about 8,152 subjects into '/app/server_root/tmp/UTC2024_05_19__10_09_03.323.2.xCEA438Dx939/000000_doc_final.trig' (0.846 sec)
+make_context_trace_report ...
+get_context_trace ...
+"reverse context_trace" ...
+"maplist(make_context_trace_report2..." ...
+"add_report_page_with_body(_Report_Uri, context_trace..." ...
+json_report_entries ...
+make_json_report ...
+{
+  "alerts": [],
+  "reports": [
+    {
+      "key":"alerts_html",
+      "title":"alerts",
+      "val": {
+	"url":"http://dev3-hp.internal:8877/tmp/UTC2024_05_19__10_09_03.323.2.xCEA438Dx939/000000_alerts.html"
+      }
+    },
+    {
+      "key":"context_trace_html",
+      "title":"context_trace",
+      "val": {
+	"url":"http://dev3-hp.internal:8877/tmp/UTC2024_05_19__10_09_03.323.2.xCEA438Dx939/000000_context_trace.html"
+      }
+    },
+    {
+      "key":"alerts_json",
+      "title":"alerts",
+      "val": {
+	"url":"http://dev3-hp.internal:8877/tmp/UTC2024_05_19__10_09_03.323.2.xCEA438Dx939/000000_alerts.json"
+      }
+    },
+    {
+      "key":"response.n3",
+      "title":"response.n3",
+      "val": {
+	"url":"http://dev3-hp.internal:8877/tmp/UTC2024_05_19__10_09_03.323.2.xCEA438Dx939/000000_response.n3"
+      }
+    },
+    {
+      "key":"result_sheets",
+      "title":"doc_result_sheets.turtle",
+      "val": {
+	"url":"http://dev3-hp.internal:8877/tmp/UTC2024_05_19__10_09_03.323.2.xCEA438Dx939/000000_doc_result_sheets.turtle"
+      }
+    },
+    {
+      "key":"doc_final.turtle",
+      "title":"doc_final.turtle",
+      "val": {
+	"url":"http://dev3-hp.internal:8877/tmp/UTC2024_05_19__10_09_03.323.2.xCEA438Dx939/000000_doc_final.turtle"
+      }
+    },
+    {
+      "key":"doc_final.trig",
+      "title":"doc_final.trig",
+      "val": {
+	"url":"http://dev3-hp.internal:8877/tmp/UTC2024_05_19__10_09_03.323.2.xCEA438Dx939/000000_doc_final.trig"
+      }
+    },
+    {
+      "key":"request_n3",
+      "title":"request_n3",
+      "val": {
+	"url":"http://dev3-hp.internal:8877/tmp/UTC2024_05_19__10_09_03.323.2.xCEA438Dx939/depr_pl.xlsx.n3"
+      }
+    },
+    {
+      "key":"request_file",
+      "title":"request_file",
+      "val": {
+	"url":"http://dev3-hp.internal:8877/tmp/UTC2024_05_19__10_09_03.323.2.xCEA438Dx939/depr_pl.xlsx.n3"
+      }
+    },
+    {
+      "key":"job_tmp_url",
+      "title":"job_tmp_url",
+      "val": {
+	"url":"http://dev3-hp.internal:8877/tmp/UTC2024_05_19__10_09_03.323.2.xCEA438Dx939/../64364def-3ddd-40d6-9775-14fba30342e9"
+      }
+    },
+    {
+      "key":"task_directory",
+      "title":"task_directory",
+      "val": {
+	"url":"http://dev3-hp.internal:8877/tmp/UTC2024_05_19__10_09_03.323.2.xCEA438Dx939/"
+      }
+    }
+  ]
+}
+dict_json_text ...
+done ...
