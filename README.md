@@ -43,33 +43,33 @@ The most complex endpoint is the investment calculator; it validates and process
 * Australian SMSF accounting
 * livestock accounting
 
-![screenshot](wiki/media/readme/ic-sheets.png?raw=true)
+![screenshot](wiki/img/readme/ic-sheets.png?raw=true)
 
 It automates some accounting procedures, like tax calculations, and generates balance sheets, trial balances, investment report and other types of reports.
 
-![screenshot](wiki/media/readme/ic-result.png?raw=true)
+![screenshot](wiki/img/readme/ic-result.png?raw=true)
 
 
 ## livestock calculator
-![screenshot](wiki/media/readme/livestock-standalone-sheet.png?raw=true)
-![screenshot](wiki/media/readme/livestock-standalone-result.png?raw=true)
+![screenshot](wiki/img/readme/livestock-standalone-sheet.png?raw=true)
+![screenshot](wiki/img/readme/livestock-standalone-result.png?raw=true)
 
 
 ## depreciation calculator
-![screenshot](wiki/media/readme/depreciation-sheets.png?raw=true)
-![screenshot](wiki/media/readme/depreciation-result.png?raw=true)
+![screenshot](wiki/img/readme/depreciation-sheets.png?raw=true)
+![screenshot](wiki/img/readme/depreciation-result.png?raw=true)
 
 
 ## hirepurchase calculator
-![screenshot](wiki/media/readme/hp-sheet.png?raw=true)
+![screenshot](wiki/img/readme/hp-sheet.png?raw=true)
 (todo: UI)
 
 Given a hire purchase arrangement, it can track the balance of a hire purchase account through time, the total payment and the total interest.
 
 ## Division 7A Loan calculator
-![screenshot](wiki/media/readme/Div7A-sheet.png?raw=true)
+![screenshot](wiki/img/readme/Div7A-sheet.png?raw=true)
 
-![screenshot](wiki/media/readme/Div7A-result.png?raw=true)
+![screenshot](wiki/img/readme/Div7A-result.png?raw=true)
 
 
 

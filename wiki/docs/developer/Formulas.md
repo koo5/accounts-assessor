@@ -1,7 +1,7 @@
 
-# styles of equations in robust:
+# representation of formulas
 From the point of view of a possible reimplementation in pycoish, or in pure prolog with tabling.
-Also notes on current traceability of the calculations.
+Also notes on current traceability of calculations.
 
 ## account "rollups"
 This is somewhat traceable thanks to vecs and report entries being rdf.
