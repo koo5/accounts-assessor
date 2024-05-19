@@ -388,6 +388,7 @@ ProxyPass "/{path}" "http://{frontend}:7788/{path}"  connectiontimeout=999999999
 
 	#shell('pwd')
 	call_with_info('./lib/git_info.fish')
+	call_with_info('../wiki/build.sh')
 	
 
 	threading.Thread(daemon=True, target = logtail, args = (compose_cmd,)).start()

@@ -98,7 +98,7 @@ def postprocess(job, request_directory, converted_request_files, tmp_name, tmp_p
 			)
 		
 	sections['Robust'] = {
-		'Docs':'/static/docs/Robust_documentation.html',
+		'Docs':'/static/docs/',
 		'Source code':'https://github.com/lodgeit-labs/accounts-assessor/', 
 		'Server version': '/static/git_info.txt',
 	}
