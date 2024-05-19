@@ -23,3 +23,6 @@
 [submodule "sources/download_bastion"]
 	path = sources/download
 	url = https://github.com/koo5/download_bastion
+[submodule "wiki/media"]
+	path = wiki/media
+	url = https://github.com/koo5/accounts-assessor-public-wiki/

@@ -43,33 +43,33 @@ The most complex endpoint is the investment calculator; it validates and process
 * Australian SMSF accounting
 * livestock accounting
 
-![screenshot](wiki/img/readme/ic-sheets.png?raw=true)
+![screenshot](wiki/media/readme/ic-sheets.png?raw=true)
 
 It automates some accounting procedures, like tax calculations, and generates balance sheets, trial balances, investment report and other types of reports.
 
-![screenshot](wiki/img/readme/ic-result.png?raw=true)
+![screenshot](wiki/media/readme/ic-result.png?raw=true)
 
 
 ## livestock calculator
-![screenshot](wiki/img/readme/livestock-standalone-sheet.png?raw=true)
-![screenshot](wiki/img/readme/livestock-standalone-result.png?raw=true)
+![screenshot](wiki/media/readme/livestock-standalone-sheet.png?raw=true)
+![screenshot](wiki/media/readme/livestock-standalone-result.png?raw=true)
 
 
 ## depreciation calculator
-![screenshot](wiki/img/readme/depreciation-sheets.png?raw=true)
-![screenshot](wiki/img/readme/depreciation-result.png?raw=true)
+![screenshot](wiki/media/readme/depreciation-sheets.png?raw=true)
+![screenshot](wiki/media/readme/depreciation-result.png?raw=true)
 
 
 ## hirepurchase calculator
-![screenshot](wiki/img/readme/hp-sheet.png?raw=true)
+![screenshot](wiki/media/readme/hp-sheet.png?raw=true)
 (todo: UI)
 
 Given a hire purchase arrangement, it can track the balance of a hire purchase account through time, the total payment and the total interest.
 
 ## Division 7A Loan calculator
-![screenshot](wiki/img/readme/Div7A-sheet.png?raw=true)
+![screenshot](wiki/media/readme/Div7A-sheet.png?raw=true)
 
-![screenshot](wiki/img/readme/Div7A-result.png?raw=true)
+![screenshot](wiki/media/readme/Div7A-result.png?raw=true)
 
 
 
@@ -111,15 +111,11 @@ see [tests2/runner/README.md](tests2/runner/README.md)
 we have an experimental endpoint for [custom GPT](https://openai.com/blog/introducing-gpts), which you can register as an "action" - https://robust1.ueueeu.eu/ai3/openapi.json - see [/wiki/CustomGPT.md]
 
 
-## input files
-#### endpoint_tests
-* `tests/endpoint_tests/**/request/*`
-* todo make sure that this includes whatever we generate from rdf templates - Robust Input Example 8.7.2021
+## example input files
+excel_usage
+* `tests/endpoint_tests/**/inputs/*`
 
 
-
-## how to generate an input file from template
-todo
 
 
 ## documentation
