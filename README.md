@@ -43,33 +43,33 @@ The most complex endpoint is the investment calculator; it validates and process
 * Australian SMSF accounting
 * livestock accounting
 
-![screenshot](sources/static/docs/readme/ic-sheets.png?raw=true)
+![screenshot](wiki/img/readme/ic-sheets.png?raw=true)
 
 It automates some accounting procedures, like tax calculations, and generates balance sheets, trial balances, investment report and other types of reports.
 
-![screenshot](sources/static/docs/readme/ic-result.png?raw=true)
+![screenshot](wiki/img/readme/ic-result.png?raw=true)
 
 
 ## livestock calculator
-![screenshot](sources/static/docs/readme/livestock-standalone-sheet.png?raw=true)
-![screenshot](sources/static/docs/readme/livestock-standalone-result.png?raw=true)
+![screenshot](wiki/img/readme/livestock-standalone-sheet.png?raw=true)
+![screenshot](wiki/img/readme/livestock-standalone-result.png?raw=true)
 
 
 ## depreciation calculator
-![screenshot](sources/static/docs/readme/depreciation-sheets.png?raw=true)
-![screenshot](sources/static/docs/readme/depreciation-result.png?raw=true)
+![screenshot](wiki/img/readme/depreciation-sheets.png?raw=true)
+![screenshot](wiki/img/readme/depreciation-result.png?raw=true)
 
 
 ## hirepurchase calculator
-![screenshot](sources/static/docs/readme/hp-sheet.png?raw=true)
+![screenshot](wiki/img/readme/hp-sheet.png?raw=true)
 (todo: UI)
 
 Given a hire purchase arrangement, it can track the balance of a hire purchase account through time, the total payment and the total interest.
 
 ## Division 7A Loan calculator
-![screenshot](sources/static/docs/readme/Div7A-sheet.png?raw=true)
+![screenshot](wiki/img/readme/Div7A-sheet.png?raw=true)
 
-![screenshot](sources/static/docs/readme/Div7A-result.png?raw=true)
+![screenshot](wiki/img/readme/Div7A-result.png?raw=true)
 
 
 
@@ -119,65 +119,19 @@ we have an experimental endpoint for [custom GPT](https://openai.com/blog/introd
 
 
 ## how to generate an input file from template
-
+todo
 
 
 ## documentation
-todo, this is all private at the moment:
-
-most endpoints should have some resources in lodgeit_private/doc/. Introductions to individual concepts can be found in videos on dropbox.
+[wiki](wiki)
 
 videos:
 https://www.dropbox.com/sh/prgubjzoo9zpkhp/AACd6YmoWxf9IUi5CriihKlLa?dl=0
+
 https://www.dropbox.com/sh/o5ck3qm79zwgpc5/AABD9jUcWiNpWMb2fxsmeVfia?dl=0
 
-wiki:
-https://github.com/lodgeit-labs/accounts-assessor-wiki/
+[Robust technical overview](https://www.youtube.com/playlist?list=PL1BSZVqCNKEu1tLZYSa_gAbbXpRV7KAa5)
 
-
-## architecture
-there are 4 main components:
-
-### services
-various helper functions that prolog invokes over http/rpc
-
-### workers
-a remoulade worker that:
-* wraps prolog and spawns prolog on request
-* talks to the triplestore
-
-### frontend
-lets users upload request files and triggers workers.
-
-### apache
-serves static files and proxies requests to frontend
-
-
-`
-
-## directory structure
-
-* source/lib - prolog source code
-* tests
-** plunit - contains queries that test the functionality of the main Prolog program
-** endpoint_tests - contains test requests for the web endpoint as well as expected reponses
-* misc - contains the stuff that does not yet clearly fit into a category
-* server_root - this directory is served by the prolog server
-** tmp - each request gets its own directory here
-** taxonomy - contains all xbrl taxonomy files.
-** schemas - xsd schemas
-
-
-
-## version 2.0
-
-A new version is planned, using a constrained logic programming language, aiming for these features:
-
-Derives, validates, and corrects the financial information that it is given. The program uses redundancy to carry out its validations and corrections. By this it is meant that knowledge of parts of a company's financial data imposes certain constraints on the company's other financial data. If the program is given a company's ledger, then it knows what the balance sheet should look like. If the program is given a company's balance sheet, then it has a rough idea of what the ledger should look like.
-
-* Given a hire purchase arrangement and ledger, it can guess what the erroneous transactions are
-* Given a hire purchase arrangement and ledger, it can generate correction transactions to fix the erroneous transactions
-...
 
 
 ## todo: comparisons to other projects

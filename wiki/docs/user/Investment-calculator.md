@@ -64,7 +64,7 @@ know what <a href="http://dbpedia.org/page/General_ledger">General_ledger</a>
 of accounts is specified in the field “account taxonomies”. You
 can select one or more prepared sets, or enter your own URL with a
 XML description of account hierarchy.</p>
-<p style="margin-top: 0.02in; margin-bottom: 0.02in"><img src="Robust_documentation_html_3f1b662c3de2beb4.gif" name="Image3" align="left" width="857" height="386">
+<p style="margin-top: 0.02in; margin-bottom: 0.02in"><img src="img/ic/Robust_documentation_html_3f1b662c3de2beb4.gif" name="Image3" align="left" width="857" height="386">
   <br clear="left"/>
 </img>
 <br/>
@@ -125,7 +125,7 @@ them, so the system can recognize them.</p>
 <h3 class="western">Syntax</h3>
 <p style="margin-top: 0.02in; margin-bottom: 0.02in">A role is a
 path, much like a file path in a computer:</p>
-<p style="margin-top: 0.02in; margin-bottom: 0.02in"><img src="Robust_documentation_html_220dae5d44ef6a0e.gif" name="Image4" align="left" width="513" height="32">
+<p style="margin-top: 0.02in; margin-bottom: 0.02in"><img src="img/ic/Robust_documentation_html_220dae5d44ef6a0e.gif" name="Image4" align="left" width="513" height="32">
   <br clear="left"/>
 </img>
 <br/>
@@ -139,7 +139,7 @@ understand the “<i>&lt;Member&gt;</i>” part above. The angle
 brackets (<i>&lt;&gt;</i>) enclose a “slot”, that is, a variable,
 in other words, an empty place, where something else will be put.
 That something is taken from the “<i>param</i>” columns:</p>
-<p style="margin-top: 0.02in; margin-bottom: 0.02in"><img src="Robust_documentation_html_25d2279a69dc400e.gif" name="Image5" align="left" width="288" height="65">
+<p style="margin-top: 0.02in; margin-bottom: 0.02in"><img src="img/ic/Robust_documentation_html_25d2279a69dc400e.gif" name="Image5" align="left" width="288" height="65">
   <br clear="left"/>
 </img>
 <br/>
@@ -174,7 +174,7 @@ general ledger method</h3>
 <p style="margin-top: 0.02in; margin-bottom: 0.02in">implemented:
 		</p>
 </ul>
-<p style="margin-top: 0.02in; margin-bottom: 0.02in"><img src="files/2020-03-02.png" name="Image2" align="left" width="823" height="463">
+<p style="margin-top: 0.02in; margin-bottom: 0.02in"><img src="img/2020-03-02.png" name="Image2" align="left" width="823" height="463">
   <br clear="left"/>
 </img>
 <br/>
