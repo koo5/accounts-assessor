@@ -1,4 +1,4 @@
-# calculators - old overview
+# calculators - overview
 
 ## livestock
 see https://docs.google.com/document/d/1d65WPmugD7UgdOoVBP8NOaZj670aKU8kW-z7M7Zso9I/edit
@@ -17,11 +17,6 @@ Undertanding the basics of bookkeeping is necessary. Look in the docs/ folder, o
 https://betterexplained.com/articles/understand-accounting-basics-aloe-and-balance-sheets/
 https://www.khanacademy.org/economics-finance-domain/core-finance/accounting-and-financial-stateme/financial-statements-tutorial/v/balance-sheet-and-income-statement-relationship
 
-### the frontend
-Currently the only way to feed data into it is through a ledger request xml. We generate the request xml's from an excel spreadsheet file, using some templates and a .NET plugin.
-The excel plugin should be available here: http://www.accrip.com.au/ftp/LodgeiTSmartExcelUtility/setup.exe
-An example excel file should be in doc/ledger (Bank Demo) (todo).
-
 ### the request xml
 The main sources it contains are bank statements, and also livestockData, (containing number of births, deaths, etc). Work is in progeress to also process invoices for AR/AP logic, depreciation info, and HP info.
 
@@ -31,7 +26,7 @@ A bank statement is a series of records of what amounts went into or from your b
 #### action verbs
 Users are able to annotate each record with an action verb. They are used for a high-level control of the operation of the processor. Action verbs are defined in one sheet of the excel file. An action verb currently has a name, description, an exchanged account, optional trading account, gst information..
 
-#### (some internals)
+### (some internals)
 Bank statement entries are parsed into 's_transaction' terms and processed by preprocess_s_transactions. Optional livestock processing takes place before and after. The end result is a list of 'transaction' terms in a variable named Transactions, each containing the account id, date, and a list of coords.```record coord(Unit, Debit, Credit)```
 
 The second phase consists of walking the account hierarchy and summing up transactions, and it results in a tree of ```entry(Account_Id, Balance, Child_Sheet_Entries, Transactions_Count)```. A conversion of units/currencies into a single report currency takes place here. 

@@ -64,7 +64,7 @@ know what <a href="http://dbpedia.org/page/General_ledger">General_ledger</a>
 of accounts is specified in the field “account taxonomies”. You
 can select one or more prepared sets, or enter your own URL with a
 XML description of account hierarchy.</p>
-<p style="margin-top: 0.02in; margin-bottom: 0.02in"><img src="media/ic/Robust_documentation_html_3f1b662c3de2beb4.gif" name="Image3" align="left" width="857" height="386">
+<p style="margin-top: 0.02in; margin-bottom: 0.02in"><img src="../../media/ic/Robust_documentation_html_3f1b662c3de2beb4.gif" name="Image3" align="left" width="857" height="386">
   <br clear="left"/>
 </img>
 <br/>
@@ -388,7 +388,7 @@ such hypothetical issues, in ledger's core logic.</p>
 not implemented method:
 
 
-files/picturemessage_pa5mqqi0.pwd.png
+[media/ic/picturemessage_pa5mqqi0.pwd.png]
 
 
 implemented: `<v1.n3#ic_ui:GL_input>`

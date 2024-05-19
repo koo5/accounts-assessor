@@ -68,4 +68,5 @@ dr10100usd      dr17000aud         dr17000aud cr10100usd
 
 ```
 
-see also [Difference-transactions](Difference-transactions.md) 
+see also "Difference transactions"
+ 
