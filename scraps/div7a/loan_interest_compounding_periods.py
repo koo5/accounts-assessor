@@ -85,4 +85,6 @@ def on_pick(event):
 print(graphs)
 
 plt.connect('pick_event', on_pick)
+
 plt.show()
+
