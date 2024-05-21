@@ -206,7 +206,17 @@ def get(request: Request, node: str):
 @app.get("/rdf/{node_tail:path}")
 def get(request: Request, node_tail: str):
 	node = str(request.url) #get_public_url(request) + '/rdf/' + node_tail
-	return RedirectResponse('/static/rdftab/rdftab.html?node=' + urllib.parse.quote('<'+node+'>'))
+	
+	#node_uri_quoted = urllib.parse.quote('<'+node+'>')
+	#return RedirectResponse('/static/rdftab/rdftab.html?node=' + node_uri_quoted)
+
+	server_info_url = get_public_url(request) + '/static/git_info.txt'
+
+	return templates.TemplateResponse("rdf.html", {
+		"server_info_url": server_info_url,
+		'node': node})
+
+
 
 
 
